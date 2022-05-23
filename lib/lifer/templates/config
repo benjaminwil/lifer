@@ -1,0 +1,4 @@
+output_directory: _build
+uri_strategy: simple
+root:
+  uri_strategy: simple

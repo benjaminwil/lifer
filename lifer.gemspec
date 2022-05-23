@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "lib/lifer/version"
+module Lifer
+  VERSION = "0.1.0"
+end
 
 Gem::Specification.new do |spec|
   spec.name          = "lifer"
@@ -32,9 +34,5 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
-
-  # For more information and examples about making a new gem, checkout our
-  # guide at: https://bundler.io/guides/creating_gem.html
+  spec.add_dependency "kramdown", "~> 2.4"
 end

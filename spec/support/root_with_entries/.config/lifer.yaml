@@ -1,0 +1,4 @@
+unregistered_setting: should not be present in settings
+uri_strategy: simple
+subdirectory_one:
+  uri_strategy: fake_uri_strategy

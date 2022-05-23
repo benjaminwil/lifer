@@ -1,0 +1,6 @@
+#!/usr/bin/env -S ruby -Eutf-8
+
+require "bundler/setup"
+require_relative "../lib/lifer"
+
+Lifer.build
