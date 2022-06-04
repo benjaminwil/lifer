@@ -23,7 +23,7 @@ RSpec.describe Lifer do
     context "with an argument" do
       subject { described_class.build(directory: directory) }
 
-      let(:directory) { support_file "root_with_entries" }
+      let(:directory) { temp_root(support_file "root_with_entriesl") }
       let(:contents)  { instance_double Lifer::Contents }
 
       it "calls the builder" do
@@ -78,7 +78,7 @@ RSpec.describe Lifer do
         Lifer.build(directory: directory)
       end
 
-      let(:directory) { support_file "root_with_entries" }
+      let(:directory) { temp_root(support_file "root_with_entries") }
       let(:directory_entry_count) {
         Dir
           .glob("#{directory}/**/*.md")

@@ -17,8 +17,9 @@ module Lifer::FileHelpers
   end
 
   def lose_support_config
-    Lifer.class_variable_set("@@config", nil)
-    Lifer.class_variable_set("@@manifest", nil)
+    Lifer.class_variables.each do |class_variable|
+      Lifer.class_variable_set class_variable.to_s, nil
+    end
   end
 
   def temp_root(root_directory)
@@ -26,8 +27,12 @@ module Lifer::FileHelpers
       files = Dir
         .glob("#{root_directory}/**/*")
         .select { |file| File.file? file }
+        .map { |file| [file, file.gsub(root_directory, temp_directory)] }
 
-      FileUtils.cp_r files, temp_directory
+      files.each do |original, temp|
+        FileUtils.mkdir_p File.dirname(temp)
+        FileUtils.cp original, temp
+      end
     }
   end
 end

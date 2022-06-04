@@ -7,10 +7,6 @@ RSpec.describe Lifer::Contents do
     use_support_config "root_with_entries/.config/lifer.yaml"
   end
 
-  after do
-    lose_support_config
-  end
-
   describe "#collections" do
     subject { contents.collections }
 
