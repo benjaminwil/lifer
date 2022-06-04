@@ -27,5 +27,16 @@ RSpec.describe Lifer::Builder::HTML do
         .from(0)
         .to(entry_count)
     end
+
+    it "generates HTML in the correct subdirectories" do
+      entry_count = Dir.glob("#{directory}/subdirectory_one/*.md").count
+
+      expect { subject }
+        .to change {
+          Dir.glob("#{directory}/_build/subdirectory_one/*.html").count
+        }
+        .from(0)
+        .to(entry_count)
+    end
   end
 end
