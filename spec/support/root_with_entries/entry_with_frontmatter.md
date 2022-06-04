@@ -1,3 +1,7 @@
+---
+some: frontmatter
+---
+
 # An entry
 
 Veniam deserunt tempor dolor adipisicing enim commodo proident dolor commodo.

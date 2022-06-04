@@ -5,7 +5,7 @@ RSpec.describe Lifer::Layout do
     subject { described_class.build(entry: entry) }
 
     let(:entry) { Lifer::Entry.new(file: file) }
-    let(:file) { support_file "root_with_entries/entry_two.md" }
+    let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
     it "renders a valid HTML document using the default template" do
       expect(subject).to eq <<~RESULT
