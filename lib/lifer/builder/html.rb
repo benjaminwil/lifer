@@ -1,5 +1,9 @@
 require "fileutils"
 
+# FIXME:
+# This builder is not currently designed in a good way. Every builder should
+# have an interface that lets us swap steps in and out in an easy way.
+#
 class Lifer::Builder::HTML
   DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
 
