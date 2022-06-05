@@ -6,17 +6,12 @@ class Lifer::Layout
 
   class << self
     def build(entry:, template: DEFAULT)
-      new(entry: entry, template: template)
-        .render_minified { entry.to_html }
+      new(entry: entry, template: template).render { entry.to_html }
     end
   end
 
-  def render_minified
-    ERB.new(File.readlines(template).join).result(binding).tap { |result|
-      result.gsub!(/>\s*[\n\t]+\s*</mi, '><')
-      result.gsub!(/>\s*$/mi, '>')
-      result.gsub!(/^\s*</mi, '<')
-    }
+  def render
+    ERB.new(File.readlines(template).join).result(binding)
   end
 
   private
@@ -25,6 +20,6 @@ class Lifer::Layout
 
   def initialize(entry:, template:)
     @entry = entry
-    @template = template
+    @template = template.nil? ? DEFAULT : template
   end
 end
