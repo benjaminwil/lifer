@@ -25,7 +25,10 @@ class Lifer::Builder::HTML
           initialize_subdirectories_for entry
 
           File.open(uri_strategy.file_for(entry), "w") { |f|
-            f.write Lifer::Layout.build(entry: entry)
+            f.write Lifer::Layout.build(
+              entry: entry,
+              template: layout_for(collection)
+            )
           }
         end
       end
@@ -46,6 +49,14 @@ class Lifer::Builder::HTML
       Dir.exist?(dirname)
 
     FileUtils.mkdir_p uri_strategy.dirname_for(entry)
+  end
+
+  def layout_for(collection)
+    if (collection_settings = Lifer.settings[collection.name])
+      collection_settings[:layout_file]
+    else
+      Lifer.settings[:layout_file]
+    end
   end
 
   def output_directory
