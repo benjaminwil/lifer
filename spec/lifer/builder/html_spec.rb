@@ -2,10 +2,13 @@ require "spec_helper"
 
 RSpec.describe Lifer::Builder::HTML do
   let(:directory) { temp_root(support_file "root_with_entries") }
-  let(:contents) { Lifer::Contents.init(directory: directory) }
+
+  before do
+    Lifer.class_variable_set("@@root", directory)
+  end
 
   describe ".execute" do
-    subject { described_class.execute(contents: contents) }
+    subject { described_class.execute(root: directory) }
 
     it "attempts to remove an existing build directory" do
       allow(FileUtils)

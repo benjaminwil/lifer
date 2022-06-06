@@ -10,37 +10,50 @@ RSpec.describe Lifer do
 
     context "without an argument" do
       it "calls the builder" do
-        allow(Lifer::Builder::HTML).to receive(:execute)
+        allow(Lifer::Builder::HTML)
+          .to receive(:execute)
+          .with(root: Dir.pwd)
 
         subject
 
         expect(Lifer::Builder::HTML)
           .to have_received(:execute)
-          .with(contents: an_instance_of(Lifer::Contents))
+          .with(root: Dir.pwd)
       end
     end
 
     context "with an argument" do
       subject { described_class.build(directory: directory) }
 
-      let(:directory) { temp_root(support_file "root_with_entriesl") }
+      let(:directory) { temp_root(support_file "root_with_entries") }
       let(:contents)  { instance_double Lifer::Contents }
 
       it "calls the builder" do
         allow(Lifer::Builder::HTML).to receive(:execute)
-        allow(Lifer::Contents)
-          .to receive(:init)
-          .with(directory: directory)
-          .and_return(contents)
 
         subject
 
-        expect(Lifer::Contents)
-          .to have_received(:init)
-          .with(directory: directory)
-
-        expect(Lifer::Builder::HTML).to have_received(:execute).with(contents: contents)
+        expect(Lifer::Builder::HTML).to have_received(:execute)
       end
+    end
+  end
+
+  describe ".collections" do
+    subject { described_class.collections }
+
+    let(:directory) { support_file "root_with_entries" }
+
+    before do
+      use_support_config "root_with_entries/.config/lifer.yaml"
+
+      Lifer.class_variable_set("@@root", directory)
+    end
+
+    it "creates collections as described in the .config/lifer.yaml" do
+      expect(subject).to contain_exactly(
+        an_instance_of(Lifer::Collection),
+        an_instance_of(Lifer::Collection)
+      )
     end
   end
 

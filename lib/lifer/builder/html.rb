@@ -8,8 +8,8 @@ class Lifer::Builder::HTML
   DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
 
   class << self
-    def execute(contents:)
-      new(contents: contents).execute
+    def execute(root:)
+      new(root: root).execute
     end
   end
 
@@ -20,7 +20,7 @@ class Lifer::Builder::HTML
     # Go into the fresh build directory and generate each HTML file from the
     # given directory.
     Dir.chdir(output_directory) do
-      @contents.collections.each do |collection|
+      Lifer.collections.each do |collection|
         collection.entries.each do |entry|
           initialize_subdirectories_for entry
 
@@ -37,11 +37,11 @@ class Lifer::Builder::HTML
 
   private
 
-  attr_reader :contents, :uri_strategy
+  attr_reader :root, :uri_strategy
 
-  def initialize(contents:)
-    @contents = contents
-    @uri_strategy = Lifer::URIStrategy::Simple.new(directory: @contents.directory)
+  def initialize(root:)
+    @root = root
+    @uri_strategy = Lifer::URIStrategy::Simple.new(directory: root)
   end
 
   def initialize_subdirectories_for(entry)
@@ -61,7 +61,7 @@ class Lifer::Builder::HTML
 
   def output_directory
     dir = "%s/%s" % [
-      @contents.directory,
+      root,
       Lifer.settings[:output_directory] || DEFAULT_OUTPUT_DIRECTORY_NAME
     ]
 

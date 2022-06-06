@@ -5,7 +5,6 @@ require "set"
 require_relative "lifer/builder"
 require_relative "lifer/collection"
 require_relative "lifer/config"
-require_relative "lifer/contents"
 require_relative "lifer/entry"
 require_relative "lifer/layout"
 require_relative "lifer/uri_strategy"
@@ -25,13 +24,23 @@ module Lifer
 
   class << self
     def build(directory: Dir.pwd)
-      contents = Lifer::Contents.init(directory: directory)
+      @@root = directory
 
-      Lifer::Builder::HTML.execute(contents: contents)
+      Lifer::Builder::HTML.execute(root: directory)
     end
 
     def collections
-      config.collections
+      @@collections ||=
+        begin
+          collection_map =
+            config.collections.map { |collection_name|
+              [collection_name, "#{root}/#{collection_name}"]
+            }.to_h.merge!({root: root})
+
+          collection_map.map { |name, dir|
+            Lifer::Collection.generate(name: name, directory: dir)
+          }
+        end
     end
 
     def ignoreable?(directory_or_file)
@@ -40,6 +49,12 @@ module Lifer
 
     def manifest
       @@manifest ||= Set.new
+    end
+
+    def root
+      @@root
+    rescue NameError
+      Dir.pwd
     end
 
     def settings
