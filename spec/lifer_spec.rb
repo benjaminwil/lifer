@@ -5,8 +5,8 @@ RSpec.describe Lifer do
     expect(Lifer::VERSION).not_to be nil
   end
 
-  describe ".build" do
-    subject { described_class.build }
+  describe ".build!" do
+    subject { described_class.build! }
 
     context "without an argument" do
       it "calls the builder" do
@@ -21,39 +21,19 @@ RSpec.describe Lifer do
           .with(root: Dir.pwd)
       end
     end
-
-    context "with an argument" do
-      subject { described_class.build(directory: directory) }
-
-      let(:directory) { temp_root(support_file "root_with_entries") }
-      let(:contents)  { instance_double Lifer::Contents }
-
-      it "calls the builder" do
-        allow(Lifer::Builder::HTML).to receive(:execute)
-
-        subject
-
-        expect(Lifer::Builder::HTML).to have_received(:execute)
-      end
-    end
   end
 
   describe ".collections" do
     subject { described_class.collections }
 
-    let(:directory) { support_file "root_with_entries" }
+    let(:brain) { instance_double Lifer::Brain, collections: [] }
 
-    before do
-      use_support_config "root_with_entries/.config/lifer.yaml"
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
 
-      Lifer.class_variable_set("@@root", directory)
-    end
+      subject
 
-    it "creates collections as described in the .config/lifer.yaml" do
-      expect(subject).to contain_exactly(
-        an_instance_of(Lifer::Collection),
-        an_instance_of(Lifer::Collection)
-      )
+      expect(brain).to have_received(:collections).once
     end
   end
 
@@ -82,27 +62,45 @@ RSpec.describe Lifer do
   describe ".manifest" do
     subject { described_class.manifest }
 
-    context "when fresh" do
-      it { is_expected.to be_an_instance_of Set }
+    let(:brain) { instance_double Lifer::Brain, manifest: [] }
+
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+
+      subject
+
+      expect(brain).to have_received(:manifest).once
     end
+  end
 
-    context "after a build" do
-      before do
-        Lifer.build(directory: directory)
-      end
+  describe ".root" do
+    subject { described_class.root }
 
-      let(:directory) { temp_root(support_file "root_with_entries") }
-      let(:directory_entry_count) {
-        Dir
-          .glob("#{directory}/**/*.md")
-          .select { |entry| File.file? entry }
-          .count
-      }
+    let(:brain) { instance_double Lifer::Brain, root: "haha" }
 
-      it "lists all entries" do
-        expect(subject).to be_an_instance_of Set
-        expect(subject.count).to eq directory_entry_count
-      end
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+
+      subject
+
+      expect(brain).to have_received(:root).once
+    end
+  end
+
+  describe ".settings" do
+    subject { described_class.settings }
+
+    let(:brain) { instance_double Lifer::Brain }
+    let(:config) { instance_double Lifer::Config, settings: {} }
+
+    it "delegates to the brain and config objects" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+      allow(brain).to receive(:config).and_return(config)
+
+      subject
+
+      expect(brain).to have_received(:config).once
+      expect(config).to have_received(:settings).once
     end
   end
 end

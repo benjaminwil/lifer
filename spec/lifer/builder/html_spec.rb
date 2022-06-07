@@ -1,10 +1,12 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::HTML do
-  let(:directory) { temp_root(support_file "root_with_entries") }
+  let(:directory) { temp_root support_file("root_with_entries") }
 
   before do
-    Lifer.class_variable_set("@@root", directory)
+    allow(Lifer)
+      .to receive(:brain)
+      .and_return(Lifer::Brain.init(root: directory))
   end
 
   describe ".execute" do

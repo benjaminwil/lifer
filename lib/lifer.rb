@@ -2,6 +2,7 @@
 
 require "set"
 
+require_relative "lifer/brain"
 require_relative "lifer/builder"
 require_relative "lifer/collection"
 require_relative "lifer/config"
@@ -23,24 +24,16 @@ module Lifer
   ] | IGNORE_DIRECTORIES.map { |d| "^(#{d})" }
 
   class << self
-    def build(directory: Dir.pwd)
-      @@root = directory
+    def brain
+      @@brain ||= Lifer::Brain.init(root: Dir.pwd)
+    end
 
-      Lifer::Builder::HTML.execute(root: directory)
+    def build!
+      brain.build!
     end
 
     def collections
-      @@collections ||=
-        begin
-          collection_map =
-            config.collections.map { |collection_name|
-              [collection_name, "#{root}/#{collection_name}"]
-            }.to_h.merge!({root: root})
-
-          collection_map.map { |name, dir|
-            Lifer::Collection.generate(name: name, directory: dir)
-          }
-        end
+      brain.collections
     end
 
     def ignoreable?(directory_or_file)
@@ -48,27 +41,15 @@ module Lifer
     end
 
     def manifest
-      @@manifest ||= Set.new
+      brain.manifest
     end
 
     def root
-      @@root
-    rescue NameError
-      Dir.pwd
+      brain.root
     end
 
     def settings
-      config.settings
-    end
-
-    private
-
-    def config
-      @@config ||= Lifer::Config.build(file: config_file_location)
-    end
-
-    def config_file_location
-      "%s/.config/lifer.yaml" % File.expand_path(File.dirname(__FILE__))
+      brain.config.settings
     end
   end
 end
