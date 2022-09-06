@@ -1,9 +1,5 @@
 require "fileutils"
 
-# FIXME:
-# This builder is not currently designed in a good way. Every builder should
-# have an interface that lets us swap steps in and out in an easy way.
-#
 class Lifer::Builder::HTML
   DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
 
@@ -15,21 +11,17 @@ class Lifer::Builder::HTML
 
   def execute
     # Remove any existing output directory.
+    #
     FileUtils.rm_r(output_directory)
 
     # Go into the fresh build directory and generate each HTML file from the
     # given directory.
+    #
     Dir.chdir(output_directory) do
       Lifer.collections.each do |collection|
         collection.entries.each do |entry|
-          initialize_subdirectories_for entry
-
-          File.open(uri_strategy.file_for(entry), "w") { |f|
-            f.write Lifer::Layout.build(
-              entry: entry,
-              template: layout_for(collection)
-            )
-          }
+          generate_output_directories_for entry
+          generate_output_file_for entry, current_collection: collection
         end
       end
     end
@@ -41,14 +33,23 @@ class Lifer::Builder::HTML
 
   def initialize(root:)
     @root = root
-    @uri_strategy = Lifer::URIStrategy::Simple.new(directory: root)
+    @uri_strategy = Lifer::URIStrategy::Simple.new(root: root)
   end
 
-  def initialize_subdirectories_for(entry)
-    return if (dirname = uri_strategy.dirname_for(entry)).nil? ||
-      Dir.exist?(dirname)
+  def generate_output_directories_for(entry)
+    dirname = Pathname File.dirname(uri_strategy.output_file(entry))
+    FileUtils.mkdir_p dirname unless Dir.exist?(dirname)
+  end
 
-    FileUtils.mkdir_p uri_strategy.dirname_for(entry)
+  def generate_output_file_for(entry, current_collection:)
+    File.open(uri_strategy.output_file(entry), "w") { |file|
+      file.write(
+        Lifer::Layout.build(
+          entry: entry,
+          template: layout_for(current_collection)
+        )
+      )
+    }
   end
 
   def layout_for(collection)

@@ -1,19 +1,15 @@
 class Lifer::URIStrategy::Base
-  attr_reader :directory
+  attr_reader :root
 
-  def initialize(directory:)
-    @directory = directory
+  def initialize(root:)
+    @root = root
   end
 
   def name
     raise NotImplementedError, "implement on a subclass"
   end
 
-  def dirname_for(entry)
-    raise NotImplementedError, "implement on a subclass"
-  end
-
-  def file_for(entry)
+  def output_file(entry)
     raise NotImplementedError, "implement on a subclass"
   end
 end
