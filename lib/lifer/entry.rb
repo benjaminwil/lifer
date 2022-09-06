@@ -26,9 +26,7 @@ class Lifer::Entry
   end
 
   def full_text
-    return unless file
-
-    File.readlines(file).join
+    File.readlines(file).join if file
   end
 
   def to_html
