@@ -25,7 +25,7 @@ module Lifer::FileHelpers
   def temp_root(root_directory)
     Dir.mktmpdir.tap { |temp_directory|
       files = Dir
-        .glob("#{root_directory}/**/*")
+        .glob("#{root_directory}/**/*", File::FNM_DOTMATCH)
         .select { |file| File.file? file }
         .map { |file| [file, file.gsub(root_directory, temp_directory)] }
 
