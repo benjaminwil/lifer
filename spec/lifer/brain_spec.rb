@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Lifer::Brain do
   let(:brain) { described_class.init(root: root) }
-  let(:root) { support_file "root_with_entries" }
+  let(:root) { temp_root support_file("root_with_entries") }
 
   describe "#build!" do
     subject { brain.build! }
@@ -55,7 +55,7 @@ RSpec.describe Lifer::Brain do
         brain.build!
       end
 
-      let(:root) { support_file("root_with_entries") }
+      let(:root) { temp_root support_file("root_with_entries") }
 
       let(:directory_entry_count) {
         Dir
