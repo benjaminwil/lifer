@@ -37,7 +37,7 @@ RSpec.describe Lifer::Entry do
     context "when frontmatter is not present" do
       let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
-      it { is_expected.to be nil }
+      it { is_expected.to eq({}) }
     end
   end
 

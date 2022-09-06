@@ -18,7 +18,7 @@ class Lifer::Entry
   end
 
   def frontmatter
-    return nil unless frontmatter?
+    return {} unless frontmatter?
 
     Lifer::Utilities.symbolize_keys(
       YAML.load full_text[FRONTMATTER_REGEX, 1]
