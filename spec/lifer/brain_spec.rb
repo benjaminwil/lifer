@@ -7,6 +7,30 @@ RSpec.describe Lifer::Brain do
   describe "#build!" do
     subject { brain.build! }
 
+    before do
+      allow(Lifer::Builder::HTML)
+        .to receive(:execute)
+        .and_return(instance_double Lifer::Builder::HTML)
+    end
+
+    it "cleans up any existing output directory" do
+      allow(FileUtils).to receive(:rm_r).with(Pathname "#{root}/_build")
+
+      subject
+
+      expect(FileUtils).to have_received(:rm_r).with(Pathname "#{root}/_build")
+    end
+
+    it "recreates the output directory" do
+      allow(FileUtils).to receive(:mkdir_p).with(Pathname "#{root}/_build")
+
+      subject
+
+      expect(FileUtils)
+        .to have_received(:mkdir_p)
+        .with(Pathname "#{root}/_build")
+    end
+
     it "executes a build" do
       allow(Lifer::Builder::HTML).to receive(:execute).with(root: root)
 

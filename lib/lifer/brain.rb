@@ -1,4 +1,8 @@
+require "fileutils"
+
 class Lifer::Brain
+  DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
+
   attr_reader :root
 
   class << self
@@ -8,7 +12,11 @@ class Lifer::Brain
   end
 
   def build!
-    Lifer::Builder::HTML.execute(root: root)
+    brainwash!
+
+    [Lifer::Builder::HTML].each do |builder|
+      builder.execute root: root
+    end
   end
 
   def collections
@@ -33,10 +41,30 @@ class Lifer::Brain
     @manifest ||= Set.new
   end
 
+  def output_directory
+    @output_directory ||=
+      begin
+        dir = "%s/%s" % [
+          root,
+          config.settings[:output_directory] || DEFAULT_OUTPUT_DIRECTORY_NAME
+        ]
+
+        return Pathname(dir) if Dir.exist? dir
+
+        Dir.mkdir(dir)
+        Pathname(dir)
+      end
+  end
+
   private
 
   def initialize(root:)
     @root = root
+  end
+
+  def brainwash!
+    FileUtils.rm_r output_directory
+    FileUtils.mkdir_p output_directory
   end
 
   def config_file_location

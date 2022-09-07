@@ -12,18 +12,6 @@ RSpec.describe Lifer::Builder::HTML do
   describe ".execute" do
     subject { described_class.execute(root: directory) }
 
-    it "attempts to remove an existing build directory" do
-      allow(FileUtils)
-        .to receive(:rm_r)
-        .with Pathname("#{directory}/_build")
-
-      subject
-
-      expect(FileUtils)
-        .to have_received(:rm_r)
-        .with Pathname("#{directory}/_build")
-    end
-
     it "generates HTML for each entry" do
       entry_count = Dir.glob("#{directory}/**/*.md").count
 

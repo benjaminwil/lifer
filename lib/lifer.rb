@@ -44,6 +44,10 @@ module Lifer
       brain.manifest
     end
 
+    def output_directory
+      brain.output_directory
+    end
+
     def root
       brain.root
     end

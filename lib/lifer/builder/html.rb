@@ -1,7 +1,6 @@
 require "fileutils"
 
 class Lifer::Builder::HTML
-  DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
   FALLBACK_URI_STRATEGY = "simple"
 
   class << self
@@ -11,14 +10,7 @@ class Lifer::Builder::HTML
   end
 
   def execute
-    # Remove any existing output directory.
-    #
-    FileUtils.rm_r(output_directory)
-
-    # Go into the fresh build directory and generate each HTML file from the
-    # given directory.
-    #
-    Dir.chdir(output_directory) do
+    Dir.chdir(Lifer.output_directory) do
       Lifer.collections.each do |collection|
         collection.entries.each do |entry|
           generate_output_directories_for entry, current_collection: collection
@@ -59,18 +51,6 @@ class Lifer::Builder::HTML
     else
       Lifer.settings[:layout_file]
     end
-  end
-
-  def output_directory
-    dir = "%s/%s" % [
-      root,
-      Lifer.settings[:output_directory] || DEFAULT_OUTPUT_DIRECTORY_NAME
-    ]
-
-    return Pathname(dir) if Dir.exist? dir
-
-    Dir.mkdir(dir)
-    Pathname(dir)
   end
 
   def uri_strategy(current_collection)

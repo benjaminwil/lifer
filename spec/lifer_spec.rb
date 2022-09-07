@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe Lifer do
   it "has a version number" do
     expect(Lifer::VERSION).not_to be nil
@@ -8,17 +10,16 @@ RSpec.describe Lifer do
   describe ".build!" do
     subject { described_class.build! }
 
+    let(:brain) { instance_double Lifer::Brain }
+
     context "without an argument" do
       it "calls the builder" do
-        allow(Lifer::Builder::HTML)
-          .to receive(:execute)
-          .with(root: Dir.pwd)
+        allow(Lifer::Brain).to receive(:init).and_return(brain)
+        allow(brain).to receive(:build!)
 
         subject
 
-        expect(Lifer::Builder::HTML)
-          .to have_received(:execute)
-          .with(root: Dir.pwd)
+        expect(brain).to have_received(:build!).once
       end
     end
   end
@@ -70,6 +71,22 @@ RSpec.describe Lifer do
       subject
 
       expect(brain).to have_received(:manifest).once
+    end
+  end
+
+  describe ".output_directory" do
+    subject { described_class.output_directory }
+
+    let(:brain) {
+      instance_double Lifer::Brain, output_directory: Pathname("haha")
+    }
+
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+
+      subject
+
+      expect(brain).to have_received(:output_directory).once
     end
   end
 
