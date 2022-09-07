@@ -40,7 +40,7 @@ RSpec.describe Lifer::Config do
     it "loads some YAML" do
       expect(subject).to eq(
         {
-          subdirectory_one: {uri_strategy: "fake_uri_strategy"},
+          subdirectory_one: {uri_strategy: "pretty"},
           uri_strategy: "simple"
         }
       )
