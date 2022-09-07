@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Minimal static weblog generator."
   spec.description   = "Minimal static weblog generator. Good RSS feeds."
   spec.homepage      = "https://github.com/benjaminwil/lifer"
-  spec.required_ruby_version = ">= 2.4.0"
+  spec.required_ruby_version = ">= 3.1"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
@@ -35,4 +35,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "kramdown", "~> 2.4"
+
+  spec.add_development_dependency "debug"
 end

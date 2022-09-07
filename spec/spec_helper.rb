@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "lifer"
+
+require "debug"
 require "fileutils"
 require "tmpdir"
 
