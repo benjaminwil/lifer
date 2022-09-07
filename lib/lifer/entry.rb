@@ -39,7 +39,7 @@ class Lifer::Entry
     return {} unless frontmatter?
 
     Lifer::Utilities.symbolize_keys(
-      YAML.load full_text[FRONTMATTER_REGEX, 1]
+      YAML.load(full_text[FRONTMATTER_REGEX, 1], permitted_classes: [Time])
     )
   end
 
