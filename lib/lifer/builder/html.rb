@@ -1,8 +1,6 @@
 require "fileutils"
 
 class Lifer::Builder::HTML
-  FALLBACK_URI_STRATEGY = "simple"
-
   class << self
     def execute(root:)
       new(root: root).execute
@@ -39,15 +37,15 @@ class Lifer::Builder::HTML
       file.write(
         Lifer::Layout.build(
           entry: entry,
-          template: Lifer.setting(:layout_file, collection: current_collection)
+          template: current_collection.setting(:layout_file)
         )
       )
     }
   end
 
   def uri_strategy(current_collection)
-    Lifer::URIStrategy.find_by_name(
-      Lifer.setting(:uri_strategy, collection: current_collection)
-    ).new(root: root)
+    Lifer::URIStrategy
+      .find_by_name(current_collection.setting :uri_strategy)
+      .new(root: root)
   end
 end

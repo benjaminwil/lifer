@@ -1,6 +1,10 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Collection do
+  let(:collection) {
+    described_class.generate  name: "name", directory: "directory"
+  }
+
   describe ".generate" do
     subject {
       described_class.generate(name: :my_collection, directory: directory)
@@ -27,6 +31,21 @@ RSpec.describe Lifer::Collection do
         an_instance_of(Lifer::Entry),
         an_instance_of(Lifer::Entry)
       )
+    end
+  end
+
+  describe "#setting" do
+    subject { collection.setting(:setting_name) }
+
+    it "delegates to the global setting method" do
+      allow(Lifer).to receive(:setting).with(:setting_name, {collection: collection})
+
+      subject
+
+      expect(Lifer)
+        .to have_received(:setting)
+        .with(:setting_name, {collection: collection})
+        .once
     end
   end
 end

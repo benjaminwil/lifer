@@ -20,6 +20,10 @@ class Lifer::Collection
     end
   end
 
+  def setting(name)
+    Lifer.setting(name, collection: self)
+  end
+
   private
 
   def initialize(name:, entries:)
