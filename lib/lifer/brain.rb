@@ -19,22 +19,18 @@ class Lifer::Brain
     end
   end
 
+  # Collections only exist if they're explicitly configured in a configuration
+  # file and they match a subdirectory within the root.
+  #
+  # Every Lifer build contains at least one collection. (That collection is
+  # `:root`.)
+  #
   def collections
-    @collections ||=
-      begin
-        collection_map =
-          config.collections.map { |collection_name|
-            [collection_name, "#{root}/#{collection_name}"]
-          }.to_h.merge!({root: root})
-
-        collection_map.map { |name, dir|
-          Lifer::Collection.generate(name: name, directory: dir)
-        }
-      end
+    @collections ||= generate_collections
   end
 
   def config
-    @config ||= Lifer::Config.build(file: config_file_location)
+    @config ||= Lifer::Config.build file: config_file_location
   end
 
   def manifest
@@ -70,5 +66,21 @@ class Lifer::Brain
 
   def config_file_location
     File.join(root, ".config", "lifer.yaml")
+  end
+
+  # FIXME:
+  # Do collections work with sub-subdirectories? For example, what if the
+  # configured collection maps to a directory:
+  #
+  #     subdirectory_one/sub_subdirectory_one
+  #
+  def generate_collections
+    config.collections
+      .map { |collection_name| [collection_name, "#{root}/#{collection_name}"] }
+      .to_h
+      .merge!({root: root})
+      .map { |collection_name, directory|
+        Lifer::Collection.generate name: collection_name, directory: directory
+      }
   end
 end
