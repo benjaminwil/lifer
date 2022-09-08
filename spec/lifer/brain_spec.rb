@@ -94,4 +94,24 @@ RSpec.describe Lifer::Brain do
       end
     end
   end
+
+  describe "#setting" do
+    subject { brain.setting(:some_argument) }
+
+    let(:config) { instance_double Lifer::Config }
+
+    it "delegates to the config object" do
+      allow(Lifer::Config).to receive(:build).and_return(config)
+      allow(config)
+        .to receive(:setting)
+        .with(:some_argument, {collection_name: nil})
+
+      subject
+
+      expect(config)
+        .to have_received(:setting)
+        .with(:some_argument, {collection_name: nil})
+        .once
+    end
+  end
 end

@@ -1,12 +1,16 @@
 require_relative "utilities"
 
 class Lifer::Config
-  DEFAULT = "%s/templates/config" % File.expand_path(File.dirname(__FILE__))
-
-  REGISTERED_SETTINGS = [
-    :output_directory,
-    :uri_strategy
-  ]
+  DEFAULT_CONFIG_FILE =
+    "%s/templates/config" % File.expand_path(File.dirname(__FILE__))
+  DEFAULT_LAYOUT_FILE =
+    "%s/templates/layout.html.erb" % File.expand_path(File.dirname(__FILE__))
+  DEFAULT_SETTINGS = {
+    layout_file: DEFAULT_LAYOUT_FILE,
+    output_directory: "_build",
+    uri_strategy: "simple"
+  }
+  REGISTERED_SETTINGS = DEFAULT_SETTINGS.keys
 
   class << self
     def build(file:)
@@ -15,7 +19,7 @@ class Lifer::Config
       else
         puts "No configuration file at #{file}. Using default configuration."
 
-        new file: DEFAULT
+        new file: DEFAULT_CONFIG_FILE
       end
     end
   end
@@ -23,17 +27,26 @@ class Lifer::Config
   attr_reader :file
 
   def collections
-    raw.keys.select { |setting| has_settings? setting }
+    raw.keys.select { |setting| has_collection_settings? setting }
   end
 
-  def settings
-    raw.select { |setting, _|
-      if REGISTERED_SETTINGS.include? setting
-        true
-      elsif has_settings? setting
-        true
+  def setting(name, collection_name: nil)
+    collection_setting =
+      if collection_name && settings[collection_name]
+        settings[collection_name][name]
       end
-    }
+
+    [collection_setting, settings[name], DEFAULT_SETTINGS[name]].detect(&:itself)
+  end
+
+  def settings(settings_hash = raw)
+    settings_hash.select { |setting, value|
+      value = settings(value) if value.is_a?(Hash)
+
+      next unless REGISTERED_SETTINGS.include?(setting) || has_collection_settings?(setting)
+
+      [setting, value]
+    }.compact.to_h
   end
 
   private
@@ -42,7 +55,7 @@ class Lifer::Config
     @file = Pathname(file)
   end
 
-  def has_settings?(subdirectory)
+  def has_collection_settings?(subdirectory)
     subdirectories_with_settings =
       subdirectories & unregistered_settings.keys
 

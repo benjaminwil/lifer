@@ -44,16 +44,17 @@ class Lifer::Brain
   def output_directory
     @output_directory ||=
       begin
-        dir = "%s/%s" % [
-          root,
-          config.settings[:output_directory] || DEFAULT_OUTPUT_DIRECTORY_NAME
-        ]
+        dir = "%s/%s" % [root, Lifer.setting(:output_directory)]
 
         return Pathname(dir) if Dir.exist? dir
 
         Dir.mkdir(dir)
         Pathname(dir)
       end
+  end
+
+  def setting(name, collection: nil)
+    config.setting name, collection_name: collection&.name
   end
 
   private

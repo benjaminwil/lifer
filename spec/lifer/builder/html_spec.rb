@@ -33,13 +33,16 @@ RSpec.describe Lifer::Builder::HTML do
     end
 
     context "when a custom layout is configured in the root settings" do
+      let(:config) { Lifer::Config.build file: config_file }
+      let(:config_file) {
+        support_file "root_with_entries/.config/custom-root-layout-lifer.yaml"
+      }
       let(:layout_file) {
         support_file File.join "root_with_entries",
           ".config",
           "layouts",
           "layout_with_greeting.html.erb"
       }
-
       let(:collection_entry_file) {
         File.read File.join(
           directory,
@@ -52,20 +55,12 @@ RSpec.describe Lifer::Builder::HTML do
         File.read File.join(directory, "_build", "tiny_entry.html")
       }
 
-      let(:config) {
-        instance_double Lifer::Config,
-          collections: [:subdirectory_one],
-          raw: settings,
-          settings: settings
-      }
-
-      let(:settings) { {layout_file: layout_file} }
-
-      before do
-        allow(Lifer::Config).to receive(:build).and_return(config)
-      end
-
       it "builds using the correct layout" do
+        allow(Lifer::Config).to receive(:build).and_return(config)
+        allow(config)
+          .to receive(:settings)
+          .and_return({layout_file: layout_file})
+
         subject
 
         expect(collection_entry_file).to include "Greetings!"
@@ -80,27 +75,24 @@ RSpec.describe Lifer::Builder::HTML do
             "layout_for_subdirectory_one_collection.html.erb"
         }
 
-        let(:settings) {
-          {
-            layout_file: layout_file,
-            subdirectory_one: {
-              layout_file: collection_layout_file
-            }
-          }
-        }
-
         it "builds using all the correct layouts" do
+          allow(Lifer::Config).to receive(:build).and_return(config)
+          allow(config)
+            .to receive(:settings)
+            .and_return({
+              layout_file: layout_file,
+              subdirectory_one: {layout_file: collection_layout_file}
+            })
+
           subject
 
-          expect(collection_entry_file)
-            .not_to include "Greetings!"
+          expect(collection_entry_file).not_to include "Greetings!"
           expect(collection_entry_file)
             .to include "Layout for Subdirectory One"
 
+          expect(root_collection_entry_file).to include "Greetings!"
           expect(root_collection_entry_file)
             .not_to include "Layout for Subdirectory One"
-          expect(root_collection_entry_file)
-            .to include "Greetings!"
         end
       end
     end

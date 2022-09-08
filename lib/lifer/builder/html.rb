@@ -39,27 +39,15 @@ class Lifer::Builder::HTML
       file.write(
         Lifer::Layout.build(
           entry: entry,
-          template: layout_for(current_collection)
+          template: Lifer.setting(:layout_file, collection: current_collection)
         )
       )
     }
   end
 
-  def layout_for(collection)
-    if (collection_settings = Lifer.settings[collection.name])
-      collection_settings[:layout_file]
-    else
-      Lifer.settings[:layout_file]
-    end
-  end
-
   def uri_strategy(current_collection)
-    collection_settings =
-      Lifer.settings[current_collection.name] || Lifer.settings[:root]
-    current_uri_strategy =
-      collection_settings && collection_settings[:uri_strategy] ||
-        FALLBACK_URI_STRATEGY
-
-    Lifer::URIStrategy.find_by_name(current_uri_strategy).new(root: root)
+    Lifer::URIStrategy.find_by_name(
+      Lifer.setting(:uri_strategy, collection: current_collection)
+    ).new(root: root)
   end
 end

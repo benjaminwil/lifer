@@ -104,6 +104,24 @@ RSpec.describe Lifer do
     end
   end
 
+  describe ".setting" do
+    subject { described_class.setting :some_argument }
+
+    let(:brain) { instance_double Lifer::Brain }
+
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+      allow(brain).to receive(:setting).with(:some_argument, {collection: nil})
+
+      subject
+
+      expect(brain)
+        .to have_received(:setting)
+        .with(:some_argument, {collection: nil})
+        .once
+    end
+  end
+
   describe ".settings" do
     subject { described_class.settings }
 

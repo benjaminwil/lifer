@@ -32,6 +32,53 @@ RSpec.describe Lifer::Config do
     end
   end
 
+  describe "#setting" do
+    subject { config.setting name, collection_name: collection.name }
+
+    let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+    let(:name) { :layout_file }
+    let(:collection) {
+      Lifer::Collection.generate name: :subdirectory_one,
+        directory: support_file("root_with_entries/subdirectory_one")
+    }
+    let(:raw_settings_hash) { {} }
+
+    before do
+      allow(Lifer::Utilities)
+        .to receive(:symbolize_keys)
+        .and_return(raw_settings_hash)
+    end
+
+    context "with a collection" do
+      context "that has a collection-specific setting available" do
+        before do
+          raw_settings_hash
+            .merge!({subdirectory_one: {layout_file: "collection-layout-file"}})
+        end
+
+        it "uses the collection setting" do
+          expect(subject).to eq "collection-layout-file"
+        end
+      end
+
+      context "that does not have a collection-specific setting available" do
+        before do
+          raw_settings_hash.merge!({layout_file: "root-layout-file"})
+        end
+
+        it "uses the root setting" do
+          expect(subject).to eq "root-layout-file"
+        end
+      end
+
+      context "that does not have any setting available" do
+        it "uses the default setting" do
+          expect(subject).to end_with "lib/lifer/templates/layout.html.erb"
+        end
+      end
+    end
+  end
+
   describe "#settings" do
     subject { config.settings }
 
