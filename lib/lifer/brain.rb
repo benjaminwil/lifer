@@ -75,7 +75,7 @@ class Lifer::Brain
   #     subdirectory_one/sub_subdirectory_one
   #
   def generate_collections
-    config.collections
+    config.collectionables
       .map { |collection_name| [collection_name, "#{root}/#{collection_name}"] }
       .to_h
       .merge!({root: root})

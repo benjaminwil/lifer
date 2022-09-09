@@ -3,6 +3,26 @@ require "spec_helper"
 RSpec.describe Lifer::Config do
   let(:config) { described_class.build(file: file) }
 
+  describe "#collectionables" do
+    subject { config.collectionables }
+
+    context "when there are potential collections" do
+      let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+
+      it "returns any potential collections" do
+        expect(subject).to eq [:subdirectory_one]
+      end
+    end
+
+    context "when there are no potential collections" do
+      let(:file) {
+        support_file "root_with_entries/.config/no-collections-lifer.yaml"
+      }
+
+      it { is_expected.to eq [] }
+    end
+  end
+
   describe "#file" do
     subject { config.file }
 
