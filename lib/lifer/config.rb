@@ -55,11 +55,20 @@ class Lifer::Config
     @file = Pathname(file)
   end
 
-  def has_collection_settings?(subdirectory)
-    subdirectories_with_settings =
-      subdirectories & unregistered_settings.keys
+  def collection_candidates
+    subirectories = Dir.glob("#{root_directory}/**/*")
+      .select { |entry| File.directory? entry }
+      .map { |entry| entry.gsub("#{root_directory}/", "") }
 
-    subdirectories_with_settings.include? subdirectory
+    subdirectories
+      .select { |dir| !Lifer.ignoreable? dir }.map(&:to_sym).sort.reverse
+  end
+
+
+  def has_collection_settings?(settings_key)
+    confirmed_collections = collection_candidates & unregistered_settings.keys
+
+    confirmed_collections.include? settings_key
   end
 
   def raw
@@ -70,14 +79,6 @@ class Lifer::Config
 
   def root_directory
     @root_directory ||= ("%s/.." % File.expand_path(File.dirname(@file)))
-  end
-
-  def subdirectories
-    subs = Dir.glob("#{root_directory}/**/*")
-      .select { |entry| File.directory? entry }
-      .map { |entry| entry.gsub("#{root_directory}/", "") }
-
-    subs.select { |dir| !Lifer.ignoreable? dir }.map(&:to_sym).sort.reverse
   end
 
   def unregistered_settings
