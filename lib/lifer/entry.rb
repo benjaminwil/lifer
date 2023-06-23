@@ -11,7 +11,11 @@ class Lifer::Entry
   attr_reader :file
 
   def initialize(file:)
-    @file = File.exist?(file) ? Pathname(file) : nil
+    if File.exist? file
+      @file = Pathname file
+    else
+      raise StandardError, "file \"%s\" does not exist" % file
+    end
   end
 
   def body

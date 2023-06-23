@@ -125,7 +125,11 @@ RSpec.describe Lifer::Entry do
     context "when the file doesn't exist" do
       let(:file) { "doesnt-exist" }
 
-      it { is_expected.to eq nil }
+      it "raises an error" do
+        expect { subject }
+          .to raise_error StandardError, "file \"doesnt-exist\" does not exist"
+      end
+
     end
 
     context "when the file has frontmatter" do
