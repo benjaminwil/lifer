@@ -1,0 +1,3 @@
+feed_uri: default.xml
+subdirectory_one:
+  feed_uri: subdirectory_one.xml

@@ -6,8 +6,16 @@ class Lifer::Config
   DEFAULT_LAYOUT_FILE =
     "%s/templates/layout.html.erb" % File.expand_path(File.dirname(__FILE__))
   DEFAULT_SETTINGS = {
+    default_entry_title: "Untitled Entry",
+    feed_builder: "atom",
+    feed_uri: "feed.xml",
+    host: "https://example.com",
     layout_file: DEFAULT_LAYOUT_FILE,
+    language: "en",
     output_directory: "_build",
+    site_default_author: "Admin",
+    site_title: "My Lifer Weblog",
+    site_subtitle: "A great weblog, lol...",
     uri_strategy: "simple"
   }
   REGISTERED_SETTINGS = DEFAULT_SETTINGS.keys
