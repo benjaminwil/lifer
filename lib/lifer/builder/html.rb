@@ -3,17 +3,17 @@ require "fileutils"
 class Lifer::Builder::HTML
   class << self
     def execute(root:)
-      new(root: root).execute
+      Dir.chdir Lifer.output_directory do
+        new(root: root).execute
+      end
     end
   end
 
   def execute
-    Dir.chdir(Lifer.output_directory) do
-      Lifer.collections.each do |collection|
-        collection.entries.each do |entry|
-          generate_output_directories_for entry, current_collection: collection
-          generate_output_file_for entry, current_collection: collection
-        end
+    Lifer.collections.each do |collection|
+      collection.entries.each do |entry|
+        generate_output_directories_for entry, current_collection: collection
+        generate_output_file_for entry, current_collection: collection
       end
     end
   end
