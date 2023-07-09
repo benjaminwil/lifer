@@ -1,12 +1,14 @@
 class Lifer::Collection
-  attr_reader :name, :entries
+  attr_reader :name
 
   class << self
     def generate(name:, directory:)
-      new(name: name, entries: entries_from(directory))
+      new name: name, directory: directory
     end
+  end
 
-    def entries_from(directory)
+  def entries
+    @entries ||=
       Dir.glob("#{directory}/**/*.md").select { |entry|
         if Lifer.manifest.include? entry
           false
@@ -26,8 +28,10 @@ class Lifer::Collection
 
   private
 
-  def initialize(name:, entries:)
+  attr_reader :directory
+
+  def initialize(name:, directory:)
     @name = name
-    @entries = entries
+    @directory = directory
   end
 end

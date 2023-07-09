@@ -2,15 +2,14 @@ require "spec_helper"
 
 RSpec.describe Lifer::Collection do
   let(:collection) {
-    described_class.generate  name: "name", directory: "directory"
+    described_class.generate name: "name", directory: directory
   }
+  let(:directory) { support_file "root_with_entries/subdirectory_one" }
 
   describe ".generate" do
     subject {
       described_class.generate(name: :my_collection, directory: directory)
     }
-
-    let(:directory) { support_file "root_with_entries/subdirectory_one" }
 
     it "generates a collection" do
       expect(subject.name).to eq :my_collection
@@ -21,10 +20,8 @@ RSpec.describe Lifer::Collection do
     end
   end
 
-  describe ".entries_from" do
-    subject { described_class.entries_from(directory) }
-
-    let(:directory) { support_file "root_with_entries/subdirectory_one" }
+  describe "#entries" do
+    subject { collection.entries }
 
     it "creates entries from a directory" do
       expect(subject).to include(
