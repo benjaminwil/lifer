@@ -30,6 +30,13 @@ class Lifer::Config
     raw.keys.select { |setting| has_collection_settings? setting }
   end
 
+  # Returns the best in-scope setting value, where the best is the current
+  # collection's setting, then the root collection's setting, and then Lifer's
+  # default setting. If none these are available the method will return `nil`.
+  #
+  # @param  name [Symbol] The configuration setting.
+  # @param  collection_name [Symbol] A collection name.
+  # @return [String] The value of the best in-scope setting.
   def setting(name, collection_name: nil)
     collection_setting =
       if collection_name && settings[collection_name]
