@@ -18,8 +18,7 @@ class Lifer::Collection
           Lifer.manifest << entry
           true
         end
-      }.map { |entry| Lifer::Entry.new(file: entry) }
-    end
+      }.map { |entry| Lifer::Entry.new file: entry, collection: self }
   end
 
   def setting(name)

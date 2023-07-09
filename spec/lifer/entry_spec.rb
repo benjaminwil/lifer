@@ -1,7 +1,42 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Entry do
-  let(:entry) { described_class.new(file: file) }
+  let(:entry) { described_class.new file: file, collection: collection }
+
+  let(:collection) {
+    Lifer::Collection.generate name: "Collection",
+      directory: File.dirname(file)
+  }
+
+  describe "#authors" do
+    subject { entry.authors }
+
+    context "when frontmatter for both 'authors' and 'author exist" do
+      let(:file) {
+        support_file "root_with_entries/entry_with_author_and_authors.md"
+      }
+
+      it { is_expected.to eq ["singular author"] }
+    end
+
+    context "when frontmatter for 'authors' exists" do
+      let(:file) { support_file "root_with_entries/entry_with_authors.md" }
+
+      it { is_expected.to eq ["all of", "the authors"] }
+    end
+
+    context "when frontmatter for 'author' exists" do
+      let(:file) { support_file "root_with_entries/entry_with_author.md" }
+
+      it { is_expected.to eq ["one author"] }
+    end
+
+    context "when no frontmatter for 'authors' or 'author' exists" do
+      let(:file) { support_file "root_with_entries/tiny_entry.md" }
+
+      it { is_expected.to be_empty }
+    end
+  end
 
   describe "#body" do
     subject { entry.body }
@@ -99,7 +134,12 @@ RSpec.describe Lifer::Entry do
     context "when frontmatter is present" do
       let(:file) { support_file "root_with_entries/entry_with_frontmatter.md" }
 
-      it { is_expected.to eq({some: "frontmatter"}) }
+      it {
+        is_expected.to eq(
+          some: "frontmatter",
+          title: "Entry with Frontmatter"
+        )
+      }
     end
 
     context "when frontmatter is not present" do
@@ -138,6 +178,68 @@ RSpec.describe Lifer::Entry do
       it "includes the frontmatter" do
         expect(subject).to start_with("---\n")
       end
+    end
+  end
+
+  describe "#permalink" do
+    subject { entry.permalink }
+
+    let(:file) { support_file "root_with_entries/tiny_entry.md" }
+
+    before do
+      allow(Lifer)
+        .to receive(:root)
+        .and_return(support_file "root_with_entries")
+    end
+
+    it { is_expected.to eq "https://example.com/tiny_entry.html" }
+  end
+
+  describe "#summary" do
+    subject { entry.summary }
+
+    context "when a summary is present" do
+      let(:file) { support_file "root_with_entries/entry_with_summary.md" }
+
+      it { is_expected.to eq "the summary" }
+    end
+
+    context "when no summary is present and the body is short" do
+      let(:file) { support_file "root_with_entries/tiny_entry.md" }
+
+      it { is_expected.to eq "A testable entry." }
+    end
+
+    context "when the summary is present and the body is long" do
+      let(:file) { support_file "root_with_entries/long_entry.md" }
+
+      it {
+        is_expected
+ 	        .to eq "In the realm where dreams dance upon ethereal melodies and " \
+	          "time surrenders to whispers of serenity, there lies a tapestry..."
+      }
+    end
+
+    context "when no summary or entry body are present" do
+      let(:file) { support_file "root_with_entries/blank_entry.md" }
+
+      it { is_expected.to be_nil }
+    end
+  end
+
+  describe "#title" do
+    subject { entry.title }
+
+    context "when an entry title is set in the frontmatter" do
+      let(:file) { support_file "root_with_entries/entry_with_frontmatter.md" }
+
+      it { is_expected.to eq "Entry with Frontmatter" }
+    end
+
+    context "when an entry title is not set in the frontmatter" do
+      let(:file) { support_file "root_with_entries/tiny_entry.md" }
+
+      it { is_expected.to eq "Untitled Entry" }
     end
   end
 end

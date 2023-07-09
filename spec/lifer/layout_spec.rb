@@ -2,9 +2,13 @@ require "spec_helper"
 
 RSpec.describe Lifer::Layout do
   describe ".build" do
-    subject { described_class.build(entry: entry, template: template) }
+    subject { described_class.build entry: entry, template: template }
 
-    let(:entry) { Lifer::Entry.new(file: file) }
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+    let(:entry) { Lifer::Entry.new file: file, collection: collection }
     let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
     context "when not assigning a template file" do

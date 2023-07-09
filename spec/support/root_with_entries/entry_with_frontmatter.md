@@ -1,5 +1,6 @@
 ---
 some: frontmatter
+title: Entry with Frontmatter
 ---
 
 # An entry
