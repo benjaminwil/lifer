@@ -38,6 +38,18 @@ class Lifer::Config
     raw.keys.select { |setting| has_collection_settings? setting }
   end
 
+  # This method allows user scripts and extensions to register arbitrary
+  # settings in their configuration YAML files.
+  #
+  # @param *settings [*Symbol, *Hash] A list of symbols and/or hashs to be added
+  #   to Lifer's registered settings.
+  # @return [void]
+  def register_settings(*settings)
+    settings.each do |setting|
+      registered_settings << setting
+    end
+  end
+
   # Returns the best in-scope setting value, where the best is the current
   # collection's setting, then the root collection's setting, and then Lifer's
   # default setting. If none these are available the method will return `nil`.

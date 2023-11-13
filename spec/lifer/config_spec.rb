@@ -52,6 +52,44 @@ RSpec.describe Lifer::Config do
     end
   end
 
+  describe "#register_settings" do
+    subject { config.register_settings setting }
+
+    let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+
+    context "with a simple setting" do
+      let(:setting) { :my_new_setting }
+
+      it "adds the setting to the registered settings" do
+        expect { subject }
+          .to change { config.registered_settings }
+          .from(Lifer::Config::DEFAULT_REGISTERED_SETTINGS)
+          .to(Lifer::Config::DEFAULT_REGISTERED_SETTINGS + [:my_new_setting])
+      end
+    end
+
+    context "with a setting tree" do
+      let(:setting) {
+        {
+          my_new_setting: [
+            :sub_setting_one,
+            :sub_setting_two,
+            sub_setting_three: [:sub_sub_setting_one]
+          ]
+        }
+      }
+
+      it "adds all the settings to the registered settings" do
+        expect { subject }
+          .to change {
+            config.registered_settings.include?(setting)
+          }
+          .from(false)
+          .to(true)
+      end
+    end
+  end
+
   describe "#setting" do
     subject { config.setting name, collection_name: collection.name }
 
