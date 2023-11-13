@@ -20,6 +20,12 @@ class Lifer::Config
   ]
 
   class << self
+    # A configuration file must be present in order to bootstrap Lifer. If a
+    # configuration file cannot be found at the given path, then the default
+    # configuration file is used.
+    #
+    # @param file [String] The path to the user-provided configuration file.
+    # @return [void]
     def build(file:)
       if File.file? file
         new file: file
@@ -34,6 +40,10 @@ class Lifer::Config
   attr_accessor :registered_settings
   attr_reader :file
 
+  # Provides Lifer with a list of collections as interpreted by reading the
+  # configuration YAML file. Collectionables are used to generate collections.
+  #
+  # @return [void]
   def collectionables
     raw.keys.select { |setting| has_collection_settings? setting }
   end
