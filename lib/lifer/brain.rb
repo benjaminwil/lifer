@@ -14,8 +14,13 @@ class Lifer::Brain
   def build!
     brainwash!
 
-    [Lifer::Builder::HTML].each do |builder|
-      builder.execute root: root
+    # FIXME:
+    # Make the list of builders configurable via settings.
+    #
+    builders = [:html, :rss]
+
+    builders.each do |builder|
+      Lifer::Builder.find(builder).execute root: root
     end
   end
 

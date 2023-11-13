@@ -11,6 +11,9 @@ RSpec.describe Lifer::Brain do
       allow(Lifer::Builder::HTML)
         .to receive(:execute)
         .and_return(instance_double Lifer::Builder::HTML)
+      allow(Lifer::Builder::RSS)
+        .to receive(:execute)
+        .and_return(instance_double Lifer::Builder::RSS)
     end
 
     it "cleans up any existing output directory" do
@@ -33,10 +36,12 @@ RSpec.describe Lifer::Brain do
 
     it "executes a build" do
       allow(Lifer::Builder::HTML).to receive(:execute).with(root: root)
+      allow(Lifer::Builder::RSS).to receive(:execute).with(root: root)
 
       subject
 
       expect(Lifer::Builder::HTML).to have_received(:execute).with(root: root)
+      expect(Lifer::Builder::RSS).to have_received(:execute).with(root: root)
     end
   end
 

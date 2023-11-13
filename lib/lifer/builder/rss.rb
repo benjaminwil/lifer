@@ -4,7 +4,7 @@ require "rss"
 #
 #   https://www.rssboard.org/rss-specification
 #
-class Lifer::Builder::RSS
+class Lifer::Builder::RSS < Lifer::Builder
   DEFAULT_FEED_FILENAME = "feed.xml"
 
   class << self

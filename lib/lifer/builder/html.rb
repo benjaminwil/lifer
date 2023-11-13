@@ -1,6 +1,6 @@
 require "fileutils"
 
-class Lifer::Builder::HTML
+class Lifer::Builder::HTML < Lifer::Builder
   class << self
     def execute(root:)
       Dir.chdir Lifer.output_directory do

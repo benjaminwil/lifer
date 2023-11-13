@@ -97,4 +97,10 @@ RSpec.describe Lifer::Builder::HTML do
       end
     end
   end
+
+  describe ".name" do
+    subject { described_class.name }
+
+    it { is_expected.to eq :html }
+  end
 end
