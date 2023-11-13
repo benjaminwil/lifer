@@ -3,6 +3,7 @@ PATH
   specs:
     lifer (0.2.0)
       kramdown (~> 2.4)
+      rss
 
 GEM
   remote: https://rubygems.org/
@@ -47,7 +48,6 @@ DEPENDENCIES
   lifer!
   rake (~> 13.0)
   rspec (~> 3.0)
-  rss
 
 BUNDLED WITH
    2.3.21

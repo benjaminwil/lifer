@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "kramdown", "~> 2.4"
+  spec.add_dependency "rss"
 
   spec.add_development_dependency "debug"
 end
