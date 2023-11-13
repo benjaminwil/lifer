@@ -8,12 +8,7 @@ RSpec.describe Lifer::Brain do
     subject { brain.build! }
 
     before do
-      allow(Lifer::Builder::HTML)
-        .to receive(:execute)
-        .and_return(instance_double Lifer::Builder::HTML)
-      allow(Lifer::Builder::RSS)
-        .to receive(:execute)
-        .and_return(instance_double Lifer::Builder::RSS)
+      allow(Lifer::Builder).to receive(:build!)
     end
 
     it "cleans up any existing output directory" do
@@ -34,14 +29,38 @@ RSpec.describe Lifer::Brain do
         .with(Pathname "#{root}/_build")
     end
 
-    it "executes a build" do
-      allow(Lifer::Builder::HTML).to receive(:execute).with(root: root)
-      allow(Lifer::Builder::RSS).to receive(:execute).with(root: root)
+    context "when using a default configuration file" do
+      it "executes a build with the default set of builders" do
+        subject
 
-      subject
+        expect(Lifer::Builder)
+          .to have_received(:build!)
+          .with(*["html", "rss"], root: root)
+          .once
+      end
+    end
 
-      expect(Lifer::Builder::HTML).to have_received(:execute).with(root: root)
-      expect(Lifer::Builder::RSS).to have_received(:execute).with(root: root)
+    context "when using a custom configuration file" do
+      let!(:config_with_custom_config_file) {
+        Lifer::Config.build(
+          file: support_file(
+            "root_with_entries/.config/custom-builder-list.yaml"
+          )
+        )
+      }
+
+      it "executes with the configured set of builders only" do
+        allow(Lifer::Config)
+          .to receive(:build)
+          .and_return config_with_custom_config_file
+
+        subject
+
+        expect(Lifer::Builder)
+          .to have_received(:build!)
+          .with(*["rss"], root: root)
+          .once
+      end
     end
   end
 

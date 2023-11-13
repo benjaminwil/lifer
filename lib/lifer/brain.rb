@@ -14,14 +14,7 @@ class Lifer::Brain
   def build!
     brainwash!
 
-    # FIXME:
-    # Make the list of builders configurable via settings.
-    #
-    builders = [:html, :rss]
-
-    builders.each do |builder|
-      Lifer::Builder.find(builder).execute root: root
-    end
+    Lifer::Builder.build! *setting(:global, :build), root: root
   end
 
   # Collections only exist if they're explicitly configured in a configuration

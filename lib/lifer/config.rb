@@ -1,6 +1,11 @@
 require_relative "utilities"
 
 class Lifer::Config
+  GLOBAL_SETTINGS = [
+    {build: ["html", "rss"]},
+    :host,
+    :output_directory
+  ]
   DEFAULT_CONFIG_FILE =
     "%s/templates/config" % File.expand_path(File.dirname(__FILE__))
   DEFAULT_LAYOUT_FILE =
@@ -13,6 +18,7 @@ class Lifer::Config
     :description,
     {entries: [:default_title]},
     {feed: [:builder, :uri]},
+    {global: GLOBAL_SETTINGS},
     :language,
     :layout_file,
     :title,
@@ -84,8 +90,7 @@ class Lifer::Config
     settings_hash.select { |setting, value|
       value = settings(value) if value.is_a?(Hash)
 
-      next unless DEFAULT_REGISTERED_SETTINGS.include?(setting) ||
-        has_collection_settings?(setting)
+      next unless registered_setting?(setting)
 
       [setting, value]
     }.compact.to_h
@@ -122,6 +127,16 @@ class Lifer::Config
     @raw ||= Lifer::Utilities.symbolize_keys(
       YAML.load_file(file).to_h
     )
+  end
+
+  def registered_setting?(setting)
+    simple_settings = registered_settings.select { _1.is_a? Symbol }
+    return true if simple_settings.include?(setting)
+
+    hash_settings = registered_settings.select { _1.is_a? Hash }
+    return true if hash_settings.flat_map(&:keys).include?(setting)
+
+    has_collection_settings? setting
   end
 
   def root_directory

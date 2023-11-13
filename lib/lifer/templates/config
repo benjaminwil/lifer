@@ -45,5 +45,8 @@ uri_strategy: simple
 # cannot be set per collection.
 #
 global:
+  build:
+    - html
+    - rss
   host: https://example.com
   output_directory: _build

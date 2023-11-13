@@ -38,7 +38,7 @@ RSpec.describe Lifer::Builder::RSS do
         # As specified in the custom configuration file.
         #
         expect(Dir.glob(pattern).map { File.basename _1 })
-          .to contain_exactly "feed.xml", "subdirectory_one.xml"
+          .to contain_exactly "default.xml", "subdirectory_one.xml"
       end
     end
   end

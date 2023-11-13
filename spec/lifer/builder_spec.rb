@@ -1,6 +1,42 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Builder do
+  let(:root) { temp_root support_file("root_with_entries") }
+
+  describe ".all" do
+    subject { described_class.all }
+
+    it "returns all builders by name" do
+      expect(subject).to contain_exactly :html, :rss
+    end
+  end
+
+  describe ".build!" do
+    subject { described_class.build! *list_of_builders, root: root }
+
+    let(:list_of_builders) { ["rss"] }
+
+    before do
+      # Do not allow any builders to actually build files to an output directory
+      # in the scope of these tests.
+      #
+      Lifer::Builder.send(:descendants).each do |subclass|
+        allow(subclass)
+          .to receive(:execute)
+          .and_return(instance_double subclass)
+      end
+    end
+
+    it "builds only the builders specified in the list of builders" do
+      subject
+
+      expect(Lifer::Builder::HTML)
+        .not_to have_received(:execute).with(root: root)
+
+      expect(Lifer::Builder::RSS).to have_received(:execute).with(root: root)
+    end
+  end
+
   describe ".find" do
     subject { described_class.find name }
 
