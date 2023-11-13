@@ -23,7 +23,7 @@ class Lifer::Builder::RSS
         end
 
       output_filename =
-        File.join Dir.pwd, Lifer.setting(:feed_uri, collection: collection)
+        File.join Dir.pwd, Lifer.setting(:feed, :uri, collection: collection)
 
       File.open output_filename, "w" do |file|
         file.puts new_feed.to_feed
@@ -37,7 +37,7 @@ class Lifer::Builder::RSS
 
   def initialize(root:)
     @collections_with_feeds =
-      Lifer.collections.select { |collection| collection.setting(:feed_uri) }
+      Lifer.collections.select { |collection| collection.setting(:feed, :uri) }
     @root = root
   end
 
@@ -67,15 +67,14 @@ class Lifer::Builder::RSS
       feed.channel.lastBuildDate = Time.now.to_s
 
       feed.channel.link = "%s/%s" % [
-        Lifer.setting(:host),
-        Lifer.setting(:feed_uri, collection: collection)
+        Lifer.setting(:global, :host),
+        Lifer.setting(:feed, :uri, collection: collection)
       ]
 
       feed.channel.managingEditor =
         Lifer.setting(:site_default_author, collection: collection)
 
-      feed.channel.title = Lifer.setting(:site_title, collection: collection)
-
+      feed.channel.title = Lifer.setting(:title, collection: collection)
 
       feed.channel.webMaster =
         Lifer.setting(:site_default_author, collection: collection)

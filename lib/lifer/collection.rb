@@ -21,8 +21,8 @@ class Lifer::Collection
       }.map { |entry| Lifer::Entry.new file: entry, collection: self }
   end
 
-  def setting(name)
-    Lifer.setting(name, collection: self)
+  def setting(*name)
+    Lifer.setting(*name, collection: self)
   end
 
   private

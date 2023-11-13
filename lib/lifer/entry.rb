@@ -58,7 +58,7 @@ class Lifer::Entry
   end
 
   def permalink
-    File.join Lifer.setting(:host),
+    File.join Lifer.setting(:global, :host),
       Lifer::URIStrategy
         .find_by_name(collection.setting :uri_strategy)
         .new(root: Lifer.root)
@@ -84,7 +84,7 @@ class Lifer::Entry
   end
 
   def title
-    frontmatter[:title] || Lifer.setting(:default_entry_title)
+    frontmatter[:title] || Lifer.setting(:entries, :default_title)
   end
 
   def to_html

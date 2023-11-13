@@ -52,8 +52,8 @@ module Lifer
       brain.root
     end
 
-    def setting(name, collection: nil)
-      brain.setting name, collection: collection
+    def setting(*name, collection: nil)
+      brain.setting *name, collection: collection
     end
 
     def settings

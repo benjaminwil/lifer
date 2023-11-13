@@ -5,20 +5,19 @@ class Lifer::Config
     "%s/templates/config" % File.expand_path(File.dirname(__FILE__))
   DEFAULT_LAYOUT_FILE =
     "%s/templates/layout.html.erb" % File.expand_path(File.dirname(__FILE__))
-  DEFAULT_SETTINGS = {
-    default_entry_title: "Untitled Entry",
-    feed_builder: "atom",
-    feed_uri: "feed.xml",
-    host: "https://example.com",
-    layout_file: DEFAULT_LAYOUT_FILE,
-    language: "en",
-    output_directory: "_build",
-    site_default_author: "Admin",
-    site_title: "My Lifer Weblog",
-    site_subtitle: "A great weblog, lol...",
-    uri_strategy: "simple"
+  DEFAULT_IMPLICIT_SETTINGS = {
+    layout_file: DEFAULT_LAYOUT_FILE
   }
-  REGISTERED_SETTINGS = DEFAULT_SETTINGS.keys
+  DEFAULT_REGISTERED_SETTINGS = [
+    :author,
+    :description,
+    {entries: [:default_title]},
+    {feed: [:builder, :uri]},
+    :language,
+    :layout_file,
+    :title,
+    :uri_strategy
+  ]
 
   class << self
     def build(file:)
@@ -32,6 +31,7 @@ class Lifer::Config
     end
   end
 
+  attr_accessor :registered_settings
   attr_reader :file
 
   def collectionables
@@ -45,20 +45,25 @@ class Lifer::Config
   # @param  name [Symbol] The configuration setting.
   # @param  collection_name [Symbol] A collection name.
   # @return [String] The value of the best in-scope setting.
-  def setting(name, collection_name: nil)
-    collection_setting =
-      if collection_name && settings[collection_name]
-        settings[collection_name][name]
-      end
+  def setting(*name, collection_name: nil)
+    name_in_collection = name.dup.unshift(collection_name) if collection_name
 
-    [collection_setting, settings[name], DEFAULT_SETTINGS[name]].detect(&:itself)
+    candidates = [
+      settings.dig(*name),
+      default_settings.dig(*name),
+      DEFAULT_IMPLICIT_SETTINGS.dig(*name)
+    ]
+    candidates.unshift settings.dig(*name_in_collection) if name_in_collection
+
+    candidates.detect &:itself
   end
 
   def settings(settings_hash = raw)
     settings_hash.select { |setting, value|
       value = settings(value) if value.is_a?(Hash)
 
-      next unless REGISTERED_SETTINGS.include?(setting) || has_collection_settings?(setting)
+      next unless DEFAULT_REGISTERED_SETTINGS.include?(setting) ||
+        has_collection_settings?(setting)
 
       [setting, value]
     }.compact.to_h
@@ -68,6 +73,7 @@ class Lifer::Config
 
   def initialize(file:)
     @file = Pathname(file)
+    @registered_settings = DEFAULT_REGISTERED_SETTINGS.to_set
   end
 
   def collection_candidates
@@ -79,6 +85,10 @@ class Lifer::Config
       .select { |dir| !Lifer.ignoreable? dir }.map(&:to_sym).sort.reverse
   end
 
+  def default_settings
+    @default_settings ||=
+      Lifer::Utilities.symbolize_keys(YAML.load_file DEFAULT_CONFIG_FILE).to_h
+  end
 
   def has_collection_settings?(settings_key)
     confirmed_collections = collection_candidates & unregistered_settings.keys
@@ -97,6 +107,6 @@ class Lifer::Config
   end
 
   def unregistered_settings
-    raw.reject { |setting, _| REGISTERED_SETTINGS.include? setting }
+    raw.reject { |setting, _| DEFAULT_REGISTERED_SETTINGS.include? setting }
   end
 end

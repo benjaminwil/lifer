@@ -96,6 +96,25 @@ RSpec.describe Lifer::Config do
           expect(subject).to end_with "lib/lifer/templates/layout.html.erb"
         end
       end
+
+      context "when given a nested setting name" do
+        subject {
+          config.setting :some,
+            :double,
+            :nested,
+            collection_name: collection.name
+        }
+
+        it "finds the nested setting if available" do
+          raw_settings_hash.merge! some: {double: {nested: "setting-value"}}
+
+          expect(subject).to eq "setting-value"
+        end
+
+        it "returns nil if unavailable" do
+          expect(subject).to be_nil
+        end
+      end
     end
   end
 

@@ -1,4 +1,49 @@
-output_directory: _build
+# This file provides the default configuration settings for Lifer.
+
+title: My Lifer Weblog
+description: Just another Lifer weblog, lol...
+language: en
+author: Admin
+
+entries:
+  default_title: Untitled Entry
+
+feed:
+  builder: rss
+  uri: feed.xml
+
 uri_strategy: simple
-root:
-  uri_strategy: simple
+
+# You can optionally set a path to the layout file. If this setting is left
+# unset, Lifer will use its built-in, simple-but-usable layout file instead.
+#
+### layout_file: path/to/my_layout.html.erb
+
+# Collections
+#
+# In addition to the root collection configured above, your configuration file
+# can include any number of collections. Collections use the root collections
+# configuration by default, or they can have their own values.
+#
+### my_collection:
+###   title: My Collection
+###   description: A collection separate from the root collection.
+###   language: fr
+###   author: Benjamin
+###
+###   feed:
+###     builder: rss
+###     uri: feed.xml
+###
+###   uri_strategy: pretty
+###
+###   layout_file: path/to/my_other_layout.html.erb
+
+# Global settings
+#
+# These settings are special, and they're used for all of your collections and
+# cannot be set per collection.
+#
+global:
+  host: https://example.com
+  output_directory: _build
