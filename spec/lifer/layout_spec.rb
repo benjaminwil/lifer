@@ -29,6 +29,12 @@ RSpec.describe Lifer::Layout do
     end
 
     context "when assigning a template file" do
+      before do
+        allow(Lifer).to receive(:root).and_return(
+          support_file "root_with_entries"
+        )
+      end
+
       let(:template) {
         support_file(
           "root_with_entries/.config/layouts/layout_with_greeting.html.erb"

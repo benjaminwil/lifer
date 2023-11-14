@@ -30,8 +30,9 @@ Gem::Specification.new do |spec|
       .reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
   end
 
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.bindir = "bin"
+  spec.executables =
+    spec.files.grep(%r{\Abin/}) { |bin_file| File.basename(bin_file) }
   spec.require_paths = ["lib"]
 
   spec.add_dependency "kramdown", "~> 2.4"

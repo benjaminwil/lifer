@@ -20,6 +20,13 @@ class Lifer::Layout
 
   def initialize(entry:, template:)
     @entry = entry
-    @template = template.nil? ? DEFAULT : template
+    @template = template_file template
+  end
+
+  def template_file(template)
+    return DEFAULT if template.nil? || template == DEFAULT
+    return template if template.include?(Lifer.root)
+
+    [Lifer.root, template].join "/"
   end
 end

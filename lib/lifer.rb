@@ -24,8 +24,8 @@ module Lifer
   ] | IGNORE_DIRECTORIES.map { |d| "^(#{d})" }
 
   class << self
-    def brain
-      @@brain ||= Lifer::Brain.init(root: Dir.pwd)
+    def brain(root: Dir.pwd)
+      @@brain ||= Lifer::Brain.init(root: root)
     end
 
     def build!

@@ -1,58 +1,54 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::HTML do
-  let(:directory) { temp_root support_file("root_with_entries") }
+  let(:root) { temp_root support_file("root_with_entries") }
 
   before do
-    allow(Lifer)
-      .to receive(:brain)
-      .and_return(Lifer::Brain.init(root: directory))
+    Lifer.brain root: root
   end
 
   describe ".execute" do
-    subject { described_class.execute(root: directory) }
+    subject { described_class.execute(root: root) }
 
     it "generates HTML for each entry" do
-      entry_count = Dir.glob("#{directory}/**/*.md").count
+      entry_count = Dir.glob("#{root}/**/*.md").count
 
       expect { subject }
-        .to change { Dir.glob("#{directory}/_build/**/*.html").count }
+        .to change { Dir.glob("#{root}/_build/**/*.html").count }
         .from(0)
         .to(entry_count)
     end
 
     it "generates HTML in the correct subdirectories" do
-      entry_count = Dir.glob("#{directory}/subdirectory_one/**/*.md").count
+      entry_count = Dir.glob("#{root}/subdirectory_one/**/*.md").count
 
       expect { subject }
         .to change {
-          Dir.glob("#{directory}/_build/subdirectory_one/**/*.html").count
+          Dir.glob("#{root}/_build/subdirectory_one/**/*.html").count
         }
         .from(0)
         .to(entry_count)
     end
 
     context "when a custom layout is configured in the root settings" do
-      let(:config) { Lifer::Config.build file: config_file }
-      let(:config_file) {
-        support_file "root_with_entries/.config/custom-root-layout-lifer.yaml"
+      let(:config) {
+        Lifer::Config.build(
+          file: support_file(
+            "root_with_entries/.config/custom-root-layout-lifer.yaml"
+          )
+        )
       }
       let(:layout_file) {
-        support_file File.join "root_with_entries",
-          ".config",
-          "layouts",
-          "layout_with_greeting.html.erb"
+        File.join root, ".config/layouts/layout_with_greeting.html.erb"
       }
       let(:collection_entry_file) {
         File.read File.join(
-          directory,
-          "_build",
-          "subdirectory_one",
-          "entry_in_subdirectory.html"
+          root,
+          "_build/subdirectory_one/entry_in_subdirectory.html"
         )
       }
       let(:root_collection_entry_file) {
-        File.read File.join(directory, "_build", "tiny_entry.html")
+        File.read File.join(root, "_build/tiny_entry.html")
       }
 
       it "builds using the correct layout" do
@@ -69,10 +65,8 @@ RSpec.describe Lifer::Builder::HTML do
 
       context "when a custom layout is configured for a collection" do
         let(:collection_layout_file) {
-          support_file File.join "root_with_entries",
-            ".config",
-            "layouts",
-            "layout_for_subdirectory_one_collection.html.erb"
+          File.join root,
+            ".config/layouts/layout_for_subdirectory_one_collection.html.erb"
         }
 
         it "builds using all the correct layouts" do
