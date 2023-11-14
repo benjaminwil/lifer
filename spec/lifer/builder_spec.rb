@@ -7,7 +7,7 @@ RSpec.describe Lifer::Builder do
     subject { described_class.all }
 
     it "returns all builders by name" do
-      expect(subject).to contain_exactly :html, :rss
+      expect(subject).to contain_exactly :simple_html_from_erb, :rss
     end
   end
 
@@ -30,7 +30,7 @@ RSpec.describe Lifer::Builder do
     it "builds only the builders specified in the list of builders" do
       subject
 
-      expect(Lifer::Builder::HTML)
+      expect(Lifer::Builder::SimpleHTMLFromERB)
         .not_to have_received(:execute).with(root: root)
 
       expect(Lifer::Builder::RSS).to have_received(:execute).with(root: root)
@@ -41,9 +41,9 @@ RSpec.describe Lifer::Builder do
     subject { described_class.find name }
 
     context "when a builder with the given name exists" do
-      let(:name) { :html }
+      let(:name) { :simple_html_from_erb }
 
-      it { is_expected.to eq Lifer::Builder::HTML }
+      it { is_expected.to eq Lifer::Builder::SimpleHTMLFromERB }
     end
 
     context "when a builder with the given name does not exist" do

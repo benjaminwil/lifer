@@ -7,6 +7,8 @@ require "rss"
 class Lifer::Builder::RSS < Lifer::Builder
   DEFAULT_FEED_FILENAME = "feed.xml"
 
+  self.name = :rss
+
   class << self
     def execute(root:)
       Dir.chdir Lifer.output_directory do

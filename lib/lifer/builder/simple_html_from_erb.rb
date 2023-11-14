@@ -1,6 +1,8 @@
 require "fileutils"
 
-class Lifer::Builder::HTML < Lifer::Builder
+class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
+  self.name = :simple_html_from_erb
+
   class << self
     def execute(root:)
       Dir.chdir Lifer.output_directory do

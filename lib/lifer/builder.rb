@@ -1,5 +1,7 @@
 class Lifer::Builder
   class << self
+    attr_accessor :name
+
     def all
       descendants.map(&:name)
     end
@@ -17,17 +19,15 @@ class Lifer::Builder
       result
     end
 
-    def name
-      super.split("::").last.downcase.to_sym
-    end
-
     private
 
     def descendants
       ObjectSpace.each_object(Class).select { |klass| klass < self }
     end
   end
+
+  self.name = :builder
 end
 
-require_relative "builder/html"
 require_relative "builder/rss"
+require_relative "builder/simple_html_from_erb"

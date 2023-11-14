@@ -46,7 +46,7 @@ uri_strategy: simple
 #
 global:
   build:
-    - html
+    - simple_html_from_erb
     - rss
   host: https://example.com
   output_directory: _build
