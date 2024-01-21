@@ -53,6 +53,7 @@ class Lifer::Builder::RSS < Lifer::Builder
       rss_feed_item.title = lifer_entry.title
       rss_feed_item.summary = lifer_entry.summary
       rss_feed_item.updated = Time.now.to_s
+      rss_feed_item.content_encoded = lifer_entry.to_html
     end
   end
 

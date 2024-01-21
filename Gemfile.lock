@@ -17,6 +17,13 @@ GEM
       reline (>= 0.3.0)
     kramdown (2.4.0)
       rexml
+    nokogiri (1.16.0-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.0-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.0-x86_64-linux)
+      racc (~> 1.4)
+    racc (1.7.3)
     rake (13.0.6)
     reline (0.3.5)
       io-console (~> 0.5)
@@ -46,6 +53,7 @@ PLATFORMS
 DEPENDENCIES
   debug
   lifer!
+  nokogiri
   rake (~> 13.0)
   rspec (~> 3.0)
 

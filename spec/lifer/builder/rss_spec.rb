@@ -1,3 +1,5 @@
+require "nokogiri"
+
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::RSS do
@@ -12,11 +14,59 @@ RSpec.describe Lifer::Builder::RSS do
   describe ".execute" do
     subject { described_class.execute root: directory }
 
-    it "generates a single Atom feed" do
+    it "generates a single RSS feed" do
       expect { subject }
         .to change { Dir.glob("#{directory}/_build/**/feed.xml").count }
         .from(0)
         .to(1)
+    end
+
+    it "generates the correct amount of feed items" do
+      article_count = Dir.glob("#{directory}/*.md").count
+
+      subject
+
+      generated_feed =
+        File.open(Dir.glob("#{directory}/_build/**/feed.xml").first) {
+          Nokogiri::XML _1
+        }
+      feed_items = generated_feed.xpath "//item"
+
+      expect(feed_items.count).to eq article_count
+    end
+
+    it "generates parseable article metadata correctly" do
+      subject
+
+      generated_feed =
+        File.open(Dir.glob("#{directory}/_build/**/feed.xml").first) {
+          Nokogiri::XML _1
+        }
+      entry = generated_feed.xpath("//item").css("link")
+        .detect { _1.text == "https://example.com/tiny_entry.html" }
+        .parent
+
+      expect(text_from entry, :title).to eq "Untitled Entry"
+      expect(text_from entry, :description).to eq "A testable entry."
+      expect(text_from entry, :content).to fuzzy_match <<~CONTENT
+        <h1 id="tiny">Tiny</h1>
+        <p>A testable entry.</p>
+      CONTENT
+
+      expect { DateTime.parse text_from(entry, :pubDate) }.not_to raise_error
+      expect { DateTime.parse text_from(entry, :date) }.not_to raise_error
+    end
+
+    it "properly escapes HTML nodes in the article contents" do
+      subject
+
+      feed_contents =
+        File.read Dir.glob("#{directory}/_build/**/feed.xml").first
+
+      expect(feed_contents).to include "<content:encoded>" \
+        "&lt;h1 id=&quot;tiny&quot;&gt;Tiny&lt;/h1&gt;\n\n" \
+        "&lt;p&gt;A testable entry.&lt;/p&gt;\n" \
+        "</content:encoded>"
     end
 
     context "when many collections are configured" do
@@ -47,5 +97,14 @@ RSpec.describe Lifer::Builder::RSS do
     subject { described_class.name }
 
     it { is_expected.to eq :rss }
+  end
+
+  def text_from(nokogiri_xml_element, node_name)
+    node_name = node_name.to_s == "content" ? "encoded" : node_name
+
+    nokogiri_xml_element
+      .children { |child| child.is_a? Nokogiri::XML::Element }
+      .detect { |child| child.name == node_name.to_s }
+      &.text
   end
 end
