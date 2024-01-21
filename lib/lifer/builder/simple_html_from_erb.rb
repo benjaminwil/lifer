@@ -1,6 +1,8 @@
 require "fileutils"
 
 class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
+  require_relative "simple_html_from_erb/layout"
+
   self.name = :simple_html_from_erb
 
   class << self
@@ -37,7 +39,7 @@ class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
   def generate_output_file_for(entry, current_collection:)
     File.open(uri_strategy(current_collection).output_file(entry), "w") { |file|
       file.write(
-        Lifer::Layout.build(
+        Lifer::Builder::SimpleHTMLFromERB::Layout.build(
           entry: entry,
           template: current_collection.setting(:layout_file)
         )
