@@ -28,6 +28,10 @@ module Lifer
       brain.collections
     end
 
+    def gem_root
+      File.dirname __dir__
+    end
+
     def ignoreable?(directory_or_file)
       directory_or_file.match?(/#{IGNORE_PATTERNS.join("|")}/)
     end
