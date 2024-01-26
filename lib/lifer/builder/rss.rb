@@ -1,8 +1,9 @@
 require "rss"
 
-# Link to RSS 2.0 specification with RSSBoard editorial corrections:
+# Builds a simple RSS 2.0[1] feed using the Ruby standard library's RSS
+# features.
 #
-#   https://www.rssboard.org/rss-specification
+# [1]: https://www.rssboard.org/rss-specification
 #
 class Lifer::Builder::RSS < Lifer::Builder
   DEFAULT_FEED_FILENAME = "feed.xml"
