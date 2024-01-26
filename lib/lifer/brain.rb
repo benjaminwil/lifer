@@ -1,5 +1,7 @@
 require "fileutils"
 
+require_relative "config"
+
 class Lifer::Brain
   DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
 

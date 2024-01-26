@@ -61,6 +61,6 @@ end
 require_relative "lifer/brain"
 require_relative "lifer/builder"
 require_relative "lifer/collection"
-require_relative "lifer/config"
 require_relative "lifer/entry"
 require_relative "lifer/uri_strategy"
+
