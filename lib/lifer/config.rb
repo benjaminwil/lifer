@@ -142,6 +142,6 @@ class Lifer::Config
   end
 
   def unregistered_settings
-    raw.reject { |setting, _| DEFAULT_REGISTERED_SETTINGS.include? setting }
+    raw.reject { |setting, _| registered_settings.include? setting }
   end
 end
