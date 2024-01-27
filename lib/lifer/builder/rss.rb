@@ -6,9 +6,8 @@ require "rss"
 # [1]: https://www.rssboard.org/rss-specification
 #
 class Lifer::Builder::RSS < Lifer::Builder
-  DEFAULT_FEED_FILENAME = "feed.xml"
-
   self.name = :rss
+  self.settings = [:rss]
 
   class << self
     def execute(root:)
@@ -20,16 +19,12 @@ class Lifer::Builder::RSS < Lifer::Builder
 
   def execute
     collections_with_feeds.each do |collection|
-      new_feed =
-        rss_feed_for(collection) do |current_feed|
-          collection.entries.each { |entry| rss_entry current_feed, entry }
-        end
-
-      output_filename =
-        File.join Dir.pwd, Lifer.setting(:feed, :uri, collection: collection)
-
-      File.open output_filename, "w" do |file|
-        file.puts new_feed.to_feed
+      File.open output_filename(collection), "w" do |file|
+        file.puts(
+          rss_feed_for(collection) do |current_feed|
+            collection.entries.each { |entry| rss_entry current_feed, entry }
+          end.to_feed
+        )
       end
     end
   end
@@ -40,8 +35,16 @@ class Lifer::Builder::RSS < Lifer::Builder
 
   def initialize(root:)
     @collections_with_feeds =
-      Lifer.collections.select { |collection| collection.setting(:feed, :uri) }
+      Lifer.collections.select { |collection| collection.setting :rss }
     @root = root
+  end
+
+  def output_filename(collection)
+    case collection.setting(:rss)
+    when TrueClass then File.join(Dir.pwd, "#{collection.name}.xml")
+    else
+      File.join Dir.pwd, collection.setting(:rss)
+    end
   end
 
   def rss_entry(rss_feed, lifer_entry)
@@ -72,7 +75,7 @@ class Lifer::Builder::RSS < Lifer::Builder
 
       feed.channel.link = "%s/%s" % [
         Lifer.setting(:global, :host),
-        Lifer.setting(:feed, :uri, collection: collection)
+        Lifer.setting(:rss, collection: collection)
       ]
 
       feed.channel.managingEditor =

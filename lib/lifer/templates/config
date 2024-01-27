@@ -8,10 +8,7 @@ author: Admin
 entries:
   default_title: Untitled Entry
 
-feed:
-  builder: rss
-  uri: feed.xml
-
+rss: false
 uri_strategy: simple
 
 # You can optionally set a path to the layout file. If this setting is left
@@ -31,10 +28,7 @@ uri_strategy: simple
 ###   language: fr
 ###   author: Benjamin
 ###
-###   feed:
-###     builder: rss
-###     uri: feed.xml
-###
+###   rss: my-collection.xml
 ###   uri_strategy: pretty
 ###
 ###   layout_file: path/to/my_other_layout.html.erb

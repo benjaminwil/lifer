@@ -9,7 +9,7 @@
 #
 class Lifer::Builder
   class << self
-    attr_accessor :name
+    attr_accessor :name, :settings
 
     # Every builder class must have execute method. This is the entrypoint for
     # instantiating *and* executing any builder.
@@ -58,6 +58,21 @@ class Lifer::Builder
       ObjectSpace.each_object(Class).select { |klass| klass < self }
     end
 
+    # @private
+    # We use the `Class#inherited` hook to add functionality to our builder
+    # subclasses as they're being initialized. This makes them more ergonomic to
+    # configure.
+    #
+    # @param klass [Class] The superclass.
+    # @return [void]
+    def inherited(klass)
+      klass.prepend InitializeBuilder
+
+      klass.name ||= :unnamed_builder
+      klass.settings ||= []
+    end
+  end
+
   # Every builder class must have execute instance method. This is where the
   # core logic of the builder runs from after initialization.
   #
@@ -65,6 +80,14 @@ class Lifer::Builder
   #   method.
   def execute
     raise NotImplementedError
+  end
+
+  module InitializeBuilder
+    def initialize(...)
+      Lifer.register_settings(*self.class.settings) if self.class.settings.any?
+
+      super(...)
+    end
   end
 
   self.name = :builder

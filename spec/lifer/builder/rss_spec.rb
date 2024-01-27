@@ -3,12 +3,21 @@ require "nokogiri"
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::RSS do
+  let(:config) {
+    Lifer::Config.build file: support_file(
+      File.join "root_with_entries",
+        ".config",
+        "custom-config-with-root-rss-feed.yaml"
+    )
+  }
   let(:directory) { temp_root support_file("root_with_entries") }
 
   before do
     allow(Lifer)
       .to receive(:brain)
       .and_return(Lifer::Brain.init(root: directory))
+
+    allow(Lifer::Config).to receive(:build).and_return(config)
   end
 
   describe ".execute" do
@@ -22,6 +31,8 @@ RSpec.describe Lifer::Builder::RSS do
     end
 
     it "generates the correct amount of feed items" do
+      # We're excluding the entries in `subdirectory_one` here.
+      #
       article_count = Dir.glob("#{directory}/*.md").count
 
       subject
@@ -79,8 +90,6 @@ RSpec.describe Lifer::Builder::RSS do
       }
 
       it "generates more than one RSS feed" do
-        allow(Lifer::Config).to receive(:build).and_return(config)
-
         pattern = "#{directory}/_build/**/*.xml"
         expect { subject }
           .to change { Dir.glob(pattern).count }.from(0).to(2)
@@ -88,7 +97,7 @@ RSpec.describe Lifer::Builder::RSS do
         # As specified in the custom configuration file.
         #
         expect(Dir.glob(pattern).map { File.basename _1 })
-          .to contain_exactly "default.xml", "subdirectory_one.xml"
+          .to contain_exactly "default.xml", "subdirectory-one.xml"
       end
     end
   end

@@ -90,6 +90,30 @@ RSpec.describe Lifer do
     end
   end
 
+  describe ".register_settings" do
+    subject { described_class.register_settings *settings }
+
+    let(:brain) { instance_double Lifer::Brain, root: "haha" }
+    let(:config) { instance_double Lifer::Config }
+    let(:settings) { [something: [:something_else]] }
+
+    it "delegates to the config object" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+      allow(brain).to receive(:config).and_return(config)
+      allow(config)
+        .to receive(:register_settings)
+        .with({something: [:something_else]})
+        .and_return(true)
+
+      subject
+
+      expect(config)
+        .to have_received(:register_settings)
+        .with({something: [:something_else]})
+        .once
+    end
+  end
+
   describe ".root" do
     subject { described_class.root }
 

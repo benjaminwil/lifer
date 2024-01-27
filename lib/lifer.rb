@@ -44,6 +44,10 @@ module Lifer
       brain.output_directory
     end
 
+    def register_settings(*settings)
+      brain.config.register_settings(*settings)
+    end
+
     def root
       brain.root
     end
@@ -63,4 +67,3 @@ require_relative "lifer/builder"
 require_relative "lifer/collection"
 require_relative "lifer/entry"
 require_relative "lifer/uri_strategy"
-
