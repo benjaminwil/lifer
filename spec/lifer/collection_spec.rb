@@ -14,8 +14,8 @@ RSpec.describe Lifer::Collection do
     it "generates a collection" do
       expect(subject.name).to eq :my_collection
       expect(subject.entries).to include(
-        an_instance_of(Lifer::Entry),
-        an_instance_of(Lifer::Entry)
+        an_instance_of(Lifer::Entry::Markdown),
+        an_instance_of(Lifer::Entry::Markdown)
       )
     end
   end
@@ -25,8 +25,8 @@ RSpec.describe Lifer::Collection do
 
     it "creates entries from a directory" do
       expect(subject).to include(
-        an_instance_of(Lifer::Entry),
-        an_instance_of(Lifer::Entry)
+        an_instance_of(Lifer::Entry::Markdown),
+        an_instance_of(Lifer::Entry::Markdown)
       )
     end
   end

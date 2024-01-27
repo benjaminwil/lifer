@@ -8,7 +8,9 @@ RSpec.describe Lifer::Builder::SimpleHTMLFromERB::Layout do
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
     }
-    let(:entry) { Lifer::Entry.new file: file, collection: collection }
+    let(:entry) {
+      Lifer::Entry::Markdown.new file: file, collection: collection
+    }
     let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
     context "when not assigning a template file" do

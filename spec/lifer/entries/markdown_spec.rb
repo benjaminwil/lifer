@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Lifer::Entry do
+RSpec.describe Lifer::Entry::Markdown do
   let(:entry) { described_class.new file: file, collection: collection }
 
   let(:collection) {

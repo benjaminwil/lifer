@@ -17,7 +17,9 @@ RSpec.describe Lifer::URIStrategy::Simple do
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
     }
-    let(:entry) { Lifer::Entry.new(file: file, collection: collection) }
+    let(:entry) {
+      Lifer::Entry::Markdown.new file: file, collection: collection
+    }
 
     context "in the root directory" do
       let(:file) { Dir.glob("#{root}/**/tiny_entry.md").first }
