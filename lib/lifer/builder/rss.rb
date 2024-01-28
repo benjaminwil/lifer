@@ -22,7 +22,9 @@ class Lifer::Builder::RSS < Lifer::Builder
       File.open output_filename(collection), "w" do |file|
         file.puts(
           rss_feed_for(collection) do |current_feed|
-            collection.entries.each { |entry| rss_entry current_feed, entry }
+            collection.entries
+              .select { |entry| entry.feedable? }
+              .each { |entry| rss_entry current_feed, entry }
           end.to_feed
         )
       end

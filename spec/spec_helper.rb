@@ -6,6 +6,8 @@ require "debug"
 require "fileutils"
 require "tmpdir"
 
+require_relative "shared_examples/lifer_entry_subclass"
+
 module Lifer::FileHelpers
   def support_file(path_to_file)
     "%s/support/%s" % [File.dirname(__FILE__), path_to_file]

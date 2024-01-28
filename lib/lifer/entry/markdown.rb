@@ -13,27 +13,12 @@ require_relative "../utilities"
 # FIXME: As we add other types of entries, especially ones that use frontmatter,
 # it may make sense to pull some of these methods into a separate module.
 #
-class Lifer::Entry::Markdown
+class Lifer::Entry::Markdown < Lifer::Entry
   FILENAME_DATE_FORMAT = /^(\d{4}-\d{1,2}-\d{1,2})-/
   FRONTMATTER_REGEX = /^---\n(.*)---\n/m
   TRUNCATION_THRESHOLD = 120
 
-  attr_reader :file, :collection
-
-  # When a new Markdown entry is initialized we expect the file to already
-  # exist, and we expect to know which `Lifer::Collection` it belongs to.
-  #
-  # @param file [String] An absolute path to a file.
-  # @param collection [Lifer::Collection] A collection.
-  # @return [Lifer::Entry]
-  def initialize(file:, collection:)
-    if File.exist? file
-      @file = Pathname file
-      @collection = collection
-    else
-      raise StandardError, "file \"%s\" does not exist" % file
-    end
-  end
+  self.include_in_feeds = true
 
   # Given the entry's frontmatter, we should be able to get a list of authors.
   # We always prefer authors (as opposed to a singular author) because it makes
@@ -87,26 +72,6 @@ class Lifer::Entry::Markdown
     Lifer::Utilities.symbolize_keys(
       YAML.load(full_text[FRONTMATTER_REGEX, 1], permitted_classes: [Time])
     )
-  end
-
-  # The full text of the entry.
-  #
-  # @return [String]
-  def full_text
-    File.readlines(file).join if file
-  end
-
-  # Using the current Lifer configuration, we can calculate the expected
-  # permalink for the entry. This would be useful for indexes and feeds and so
-  # on.
-  #
-  # @return [String] A permalink to the current entry.
-  def permalink
-    File.join Lifer.setting(:global, :host),
-      Lifer::URIStrategy
-        .find_by_name(collection.setting :uri_strategy)
-        .new(root: Lifer.root)
-        .output_file(self)
   end
 
   # FIXME:

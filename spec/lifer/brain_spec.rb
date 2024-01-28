@@ -105,16 +105,17 @@ RSpec.describe Lifer::Brain do
 
       let(:root) { temp_root support_file("root_with_entries") }
 
-      let(:directory_entry_count) {
+      let(:directory_entries) {
         Dir
-          .glob("#{root}/**/*.md")
+          .glob("#{root}/**/*")
+          .reject { |entry| entry.include? "_build" }
           .select { |entry| File.file? entry }
-          .count
+          .select { |entry| Lifer::Entry.supported? entry }
       }
 
       it "lists all entries" do
         expect(subject).to be_an_instance_of Set
-        expect(subject.count).to eq directory_entry_count
+        expect(subject.count).to eq directory_entries.count
       end
     end
   end

@@ -4,7 +4,8 @@ class Lifer::URIStrategy::Pretty < Lifer::URIStrategy::Base
   end
 
   def output_file(entry)
-    basename = File.basename(entry.file, ".*")
+    basename = File.basename entry.file,
+      Lifer::Utilities.file_extension(entry.file)
 
     Pathname entry.file.to_s
       .gsub(/#{root}[\/]{0,1}/, "")

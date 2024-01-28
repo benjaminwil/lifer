@@ -1,6 +1,30 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Utilities do
+  let(:described_module) { described_class }
+
+  describe ".file_extension" do
+    subject { described_module.file_extension path }
+
+    context "when there is no extension" do
+      let(:path) { Pathname "no/extension" }
+
+      it { is_expected.to eq "" }
+    end
+
+    context "when the extension is simple" do
+      let(:path) { Pathname "a-normal/extension.html" }
+
+      it { is_expected.to eq ".html" }
+    end
+
+    context "when the extension is complex" do
+      let(:path) { Pathname "a-normal/extension.html.erb.haha" }
+
+      it { is_expected.to eq ".html.erb.haha" }
+    end
+  end
+
   describe ".symbolize_keys" do
     subject { described_class.symbolize_keys(hash) }
 

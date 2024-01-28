@@ -11,16 +11,17 @@ RSpec.describe Lifer::Builder::SimpleHTMLFromERB do
     subject { described_class.execute(root: root) }
 
     it "generates HTML for each entry" do
-      entry_count = Dir.glob("#{root}/**/*.md").count
+      entry_files = Dir.glob("#{root}/**/*.*")
+        .select { |entry| Lifer::Entry.supported? entry }
 
       expect { subject }
         .to change { Dir.glob("#{root}/_build/**/*.html").count }
         .from(0)
-        .to(entry_count)
+        .to(entry_files.count)
     end
 
     it "generates HTML in the correct subdirectories" do
-      entry_count = Dir.glob("#{root}/subdirectory_one/**/*.md").count
+      entry_count = Dir.glob("#{root}/subdirectory_one/**/*.*").count
 
       expect { subject }
         .to change {

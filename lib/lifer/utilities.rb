@@ -1,5 +1,9 @@
 module Lifer::Utilities
   class << self
+    def file_extension(path)
+      path.to_s.downcase.match(/(?<=.)\..*/).to_s
+    end
+
     def symbolize_keys(hash)
       symbolized_hash = {}
 

@@ -6,7 +6,13 @@ class Lifer::Builder::SimpleHTMLFromERB
 
     class << self
       def build(entry:, template: DEFAULT)
-        new(entry: entry, template: template).render { entry.to_html }
+        new(entry: entry, template: template).render {
+          if Lifer::Utilities.file_extension(entry.file).include? ".erb"
+            ERB.new(entry.to_html).result(binding)
+          else
+            entry.to_html
+          end
+        }
       end
     end
 
