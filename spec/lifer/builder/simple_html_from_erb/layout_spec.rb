@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Lifer::Builder::SimpleHTMLFromERB::Layout do
   describe ".build" do
-    subject { described_class.build entry: entry, template: template }
+    subject { described_class.build entry: entry }
 
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
@@ -14,8 +14,6 @@ RSpec.describe Lifer::Builder::SimpleHTMLFromERB::Layout do
     let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
     context "when not assigning a template file" do
-      let(:template) { nil }
-
       it "renders a valid HTML document using the default template" do
         expect(subject).to fuzzy_match <<~RESULT
           <html>
@@ -30,18 +28,18 @@ RSpec.describe Lifer::Builder::SimpleHTMLFromERB::Layout do
       end
     end
 
-    context "when assigning a template file" do
-      before do
-        allow(Lifer).to receive(:root).and_return(
-          support_file "root_with_entries"
-        )
-      end
-
-      let(:template) {
-        support_file(
-          "root_with_entries/.config/layouts/layout_with_greeting.html.erb"
+    context "when the collection has its own layout file" do
+      let(:config) {
+        Lifer::Config.build(
+          file: support_file(
+            "root_with_entries/.config/custom-root-layout-lifer.yaml"
+          )
         )
       }
+
+      before do
+        allow(Lifer::Config).to receive(:build).and_return(config)
+      end
 
       it "renders a valid HTML document using any other template" do
         expect(subject).to fuzzy_match <<~RESULT

@@ -38,6 +38,23 @@ RSpec.describe Lifer do
     end
   end
 
+  describe ".config_file" do
+    subject { described_class.config_file }
+
+    let(:brain) { instance_double Lifer::Brain }
+    let(:config) { instance_double Lifer::Config }
+
+    it "delegates to the config object" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+      allow(brain).to receive(:config).and_return(config)
+      allow(config).to receive(:file).once
+
+      subject
+
+      expect(config).to have_received(:file).once
+    end
+  end
+
   describe ".ignoreable?" do
     subject { described_class.ignoreable?(file) }
 

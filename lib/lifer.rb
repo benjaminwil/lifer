@@ -28,6 +28,14 @@ module Lifer
       brain.collections
     end
 
+    # Used to locate the configuration file being used by the current Lifer
+    # project.
+    #
+    # @return [Pathname] The path to the current Lifer config file.
+    def config_file
+      brain.config.file
+    end
+
     def gem_root
       File.dirname __dir__
     end

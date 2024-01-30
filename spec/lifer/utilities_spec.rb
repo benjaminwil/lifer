@@ -19,7 +19,7 @@ RSpec.describe Lifer::Utilities do
     end
 
     context "when the extension is complex" do
-      let(:path) { Pathname "a-normal/extension.html.erb.haha" }
+      let(:path) { Pathname "my-cool-website.com/r/extension.html.erb.haha" }
 
       it { is_expected.to eq ".html.erb.haha" }
     end

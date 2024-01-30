@@ -30,6 +30,20 @@ class Lifer::Collection
       }.map { |entry| Lifer::Entry.generate file: entry, collection: self }
   end
 
+  # To allow for flexible configuration, a layout file may be set by users to
+  # either an absolute path or a path relative to the configuration file's
+  # location. This method, though, always returns the absolute path.
+  #
+  # @return [String] The absolute path to the collection's layout file.
+  def layout_file
+    return setting :layout_file if setting(:layout_file).include?(Lifer.gem_root)
+    return setting :layout_file if setting(:layout_file).include?(Lifer.root)
+
+    config_directory = File.dirname Lifer.config_file
+
+    [config_directory, setting(:layout_file)].join "/"
+  end
+
   # Gets a Lifer setting, scoped to the current collection.
   #
   # @param *name [Array<Symbol>] A list of symbols that map to a nested Lifer

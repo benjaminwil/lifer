@@ -1,7 +1,12 @@
 module Lifer::Utilities
   class << self
+    # Given a path, figure out what the extension is. It supports
+    # multi-extensions like ".html.erb".
+    #
+    # @param path [Pathname, String] The path to a file.
+    # @return [String] The extension (i.e. ".html.erb").
     def file_extension(path)
-      path.to_s.downcase.match(/(?<=.)\..*/).to_s
+      File.basename(path.to_s.downcase).match(/(?<=.)\..*/).to_s
     end
 
     def symbolize_keys(hash)

@@ -1,11 +1,20 @@
 require "fileutils"
 
+# This builder makes HTML from ERB files. If the file isn't actually an ERB
+# file, that's probably okay, too. It can build HTML files from HTML files, and
+# HTML files from text files, even.
+#
 class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
   require_relative "simple_html_from_erb/layout"
 
   self.name = :simple_html_from_erb
 
   class << self
+    # Traverses and renders each entry for each collection in the configured
+    # output directory for the Lifer project.
+    #
+    # @param root [String] The Lifer root.
+    # @return [void]
     def execute(root:)
       Dir.chdir Lifer.output_directory do
         new(root: root).execute
@@ -13,11 +22,14 @@ class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
     end
   end
 
+  # Traverses and renders each entry for each collection.
+  #
+  # @return [void]
   def execute
     Lifer.collections.each do |collection|
       collection.entries.each do |entry|
-        generate_output_directories_for entry, current_collection: collection
-        generate_output_file_for entry, current_collection: collection
+        generate_output_directories_for entry
+        generate_output_file_for entry
       end
     end
   end
@@ -26,30 +38,47 @@ class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
 
   attr_reader :root
 
+  # @private
+  # @param root [String] The Lifer root.
+  # @return [void]
   def initialize(root:)
     @root = root
   end
 
-  def generate_output_directories_for(entry, current_collection:)
-    dirname =
-      Pathname File.dirname(uri_strategy(current_collection).output_file(entry))
+  # @private
+  # For the given entry, ensure all of the paths to the file exist so the file
+  # can be safely written to.
+  #
+  # @param entry [Lifer::Entry] An entry.
+  # @return [Array<String>] An array containing the directories that were just
+  #   created (or already existed).
+  def generate_output_directories_for(entry)
+    dirname = Pathname File.dirname(output_file entry)
     FileUtils.mkdir_p dirname unless Dir.exist?(dirname)
   end
 
-  def generate_output_file_for(entry, current_collection:)
-    File.open(uri_strategy(current_collection).output_file(entry), "w") { |file|
-      file.write(
-        Lifer::Builder::SimpleHTMLFromERB::Layout.build(
-          entry: entry,
-          template: current_collection.setting(:layout_file)
-        )
-      )
+  # @private
+  # For the given entry, generate the production entry.
+  #
+  # @param entry [Lifer::Entry] An entry.
+  # @return [Integer] The length of the written file. We should not care about
+  #   this return value.
+  def generate_output_file_for(entry)
+    File.open(output_file(entry), "w") { |file|
+      file.write(Layout.build entry: entry)
     }
   end
 
-  def uri_strategy(current_collection)
+  # @private
+  # Using the URI strategy configured for the entry's collection, generate a
+  # permalink (or output filename).
+  #
+  # @param entry [Lifer::Entry] The entry.
+  # @return [String] The permalink to the entry.
+  def output_file(entry)
     Lifer::URIStrategy
-      .find_by_name(current_collection.setting :uri_strategy)
+      .find_by_name(entry.collection.setting :uri_strategy)
       .new(root: root)
+      .output_file(entry)
   end
 end
