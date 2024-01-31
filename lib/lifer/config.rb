@@ -2,7 +2,7 @@ require_relative "utilities"
 
 class Lifer::Config
   GLOBAL_SETTINGS = [
-    {build: ["html", "rss"]},
+    :build,
     :host,
     :output_directory
   ]
