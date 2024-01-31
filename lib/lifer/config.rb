@@ -47,7 +47,7 @@ class Lifer::Config
   # Provides Lifer with a list of collections as interpreted by reading the
   # configuration YAML file. Collectionables are used to generate collections.
   #
-  # @return [void]
+  # @return [Array<Symbol>] A list of non-root collection names.
   def collectionables
     raw.keys.select { |setting| has_collection_settings? setting }
   end

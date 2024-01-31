@@ -25,6 +25,8 @@ class Lifer::Brain
   # Every Lifer build contains at least one collection. (That collection is
   # `:root`.)
   #
+  # @return [Array<Lifer::Collection] All the collections for the current Lifer
+  #   project.
   def collections
     @collections ||= generate_collections
   end
