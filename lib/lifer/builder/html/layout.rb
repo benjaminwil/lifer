@@ -1,6 +1,6 @@
 require "erb"
 
-class Lifer::Builder::SimpleHTMLFromERB
+class Lifer::Builder::HTML
   class Layout
     class << self
       # Build and render an entry.

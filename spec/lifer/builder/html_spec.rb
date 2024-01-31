@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Lifer::Builder::SimpleHTMLFromERB do
+RSpec.describe Lifer::Builder::HTML do
   let(:root) { temp_root support_file("root_with_entries") }
 
   before do
@@ -96,6 +96,6 @@ RSpec.describe Lifer::Builder::SimpleHTMLFromERB do
   describe ".name" do
     subject { described_class.name }
 
-    it { is_expected.to eq :simple_html_from_erb }
+    it { is_expected.to eq :html }
   end
 end

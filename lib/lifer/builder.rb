@@ -73,4 +73,4 @@ class Lifer::Builder
 end
 
 require_relative "builder/rss"
-require_relative "builder/simple_html_from_erb"
+require_relative "builder/html"

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Lifer::Builder::SimpleHTMLFromERB::Layout do
+RSpec.describe Lifer::Builder::HTML::Layout do
   describe ".build" do
     subject { described_class.build entry: entry }
 

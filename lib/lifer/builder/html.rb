@@ -1,13 +1,12 @@
 require "fileutils"
 
-# This builder makes HTML from ERB files. If the file isn't actually an ERB
-# file, that's probably okay, too. It can build HTML files from HTML files, and
-# HTML files from text files, even.
+# This builder makes HTML documents out of any entry type that responds to
+# `#to_html`.
 #
-class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
-  require_relative "simple_html_from_erb/layout"
+class Lifer::Builder::HTML < Lifer::Builder
+  require_relative "html/layout"
 
-  self.name = :simple_html_from_erb
+  self.name = :html
 
   class << self
     # Traverses and renders each entry for each collection in the configured
