@@ -88,7 +88,7 @@ class Lifer::Entry
   def permalink
     File.join Lifer.setting(:global, :host),
       Lifer::URIStrategy
-        .find_by_name(collection.setting :uri_strategy)
+        .find(collection.setting :uri_strategy)
         .new(root: Lifer.root)
         .output_file(self)
   end

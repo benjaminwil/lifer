@@ -70,6 +70,11 @@ module Lifer
   end
 end
 
+# `Lifer::Shared` contains modules that that may or may not be included on other
+# classes required below.
+#
+require_relative "lifer/shared"
+
 require_relative "lifer/brain"
 require_relative "lifer/builder"
 require_relative "lifer/collection"

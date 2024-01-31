@@ -1,7 +1,5 @@
-class Lifer::URIStrategy::Simple < Lifer::URIStrategy::Base
-  def name
-    "simple"
-  end
+class Lifer::URIStrategy::Simple < Lifer::URIStrategy
+  self.name = :simple
 
   def output_file(entry)
     basename = File.basename entry.file,

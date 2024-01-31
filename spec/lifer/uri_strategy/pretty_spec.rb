@@ -4,10 +4,10 @@ RSpec.describe Lifer::URIStrategy::Pretty do
   let(:root) { temp_root support_file("root_with_entries") }
   let(:uri_strategy) { described_class.new root: root }
 
-  describe "#name" do
-    subject { uri_strategy.name }
+  describe ".name" do
+    subject { described_class.name }
 
-    it { is_expected.to eq "pretty" }
+    it { is_expected.to eq :pretty }
   end
 
   describe "#output_file" do

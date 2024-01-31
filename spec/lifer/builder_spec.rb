@@ -51,7 +51,7 @@ RSpec.describe Lifer::Builder do
 
       it "raises an error" do
         expect { subject }
-          .to raise_error StandardError, "no builder with name \"doesntexist\""
+          .to raise_error StandardError, "no class with name \"doesntexist\""
       end
     end
   end

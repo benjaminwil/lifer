@@ -77,7 +77,7 @@ class Lifer::Builder::SimpleHTMLFromERB < Lifer::Builder
   # @return [String] The permalink to the entry.
   def output_file(entry)
     Lifer::URIStrategy
-      .find_by_name(entry.collection.setting :uri_strategy)
+      .find(entry.collection.setting :uri_strategy)
       .new(root: root)
       .output_file(entry)
   end

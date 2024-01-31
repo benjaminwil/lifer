@@ -1,7 +1,5 @@
-class Lifer::URIStrategy::Pretty < Lifer::URIStrategy::Base
-  def name
-    "pretty"
-  end
+class Lifer::URIStrategy::Pretty < Lifer::URIStrategy
+  self.name = :pretty
 
   def output_file(entry)
     basename = File.basename entry.file,

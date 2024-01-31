@@ -8,6 +8,8 @@
 # `#execute` instance method.)
 #
 class Lifer::Builder
+  include Lifer::Shared::FinderMethods
+
   class << self
     attr_accessor :name, :settings
 
@@ -19,13 +21,6 @@ class Lifer::Builder
     #   method.
     def execute(root:)
       raise NotImplementedError
-    end
-
-    # Get a list of all available builder subclasses.
-    #
-    # @return [Array<Class>] A list of all builder classes.
-    def all
-      descendants.map(&:name)
     end
 
     # Given a list of builder names, we execute every builder based on the
@@ -40,23 +35,7 @@ class Lifer::Builder
       end
     end
 
-    # A simple finder.
-    #
-    # @params name [string] The configured name of the builder you want to find.
-    # @return [Class] A builder class.
-    def find(name)
-      result = descendants.detect { |descendant| descendant.name == name.to_sym }
-
-      raise StandardError, "no builder with name \"%s\"" % name if result.nil?
-      result
-    end
-
     private
-
-    # @private
-    def descendants
-      ObjectSpace.each_object(Class).select { |klass| klass < self }
-    end
 
     # @private
     # We use the `Class#inherited` hook to add functionality to our builder
