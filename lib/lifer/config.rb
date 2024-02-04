@@ -6,7 +6,7 @@ class Lifer::Config
     :host,
     :output_directory
   ]
-  DEFAULT_CONFIG_FILE = "%s/lib/lifer/templates/config" % Lifer.gem_root
+  DEFAULT_CONFIG_FILE = "%s/lib/lifer/templates/config.yaml" % Lifer.gem_root
   DEFAULT_LAYOUT_FILE = "%s/lib/lifer/templates/layout.html.erb" % Lifer.gem_root
   DEFAULT_IMPLICIT_SETTINGS = {
     layout_file: DEFAULT_LAYOUT_FILE
