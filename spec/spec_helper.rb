@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require "lifer"
-
 require "debug"
-require "fileutils"
-require "tmpdir"
 
 require_relative "shared_examples"
 require_relative "support"
@@ -14,7 +10,10 @@ RSpec.configure do |config|
   config.add_formatter :documentation
 
   config.after(:each) do
-    lose_support_config
+    # Ensure that the special `@@brain` class variable is always null before
+    # each test run. This will avoid order-dependent test failures.
+    #
+    Lifer.class_variable_set "@@brain", nil
   end
 
   # If RSpec runs on somethign other than TTY, try to display colours.
@@ -30,5 +29,8 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  # Provide helper methods for initializing test Lifer projects without
+  # littering garbage files all over the developer's filesystem.
+  #
   config.include Support::LiferTestHelpers::Files
 end

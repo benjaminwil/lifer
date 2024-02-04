@@ -1,10 +1,14 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Collection do
+  before do
+    spec_lifer!
+  end
+
   let(:collection) {
     described_class.generate name: "name", directory: directory
   }
-  let(:directory) { support_file "root_with_entries/subdirectory_one" }
+  let(:directory) { "#{spec_lifer.root}/subdirectory_one" }
 
   describe ".generate" do
     subject {
@@ -39,20 +43,19 @@ RSpec.describe Lifer::Collection do
     context "when the setting is an absolute path" do
       context "containing the gem root" do
         before do
-          allow(Lifer).to receive(:gem_root).and_return("fake/gem_root")
+          allow(Lifer).to receive(:gem_root).and_return("/fake/gem_root")
           allow(Lifer)
             .to receive(:setting)
             .with(:layout_file, collection: collection)
-            .and_return("fake/gem_root")
+            .and_return("/fake/gem_root")
         end
 
-        it { is_expected.to eq "fake/gem_root" }
+        it { is_expected.to eq "/fake/gem_root" }
       end
 
       context "containing the Lifer root" do
         let(:absolute_path_to_layout_file) {
-          support_file "root_with_entries/.config/layouts/" \
-            "layout_with_greeting.html.erb"
+          "#{spec_lifer.root}/.config/layouts/layout_with_greeting.html.erb"
         }
 
         before do
@@ -67,20 +70,14 @@ RSpec.describe Lifer::Collection do
     end
 
     context "when the setting is a relative path" do
-      let(:relative_path_to_layout_file) {
-        support_file(
-          "root_with_entries/.config/layouts/layout_with_greeting.html.erb"
-        ).gsub(support_file("root_with_entries/.config/"), "")
-      }
       let(:absolute_path_to_layout_file) {
-        support_file "root_with_entries/.config/layouts/" \
-          "layout_with_greeting.html.erb"
+        "#{spec_lifer.root}/.config/layouts/layout_with_greeting.html.erb"
+      }
+      let(:relative_path_to_layout_file) {
+        absolute_path_to_layout_file.gsub("#{spec_lifer.root}/.config/", "")
       }
 
       before do
-        allow(Lifer).to receive(:config_file).and_return(
-          support_file "root_with_entries/.config/lifer.yaml"
-        )
         allow(Lifer)
           .to receive(:setting)
           .with(:layout_file, collection: collection)

@@ -1,10 +1,10 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Entry do
+  let(:collection) { nil }
+
   describe ".generate" do
     subject { described_class.generate file: file, collection: collection }
-
-    let(:collection) { nil }
 
     context "when the file doesn't exist" do
       let(:file) { "doesnt-exist" }

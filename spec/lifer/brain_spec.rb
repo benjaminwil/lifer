@@ -103,8 +103,6 @@ RSpec.describe Lifer::Brain do
         brain.build!
       end
 
-      let(:root) { temp_root support_file("root_with_entries") }
-
       let(:directory_entries) {
         Dir
           .glob("#{root}/**/*")

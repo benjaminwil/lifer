@@ -5,8 +5,8 @@ RSpec.describe Lifer::Builder::HTML::Layout do
     subject { described_class.build entry: entry }
 
     let(:collection) {
-      Lifer::Collection.generate name: "Collection",
-        directory: File.dirname(file)
+      Lifer::Collection.generate name: "subdirectory_one",
+        directory: "#{spec_lifer.root}/subdirectory_one"
     }
     let(:entry) {
       Lifer::Entry::Markdown.new file: file, collection: collection
@@ -14,6 +14,10 @@ RSpec.describe Lifer::Builder::HTML::Layout do
     let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
     context "when not assigning a template file" do
+      before do
+        spec_lifer!
+      end
+
       it "renders a valid HTML document using the default template" do
         expect(subject).to fuzzy_match <<~RESULT
           <html>
@@ -29,16 +33,9 @@ RSpec.describe Lifer::Builder::HTML::Layout do
     end
 
     context "when the collection has its own layout file" do
-      let(:config) {
-        Lifer::Config.build(
-          file: support_file(
-            "root_with_entries/.config/custom-root-layout-lifer.yaml"
-          )
-        )
-      }
-
       before do
-        allow(Lifer::Config).to receive(:build).and_return(config)
+        spec_lifer! config_file: "root_with_entries/.config/" \
+          "custom-root-layout-lifer.yaml"
       end
 
       it "renders a valid HTML document using any other template" do

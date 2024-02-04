@@ -3,13 +3,14 @@ require "fileutils"
 require_relative "config"
 
 class Lifer::Brain
+  DEFAULT_CONFIG_FILE_URI = ".config/lifer.yaml"
   DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
 
   attr_reader :root
 
   class << self
-    def init(root: Dir.pwd)
-      new(root: root)
+    def init(root: Dir.pwd, config_file: nil)
+      new(root: root, config_file: config_file)
     end
   end
 
@@ -57,8 +58,11 @@ class Lifer::Brain
 
   private
 
-  def initialize(root:)
+  attr_reader :config_file_location
+
+  def initialize(root:, config_file:)
     @root = root
+    @config_file_location = build_config_file_location(config_file)
   end
 
   def brainwash!
@@ -66,8 +70,10 @@ class Lifer::Brain
     FileUtils.mkdir_p output_directory
   end
 
-  def config_file_location
-    File.join(root, ".config", "lifer.yaml")
+  def build_config_file_location(path)
+    return File.join(root, DEFAULT_CONFIG_FILE_URI) if path.nil?
+
+    path.start_with?("/") ? path : File.join(root, path)
   end
 
   # FIXME:

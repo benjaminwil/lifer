@@ -3,29 +3,19 @@ require "nokogiri"
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::RSS do
-  let(:config) {
-    Lifer::Config.build file: support_file(
-      File.join "root_with_entries",
-        ".config",
-        "custom-config-with-root-rss-feed.yaml"
-    )
-  }
-  let(:directory) { temp_root support_file("root_with_entries") }
-
   before do
-    allow(Lifer)
-      .to receive(:brain)
-      .and_return(Lifer::Brain.init(root: directory))
-
-    allow(Lifer::Config).to receive(:build).and_return(config)
+    spec_lifer! config_file: "root_with_entries/.config/" \
+      "custom-config-with-root-rss-feed.yaml"
   end
 
   describe ".execute" do
-    subject { described_class.execute root: directory }
+    subject { described_class.execute root: spec_lifer.root }
 
     it "generates a single RSS feed" do
       expect { subject }
-        .to change { Dir.glob("#{directory}/_build/**/feed.xml").count }
+        .to change {
+          Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").count
+        }
         .from(0)
         .to(1)
     end
@@ -33,14 +23,14 @@ RSpec.describe Lifer::Builder::RSS do
     it "generates the correct amount of feed items" do
       # We're excluding the entries in `subdirectory_one` here.
       #
-      article_count = Dir.glob("#{directory}/*.md").count
+      article_count = Dir.glob("#{spec_lifer.root}/*.md").count
 
       subject
 
       generated_feed =
-        File.open(Dir.glob("#{directory}/_build/**/feed.xml").first) {
-          Nokogiri::XML _1
-        }
+        File.open(
+          Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").first
+        ) { Nokogiri::XML _1 }
       feed_items = generated_feed.xpath "//item"
 
       expect(feed_items.count).to eq article_count
@@ -50,9 +40,9 @@ RSpec.describe Lifer::Builder::RSS do
       subject
 
       generated_feed =
-        File.open(Dir.glob("#{directory}/_build/**/feed.xml").first) {
-          Nokogiri::XML _1
-        }
+        File.open(
+          Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").first
+        ) { Nokogiri::XML _1 }
       entry = generated_feed.xpath("//item").css("link")
         .detect { _1.text == "https://example.com/tiny_entry.html" }
         .parent
@@ -72,7 +62,7 @@ RSpec.describe Lifer::Builder::RSS do
       subject
 
       feed_contents =
-        File.read Dir.glob("#{directory}/_build/**/feed.xml").first
+        File.read Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").first
 
       expect(feed_contents).to include "<content:encoded>" \
         "&lt;h1 id=&quot;tiny&quot;&gt;Tiny&lt;/h1&gt;\n\n" \
@@ -81,16 +71,13 @@ RSpec.describe Lifer::Builder::RSS do
     end
 
     context "when many collections are configured" do
-      let(:config) {
-        Lifer::Config.build file: support_file(
-          File.join "root_with_entries",
-            ".config",
-            "custom-config-with-multiple-rss-feeds.yaml"
-        )
-      }
+      before do
+        spec_lifer! config_file: "root_with_entries/.config/" \
+          "custom-config-with-multiple-rss-feeds.yaml"
+      end
 
       it "generates more than one RSS feed" do
-        pattern = "#{directory}/_build/**/*.xml"
+        pattern = "#{spec_lifer.output_directory}/**/*.xml"
         expect { subject }
           .to change { Dir.glob(pattern).count }.from(0).to(2)
 
