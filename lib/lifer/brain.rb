@@ -2,6 +2,10 @@ require "fileutils"
 
 require_relative "config"
 
+# The brain is the object that keeps track of all essential information about
+# the current Lifer project. Usually this information will be consumed via the
+# `Lifer` module methods.
+#
 class Lifer::Brain
   DEFAULT_CONFIG_FILE_URI = ".config/lifer.yaml"
   DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
@@ -9,11 +13,24 @@ class Lifer::Brain
   attr_reader :root
 
   class << self
+    # The preferred initializer for the single `Lifer::Brain` object that
+    # represents the user's Lifer project.
+    #
+    # @param root [String] The root Lifer project directory.
+    # @param config_file [String] A path to the correct Lifer config file. If
+    #   left empty, the brain uses the one at the default path or the one
+    #   bundled with the gem.
+    # @return [Lifer::Brain] The brain object for the current Lifer project.
     def init(root: Dir.pwd, config_file: nil)
       new(root: root, config_file: config_file)
     end
   end
 
+  # Destroy any existing build output and then build the Lifer project with all
+  # configured `Lifer::Builder`s.
+  #
+  # @return [void] This builds the Lifer site to the configured output
+  #   directory.
   def build!
     brainwash!
 
@@ -82,6 +99,7 @@ class Lifer::Brain
   #
   #     subdirectory_one/sub_subdirectory_one
   #
+  # @return [Set<Lifer::Collection>]
   def generate_collections
     config.collectionables
       .map { |collection_name| [collection_name, "#{root}/#{collection_name}"] }

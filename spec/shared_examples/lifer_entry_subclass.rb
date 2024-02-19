@@ -31,7 +31,6 @@ RSpec.shared_examples "Lifer::Entry subclass" do
   describe "#to_html" do
     subject { entry.to_html }
 
-
     let(:entry) { described_class.new file: file, collection: collection }
     let(:file) { support_file "root_with_entries/tiny_entry.md" }
     let(:collection) {
