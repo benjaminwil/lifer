@@ -59,6 +59,20 @@ RSpec.describe Lifer do
     end
   end
 
+  describe ".entry_manifest" do
+    subject { described_class.entry_manifest }
+
+    let(:brain) { instance_double Lifer::Brain, entry_manifest: [] }
+
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+
+      subject
+
+      expect(brain).to have_received(:entry_manifest).once
+    end
+  end
+
   describe ".ignoreable?" do
     subject { described_class.ignoreable?(file) }
 

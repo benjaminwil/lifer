@@ -44,3 +44,5 @@ global:
     - rss
   host: https://example.com
   output_directory: _build
+  pseudo_collections:
+    - lifer/collection/pseudo/all_markdown

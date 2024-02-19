@@ -42,6 +42,13 @@ RSpec.describe Lifer::Entry do
           .with(file: file, collection: nil)
           .once
       end
+
+      it "adds the entry to the entry manifest" do
+        expect { subject }
+          .to change { described_class.manifest }
+          .from([])
+          .to([instance_of(Lifer::Entry::HTML)])
+      end
     end
 
     context "when the file uses a supported Markdown extension" do
@@ -60,6 +67,31 @@ RSpec.describe Lifer::Entry do
           .with(file: file, collection: nil)
           .once
       end
+
+      it "adds the entry to the entry manifest" do
+        expect { subject }
+          .to change { described_class.manifest }
+          .from([])
+          .to([instance_of(Lifer::Entry::Markdown)])
+      end
+    end
+  end
+
+  describe ".manifest" do
+    subject { described_class.manifest }
+
+    it "returns a list of all currently-existing entries" do
+      expect {
+        spec_lifer!
+
+        described_class.generate(
+          file: support_file("root_with_entries/tiny_entry.md"),
+          collection: "whatever"
+        )
+      }
+        .to change { described_class.manifest }
+        .from([])
+        .to([instance_of(Lifer::Entry::Markdown)])
     end
   end
 

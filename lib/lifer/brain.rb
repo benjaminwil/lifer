@@ -22,7 +22,25 @@ class Lifer::Brain
     #   bundled with the gem.
     # @return [Lifer::Brain] The brain object for the current Lifer project.
     def init(root: Dir.pwd, config_file: nil)
-      new(root: root, config_file: config_file)
+      new(root: root, config_file: config_file).tap { |brain|
+        require_user_provided_ruby_files! brain
+      }
+    end
+
+    private
+
+    # @private
+    # The user can bring their own Ruby files to be read by Lifer. This ensures
+    # they are loaded before the build starts.
+    #
+    # @param [Lifer::Brain]
+    # @return [void]
+    def require_user_provided_ruby_files!(brain)
+      return if brain.root.include? Lifer.gem_root
+
+      Dir.glob("#{brain.root}/**/*.rb", File::FNM_DOTMATCH).each do |rb_file|
+        load rb_file
+      end
     end
   end
 
@@ -37,8 +55,14 @@ class Lifer::Brain
     Lifer::Builder.build! *setting(:global, :build), root: root
   end
 
+  # Returns all collections and pseudo-collections within the Lifer root.
+  #
   # Collections only exist if they're explicitly configured in a configuration
   # file and they match a subdirectory within the root.
+  #
+  # Pseudo-collections, on the other hand, reorganize entries from literal
+  # collections. For example, a user could collect all of their entries that were
+  # authored by Harry B. Cutler.
   #
   # Every Lifer build contains at least one collection. (That collection is
   # `:root`.)
@@ -46,11 +70,19 @@ class Lifer::Brain
   # @return [Array<Lifer::Collection] All the collections for the current Lifer
   #   project.
   def collections
-    @collections ||= generate_collections
+    @collections ||= generate_collections + generate_pseudo_collections
   end
 
   def config
     @config ||= Lifer::Config.build file: config_file_location
+  end
+
+  # Returns all entries that have been added to the manifest. If all is working
+  # as intended, this should be every entry ever generated.
+  #
+  # @return [Set<Lifer::Entry>] All entries that currently exist.
+  def entry_manifest
+    @entry_manifest ||= Set.new
   end
 
   def manifest
@@ -108,5 +140,21 @@ class Lifer::Brain
       .map { |collection_name, directory|
         Lifer::Collection.generate name: collection_name, directory: directory
       }
+      .to_set
+  end
+
+  # @private
+  # Requires user-provided pseudo collection classes (classes that subclass
+  # `Lifer::Collection::Pseudo` and implement an `#entries` method) so that
+  # users can bring their own pseudo collections.
+  #
+  # @return [Set<Lifer::Collection::Pseudo>]
+  def generate_pseudo_collections
+    return [] if config.file.to_s.include? Lifer.gem_root
+
+    config.setting(:global, :pseudo_collections).map { |pseudo_collection_name|
+      klass = Lifer::Utilities.classify(pseudo_collection_name)
+      klass.generate
+    }.to_set
   end
 end

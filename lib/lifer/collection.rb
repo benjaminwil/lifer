@@ -71,3 +71,5 @@ class Lifer::Collection
       .select { |candidate| Lifer::Entry.supported? candidate }
   end
 end
+
+require_relative "collection/pseudo"

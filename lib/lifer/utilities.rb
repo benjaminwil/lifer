@@ -1,5 +1,27 @@
 module Lifer::Utilities
   class << self
+    # Given a string path, classify it into a namespaced Ruby constant. If the
+    # constant does not exist, we raise a helpful error. For example:
+    #
+    #    Given:  my/class_name/that_exists
+    #    Result: My::ClassName::ThatExists
+    #
+    # FIXME:
+    # Note that this method is currently a bit naive. It cannot politely
+    # transform classes with many caps in them (i.e. `URIStrategy`) without
+    # being given an exact match (`URIStrategy`) or a broken-looking one
+    # (`u_r_i_strategy`).
+    #
+    # @param string_constant [String] A string that maps to a Ruby constant.
+    # @return [Class, Module]
+    # @raise [RuntimeError]
+    def classify(string_constant)
+      Object.const_get camelize(string_constant)
+    rescue NameError => exception
+      raise "could not find constant for path \"#{string_constant}\" " \
+        "(#{camelize(string_constant)})"
+    end
+
     # Given a path, figure out what the extension is. It supports
     # multi-extensions like ".html.erb".
     #
@@ -20,6 +42,18 @@ module Lifer::Utilities
       end
 
       symbolized_hash
+    end
+
+    private
+
+    def camelize(string)
+      string = string.to_s
+      string
+        .gsub("/", "::")
+        .split("::")
+        .map(&:capitalize)
+        .map { |mod| mod.split("_").map(&:capitalize).join }
+        .join("::")
     end
   end
 end

@@ -4,7 +4,8 @@ class Lifer::Config
   GLOBAL_SETTINGS = [
     :build,
     :host,
-    :output_directory
+    :output_directory,
+    :pseudo_collections
   ]
   DEFAULT_CONFIG_FILE = "%s/lib/lifer/templates/config.yaml" % Lifer.gem_root
   DEFAULT_LAYOUT_FILE = "%s/lib/lifer/templates/layout.html.erb" % Lifer.gem_root

@@ -1,0 +1,6 @@
+subdirectory_one:
+  uri_strategy: pretty
+
+global:
+  pseudo_collections:
+    - movie_reviews

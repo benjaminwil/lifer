@@ -18,12 +18,27 @@ class Lifer::Entry
     def generate(file:, collection:)
       error!(file) unless File.exist?(file)
 
-      case entry_type(file)
-      when :html
-        Lifer::Entry::HTML.new(file: file, collection: collection)
-      when :markdown
-        Lifer::Entry::Markdown.new(file: file, collection: collection)
-      end
+      new_entry =
+        case entry_type(file)
+        when :html
+          Lifer::Entry::HTML.new(file: file, collection: collection)
+        when :markdown
+          Lifer::Entry::Markdown.new(file: file, collection: collection)
+        end
+
+      Lifer.entry_manifest << new_entry if new_entry
+
+      new_entry
+    end
+
+    # Whenever an entry is generated it should be added to the entry manifest.
+    # This lets us get a list of all generated entries.
+    #
+    # @return [Array<Lifer::Entry>] A list of all entries that currently exist.
+    def manifest
+      return Lifer.entry_manifest if self == Lifer::Entry
+
+      Lifer.entry_manifest.select { |entry| entry.class == self }
     end
 
     # Checks whether the given filename is supported entry type (using only its

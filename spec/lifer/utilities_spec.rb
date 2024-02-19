@@ -3,6 +3,27 @@ require "spec_helper"
 RSpec.describe Lifer::Utilities do
   let(:described_module) { described_class }
 
+  describe ".classify" do
+    subject { described_module.classify string }
+
+    context "when the given string matches an existing constant" do
+      let(:string) { "lifer/entry/markdown" }
+
+      it { is_expected.to eq Lifer::Entry::Markdown }
+    end
+
+    context "when the given string does not match a constant" do
+      let(:string) { "lifer/collection/pseudo/doesnt_exist" }
+
+      it "raises a helpful error" do
+        expect { subject }.to raise_error RuntimeError,
+          "could not find constant for path " \
+            "\"lifer/collection/pseudo/doesnt_exist\" " \
+            "(Lifer::Collection::Pseudo::DoesntExist)"
+      end
+    end
+  end
+
   describe ".file_extension" do
     subject { described_module.file_extension path }
 

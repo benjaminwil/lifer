@@ -7,6 +7,35 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
   end
 
+  describe ".manifest" do
+    subject { described_class.manifest }
+
+    it "returns a list of all currently-existing entries" do
+      expect {
+        spec_lifer!
+
+        # This test sets up one entry of each supported type in order to work as
+        # a shared example for any `Lifer::Entry` subclass.
+        #
+        Lifer::Entry.generate(
+          file: support_file("root_with_entries/tiny_entry.md"),
+          collection: "whatever"
+        )
+
+        Lifer::Entry.generate(
+          file: support_file(
+            "root_with_entries/subdirectory_one/" \
+              "page_entry_in_subdirectory.html.erb"
+          ),
+          collection: "whatever"
+        )
+      }
+        .to change { described_class.manifest }
+        .from([])
+        .to([instance_of(described_class)])
+    end
+  end
+
   describe "#full_text" do
     subject { entry.full_text }
 

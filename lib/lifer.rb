@@ -36,6 +36,10 @@ module Lifer
       brain.config.file
     end
 
+    def entry_manifest
+      brain.entry_manifest
+    end
+
     def gem_root
       File.dirname __dir__
     end
