@@ -49,7 +49,7 @@ RSpec.describe Lifer::Collection do
           allow(Lifer).to receive(:gem_root).and_return("/fake/gem_root")
           allow(Lifer)
             .to receive(:setting)
-            .with(:layout_file, collection: collection)
+            .with(:layout_file, collection: collection, strict: false)
             .and_return("/fake/gem_root")
         end
 
@@ -64,7 +64,7 @@ RSpec.describe Lifer::Collection do
         before do
           allow(Lifer)
             .to receive(:setting)
-            .with(:layout_file, collection: collection)
+            .with(:layout_file, collection: collection, strict: false)
             .and_return(absolute_path_to_layout_file)
         end
 
@@ -83,7 +83,7 @@ RSpec.describe Lifer::Collection do
       before do
         allow(Lifer)
           .to receive(:setting)
-          .with(:layout_file, collection: collection)
+          .with(:layout_file, collection: collection, strict: false)
           .and_return(relative_path_to_layout_file)
       end
 
@@ -91,17 +91,35 @@ RSpec.describe Lifer::Collection do
     end
   end
 
+  describe "#root?" do
+    subject { described_class.new(name: name, directory: "whatever").root? }
+
+    context "when the collection is named 'root'" do
+      let(:name) { :root }
+
+      it { is_expected.to eq true }
+    end
+
+    context "when the collection is not named 'root'" do
+      let(:name) { :not_root }
+
+      it { is_expected.to eq false }
+    end
+  end
+
   describe "#setting" do
     subject { collection.setting(:setting_name) }
 
     it "delegates to the global setting method" do
-      allow(Lifer).to receive(:setting).with(:setting_name, {collection: collection})
+      allow(Lifer)
+        .to receive(:setting)
+        .with(:setting_name, {collection: collection, strict: false})
 
       subject
 
       expect(Lifer)
         .to have_received(:setting)
-        .with(:setting_name, {collection: collection})
+        .with(:setting_name, {collection: collection, strict: false})
         .once
     end
   end

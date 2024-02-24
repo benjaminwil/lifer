@@ -19,7 +19,9 @@ class Lifer::Builder::RSS < Lifer::Builder
 
   def execute
     collections_with_feeds.each do |collection|
-      File.open output_filename(collection), "w" do |file|
+      next unless (filename = output_filename(collection))
+
+      File.open filename, "w" do |file|
         file.puts(
           rss_feed_for(collection) do |current_feed|
             collection.entries
@@ -42,10 +44,13 @@ class Lifer::Builder::RSS < Lifer::Builder
   end
 
   def output_filename(collection)
-    case collection.setting(:rss)
+    strict_mode = !collection.root?
+
+    case collection.setting(:rss, strict: strict_mode)
+    when FalseClass, NilClass then nil
     when TrueClass then File.join(Dir.pwd, "#{collection.name}.xml")
     else
-      File.join Dir.pwd, collection.setting(:rss)
+      File.join Dir.pwd, collection.setting(:rss, strict: strict_mode)
     end
   end
 

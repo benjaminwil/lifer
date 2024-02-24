@@ -46,14 +46,21 @@ class Lifer::Collection
     [config_directory, setting(:layout_file)].join "/"
   end
 
+  # Check whether the current collection is the root collection.
+  #
+  # @return [boolean]
+  def root?
+    name == :root
+  end
+
   # Gets a Lifer setting, scoped to the current collection.
   #
   # @param *name [Array<Symbol>] A list of symbols that map to a nested Lifer
   #   setting (for the current collection).
   # @return [String, Nil] The setting as set in the Lifer project's
   #   configuration file.
-  def setting(*name)
-    Lifer.setting(*name, collection: self)
+  def setting(*name, strict: false)
+    Lifer.setting *name, collection: self, strict: strict
   end
 
   private

@@ -91,7 +91,9 @@ RSpec.describe Lifer::Config do
   end
 
   describe "#setting" do
-    subject { config.setting name, collection_name: collection.name }
+    subject {
+      config.setting name, collection_name: collection_name, strict: strict_mode
+    }
 
     let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
     let(:name) { :layout_file }
@@ -99,12 +101,35 @@ RSpec.describe Lifer::Config do
       Lifer::Collection.generate name: :subdirectory_one,
         directory: support_file("root_with_entries/subdirectory_one")
     }
+    let(:collection_name) { collection.name }
     let(:raw_settings_hash) { {} }
+    let(:strict_mode) { false }
 
     before do
       allow(Lifer::Utilities)
         .to receive(:symbolize_keys)
         .and_return(raw_settings_hash)
+    end
+
+    context "when strict mode is enabled" do
+      let(:strict_mode) { true }
+
+      before do
+        raw_settings_hash
+          .merge!({subdirectory_one: {layout_file: "collection-layout-file"}})
+      end
+
+      context "and no collection name is given" do
+        let(:collection_name) { nil }
+
+        it { is_expected.to be_nil }
+      end
+
+      context "and a collection is given" do
+        it "returns the collection setting" do
+          expect(subject).to eq "collection-layout-file"
+        end
+      end
     end
 
     context "with a collection" do

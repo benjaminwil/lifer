@@ -69,11 +69,16 @@ class Lifer::Config
   # collection's setting, then the root collection's setting, and then Lifer's
   # default setting. If none these are available the method will return `nil`.
   #
-  # @param  name [Symbol] The configuration setting.
-  # @param  collection_name [Symbol] A collection name.
-  # @return [String] The value of the best in-scope setting.
-  def setting(*name, collection_name: nil)
+  # @param name [Symbol] The configuration setting.
+  # @param collection_name [Symbol] A collection name.
+  # @param strict [boolean] Strictly return the collection setting without
+  #   falling back to higher-level settings.
+  # @return [String, NilClass] The value of the best in-scope setting.
+  def setting(*name, collection_name: nil, strict: false)
     name_in_collection = name.dup.unshift(collection_name) if collection_name
+
+    return if strict && collection_name.nil?
+    return settings.dig(*name_in_collection) if (strict && collection_name)
 
     candidates = [
       settings.dig(*name),

@@ -170,13 +170,15 @@ RSpec.describe Lifer do
 
     it "delegates to the brain" do
       allow(Lifer::Brain).to receive(:init).and_return(brain)
-      allow(brain).to receive(:setting).with(:some_argument, {collection: nil})
+      allow(brain)
+        .to receive(:setting)
+        .with(:some_argument, {collection: nil, strict: false})
 
       subject
 
       expect(brain)
         .to have_received(:setting)
-        .with(:some_argument, {collection: nil})
+        .with(:some_argument, {collection: nil, strict: false})
         .once
     end
   end

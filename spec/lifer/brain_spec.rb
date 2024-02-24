@@ -209,13 +209,13 @@ RSpec.describe Lifer::Brain do
       allow(Lifer::Config).to receive(:build).and_return(config)
       allow(config)
         .to receive(:setting)
-        .with(:some_argument, {collection_name: nil})
+        .with(:some_argument, {collection_name: nil, strict: false})
 
       subject
 
       expect(config)
         .to have_received(:setting)
-        .with(:some_argument, {collection_name: nil})
+        .with(:some_argument, {collection_name: nil, strict: false})
         .once
     end
   end

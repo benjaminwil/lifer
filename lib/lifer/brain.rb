@@ -101,8 +101,8 @@ class Lifer::Brain
       end
   end
 
-  def setting(*name, collection: nil)
-    config.setting *name, collection_name: collection&.name
+  def setting(*name, collection: nil, strict: false)
+    config.setting *name, collection_name: collection&.name, strict: strict
   end
 
   private
