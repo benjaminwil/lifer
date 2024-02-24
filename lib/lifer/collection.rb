@@ -8,7 +8,9 @@ class Lifer::Collection
     # @param directory [String] The absolute path to the root directory of the
     #   collection.
     def generate(name:, directory:)
-      new name: name, directory: directory
+      collection = new name: name, directory: directory
+      collection.entries
+      collection
     end
   end
 

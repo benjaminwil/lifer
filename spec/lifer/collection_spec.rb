@@ -17,6 +17,9 @@ RSpec.describe Lifer::Collection do
 
     it "generates a collection" do
       expect(subject.name).to eq :my_collection
+    end
+
+    it "immediately generates all entries for the collection" do
       expect(subject.entries).to contain_exactly(
         an_instance_of(Lifer::Entry::HTML),
         an_instance_of(Lifer::Entry::Markdown),
@@ -28,7 +31,7 @@ RSpec.describe Lifer::Collection do
   describe "#entries" do
     subject { collection.entries }
 
-    it "creates entries from a directory" do
+    it "includes entries from a directory" do
       expect(subject).to contain_exactly(
         an_instance_of(Lifer::Entry::HTML),
         an_instance_of(Lifer::Entry::Markdown),
