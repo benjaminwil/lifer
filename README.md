@@ -1,35 +1,71 @@
 # Lifer
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/lifer`. To experiment with that code, run `bin/console` for an interactive prompt.
+Lifer is an extensible static site generator. Out of the box, it provides a
+classic static site generation experience, complete with RSS feed and ERB
+templating. Unlike other Ruby-based static site generators, Lifer encourages you
+to bring your own asset compiler pipeline and configure it as a pre-build step.
 
-TODO: Delete this and the text above, and describe your gem
+_Lifer is currently in pre-release. Features are incomplete. Your mileage may
+vary._
+
+## Features
+
+Here's a short overview of Lifer's flagship features.
+
+### Bring your own asset pipeline
+
+Whether you want to compile assets with Ruby-based tools, JavaScript-based
+tools, or other tools, Lifer is okay with that. As long as those tools come with
+a commandline interface, Lifer can shell out to those tools as a prebuild step.
+
+### Collections and selections
+
+If you have multiple collections of entries that must be output in different
+ways, Lifer can help you do this. While every entry can only belong to a single
+collection, you can create your own "selections" filter to group entries across
+collections.
+
+### Extensibility
+
+Lifer autoloads any Ruby files included in the root of your project
+automatically. This lets you specify your own custom output builders, feed
+formats, and meta-collections of entries.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+_This installation guide assumes you already have Ruby 3 installed on your
+system._
+
+I recommend installing Lifer via Bundler. In the root directory of your static
+site source, add a Gemfile if one doesn't exist already:
+
+    $ bundle init
+
+In the Gemfile, add the `lifer` gem:
 
 ```ruby
-gem 'lifer'
+gem "lifer", "<= 1"
 ```
 
 And then execute:
 
     $ bundle install
 
-Or install it yourself as:
-
-    $ gem install lifer
-
-## Usage
-
-TODO: Write usage instructions here
-
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+_TODO_
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+_This development guide assumes you already have Ruby 3 installed on your
+system._
+
+Clone this repository, install dependencies via Bundler, and ensure the test
+suite can run on your machine:
+
+    $ git clone https://github.com/benjaminwil/lifer lifer
+    $ cd lifer
+    $ bundle install
+    $ bundle exec rspec
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/lifer.
+_TODO_
