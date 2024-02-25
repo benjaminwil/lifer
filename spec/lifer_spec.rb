@@ -3,10 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Lifer do
-  before do
-    Lifer.class_variable_set "@@brain", nil
-  end
-
   it "has a version number" do
     expect(Lifer::VERSION).not_to be nil
   end

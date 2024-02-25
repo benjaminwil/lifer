@@ -31,13 +31,13 @@ class Lifer::Config
     #
     # @param file [String] The path to the user-provided configuration file.
     # @return [void]
-    def build(file:)
+    def build(file:, root: Lifer.root)
       if File.file? file
-        new file: file
+        new file: file, root: root
       else
         puts "No configuration file at #{file}. Using default configuration."
 
-        new file: DEFAULT_CONFIG_FILE
+        new file: DEFAULT_CONFIG_FILE, root: root
       end
     end
   end
@@ -102,15 +102,19 @@ class Lifer::Config
 
   private
 
-  def initialize(file:)
+  attr_reader :root
+
+  def initialize(file:, root:)
     @file = Pathname(file)
+    @root = Pathname(root)
+
     @registered_settings = DEFAULT_REGISTERED_SETTINGS.to_set
   end
 
   def collection_candidates
-    subdirectories = Dir.glob("#{root_directory}/**/*")
+    subdirectories = Dir.glob("#{root}/**/*")
       .select { |entry| File.directory? entry }
-      .map { |entry| entry.gsub("#{root_directory}/", "") }
+      .map { |entry| entry.gsub("#{root}/", "") }
 
     subdirectories
       .select { |dir| !Lifer.ignoreable? dir }.map(&:to_sym).sort.reverse
@@ -141,10 +145,6 @@ class Lifer::Config
     return true if hash_settings.flat_map(&:keys).include?(setting)
 
     has_collection_settings? setting
-  end
-
-  def root_directory
-    @root_directory ||= ("%s/.." % File.expand_path(File.dirname(@file)))
   end
 
   def unregistered_settings

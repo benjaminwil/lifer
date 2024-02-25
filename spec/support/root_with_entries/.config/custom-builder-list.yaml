@@ -1,4 +1,0 @@
-global:
-  output_directory: "haha"
-  build:
-    - rss

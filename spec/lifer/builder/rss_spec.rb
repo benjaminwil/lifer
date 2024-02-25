@@ -4,8 +4,11 @@ require "spec_helper"
 
 RSpec.describe Lifer::Builder::RSS do
   before do
-    spec_lifer! config_file: "root_with_entries/.config/" \
-      "custom-config-with-root-rss-feed.yaml"
+    spec_lifer! config: <<~CONFIG
+      rss: feed.xml
+      subdirectory_one:
+        blah: blah
+    CONFIG
   end
 
   describe ".execute" do
@@ -72,8 +75,11 @@ RSpec.describe Lifer::Builder::RSS do
 
     context "when many collections are configured" do
       before do
-        spec_lifer! config_file: "root_with_entries/.config/" \
-          "custom-config-with-multiple-rss-feeds.yaml"
+        spec_lifer! config: <<~CONFIG
+          rss: default.xml
+          subdirectory_one:
+            rss: subdirectory-one.xml
+        CONFIG
       end
 
       it "generates more than one RSS feed" do

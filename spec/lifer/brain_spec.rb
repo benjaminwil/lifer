@@ -70,11 +70,14 @@ RSpec.describe Lifer::Brain do
 
     context "when using a custom configuration file" do
       let!(:config_with_custom_config_file) {
-        Lifer::Config.build(
-          file: support_file(
-            "root_with_entries/.config/custom-builder-list.yaml"
-          )
-        )
+        config_file = temp_config(<<~CONFIG)
+          global:
+            output_directory: "haha"
+            build:
+              - rss
+          CONFIG
+
+        Lifer::Config.build file: config_file
       }
 
       it "executes with the configured set of builders only" do
@@ -111,8 +114,14 @@ RSpec.describe Lifer::Brain do
 
     context "when the user has included custom pseudo-collections" do
       let(:brain) {
-        spec_lifer! root: "root_with_entries",
-          config_file: "root_with_entries/.config/custom-config-with-movie-reviews.yaml"
+        spec_lifer! root: "root_with_entries", config: <<~CONFIG
+          subdirectory_one:
+            uri_strategy: pretty
+
+          global:
+            pseudo_collections:
+              - movie_reviews
+        CONFIG
       }
 
       it "returns all collections and pseudo-collections" do
@@ -125,10 +134,7 @@ RSpec.describe Lifer::Brain do
     end
 
     context "when the user has not included custom pseudo-collections" do
-      let(:brain) {
-        spec_lifer! root: "root_with_nothing",
-          config_file: "root_with_nothing/.config/lifer.yaml"
-      }
+      let(:brain) { spec_lifer! root: "root_with_nothing", config: "" }
 
       it "returns all collections and pseudo-collections" do
         Thing = Lifer::Collection::Pseudo::AllMarkdown

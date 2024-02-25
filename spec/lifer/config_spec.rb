@@ -1,13 +1,14 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Config do
-  let(:config) { described_class.build(file: file) }
+  let(:config) { described_class.build file: file, root: root }
+  let(:root) { temp_root }
 
   describe "#collectionables" do
     subject { config.collectionables }
 
     context "when there are potential collections" do
-      let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+      let(:file) { temp_config }
 
       it "returns any potential collections" do
         expect(subject).to eq [:subdirectory_one]
@@ -15,9 +16,7 @@ RSpec.describe Lifer::Config do
     end
 
     context "when there are no potential collections" do
-      let(:file) {
-        support_file "root_with_entries/.config/no-collections-lifer.yaml"
-      }
+      let(:file) { temp_config "uri_strategy: simple" }
 
       it { is_expected.to eq [] }
     end
@@ -37,7 +36,7 @@ RSpec.describe Lifer::Config do
     end
 
     context "when given an existing file" do
-      let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+      let(:file) { temp_config }
 
       it "doesn't load the default configuration file" do
         expect { subject }
@@ -47,7 +46,7 @@ RSpec.describe Lifer::Config do
 
       it "uses the given config file" do
         expect(subject).to be_a Pathname
-        expect(subject.to_s).to end_with "root_with_entries/.config/lifer.yaml"
+        expect(subject.to_s).to include "temp.yaml"
       end
     end
   end
@@ -55,7 +54,7 @@ RSpec.describe Lifer::Config do
   describe "#register_settings" do
     subject { config.register_settings setting }
 
-    let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+    let(:file) { temp_config }
 
     context "with a simple setting" do
       let(:setting) { :my_new_setting }
@@ -95,7 +94,7 @@ RSpec.describe Lifer::Config do
       config.setting name, collection_name: collection_name, strict: strict_mode
     }
 
-    let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+    let(:file) { temp_config }
     let(:name) { :layout_file }
     let(:collection) {
       Lifer::Collection.generate name: :subdirectory_one,
@@ -184,7 +183,7 @@ RSpec.describe Lifer::Config do
   describe "#settings" do
     subject { config.settings }
 
-    let(:file) { support_file "root_with_entries/.config/lifer.yaml" }
+    let(:file) { temp_config }
 
     it "loads some YAML" do
       expect(subject).to eq(

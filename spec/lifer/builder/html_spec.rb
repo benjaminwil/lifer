@@ -34,8 +34,12 @@ RSpec.describe Lifer::Builder::HTML do
 
     context "when a custom layout is configured in the root settings" do
       before do
-        spec_lifer! config_file: "root_with_entries/.config/" \
-          "custom-root-layout-lifer.yaml"
+        spec_lifer! config: <<~CONFIG
+          layout_file: ./layouts/layout_with_greeting.html.erb
+          uri_strategy: simple
+          subdirectory_one:
+            uri_strategy: pretty
+        CONFIG
       end
 
       it "builds using the correct layout" do
@@ -55,8 +59,13 @@ RSpec.describe Lifer::Builder::HTML do
 
       context "when a custom layout is configured for a collection" do
         before do
-          spec_lifer! config_file: "root_with_entries/.config/" \
-            "all-custom-layouts.yaml"
+          spec_lifer! config: <<~CONFIG
+            layout_file: ./layouts/layout_with_greeting.html.erb
+            uri_strategy: simple
+            subdirectory_one:
+              layout_file: ./layouts/layout_for_subdirectory_one_collection.html.erb
+              uri_strategy: pretty
+          CONFIG
         end
 
         it "builds using all the correct layouts" do

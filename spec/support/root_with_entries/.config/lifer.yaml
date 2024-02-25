@@ -1,4 +1,0 @@
-unregistered_setting: does nothing
-uri_strategy: simple
-subdirectory_one:
-  uri_strategy: pretty
