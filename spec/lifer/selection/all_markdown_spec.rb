@@ -1,12 +1,12 @@
 require "spec_helper"
 
-RSpec.describe Lifer::Collection::Pseudo::AllMarkdown do
-  include_examples "Lifer::Collection::Pseudo subclass"
+RSpec.describe Lifer::Selection::AllMarkdown do
+  include_examples "Lifer::Selection subclass"
 
   describe "#entries" do
-    subject { all_markdown_pseudo_collection.entries }
+    subject { all_markdown_selection.entries }
 
-    let(:all_markdown_pseudo_collection) { described_class.generate }
+    let(:all_markdown_selection) { described_class.generate }
     let(:html_entry) {
       Lifer::Entry::HTML.new file: "not-real-html", collection: nil
     }

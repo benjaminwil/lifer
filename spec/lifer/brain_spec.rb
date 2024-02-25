@@ -112,19 +112,18 @@ RSpec.describe Lifer::Brain do
   describe "#collections" do
     subject { brain.collections }
 
-    context "when the user has included custom pseudo-collections" do
+    context "when the user has included their own selection class" do
       let(:brain) {
         spec_lifer! root: "root_with_entries", config: <<~CONFIG
           subdirectory_one:
             uri_strategy: pretty
 
-          global:
-            pseudo_collections:
-              - movie_reviews
+          selections:
+            - movie_reviews
         CONFIG
       }
 
-      it "returns all collections and pseudo-collections" do
+      it "returns all collections and selections" do
         expect(subject).to contain_exactly(
           an_instance_of(Lifer::Collection),
           an_instance_of(Lifer::Collection),
@@ -133,16 +132,17 @@ RSpec.describe Lifer::Brain do
       end
     end
 
-    context "when the user has not included custom pseudo-collections" do
+    context "when the user has not included custom selections" do
       let(:brain) { spec_lifer! root: "root_with_nothing", config: "" }
 
-      it "returns all collections and pseudo-collections" do
-        Thing = Lifer::Collection::Pseudo::AllMarkdown
+      it "returns all collections and selections" do
+        Thing = Lifer::Selection::AllMarkdown
         Object.send :remove_const, :Thing
 
         expect(subject).to contain_exactly(
           an_instance_of(Lifer::Collection),
-          an_instance_of(Lifer::Collection::Pseudo::AllMarkdown)
+          an_instance_of(Lifer::Selection::AllMarkdown),
+          an_instance_of(Lifer::Selection::IncludedInFeeds)
         )
       end
     end

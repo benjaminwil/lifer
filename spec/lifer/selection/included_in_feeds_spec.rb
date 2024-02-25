@@ -1,12 +1,12 @@
 require "spec_helper"
 
-RSpec.describe Lifer::Collection::Pseudo::IncludedInFeeds do
-  include_examples "Lifer::Collection::Pseudo subclass"
+RSpec.describe Lifer::Selection::IncludedInFeeds do
+  include_examples "Lifer::Selection subclass"
 
   describe "#entries" do
-    subject { included_in_feeds_collection.entries }
+    subject { included_in_feeds_selection.entries }
 
-    let(:included_in_feeds_collection) { described_class.generate }
+    let(:included_in_feeds_selection) { described_class.generate }
     let(:html_entry) {
       Lifer::Entry::HTML.new file: "not-real-html", collection: nil
     }

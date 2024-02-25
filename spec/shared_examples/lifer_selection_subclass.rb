@@ -1,4 +1,4 @@
-RSpec.shared_examples "Lifer::Collection::Pseudo subclass" do
+RSpec.shared_examples "Lifer::Selection subclass" do
   describe ".generate" do
     subject { described_class.generate }
 
@@ -9,20 +9,20 @@ RSpec.shared_examples "Lifer::Collection::Pseudo subclass" do
   end
 
   describe "#setting" do
-    subject { pseudo_collection.setting :setting_name }
+    subject { selection.setting :setting_name }
 
-    let(:pseudo_collection) { described_class.generate }
+    let(:selection) { described_class.generate }
 
     it "delegates to the Lifer module" do
       allow(Lifer)
         .to receive(:setting)
-        .with(:setting_name, collection: pseudo_collection, strict: false)
+        .with(:setting_name, collection: selection, strict: false)
 
       subject
 
       expect(Lifer)
         .to have_received(:setting)
-        .with(:setting_name, collection: pseudo_collection, strict: false)
+        .with(:setting_name, collection: selection, strict: false)
         .once
     end
   end

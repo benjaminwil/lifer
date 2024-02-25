@@ -1,3 +1,13 @@
+# A collection collects entries. Every entry can only be included in a single
+# collection. Collections let the user group entries together into logical
+# units. For example, if the user wants to present blog posts in one way and
+# wiki pages in a different way, it would make sense to create separate "blog" and
+# "wiki" collections.
+#
+# Each collection can have its own feeds and settings. The only special
+# collection is the "root" collection, which is where all entries that don't fall
+# into other collections end up.
+#
 class Lifer::Collection
   attr_reader :name
 
@@ -7,6 +17,7 @@ class Lifer::Collection
     # @param name [String] The name of the new collection.
     # @param directory [String] The absolute path to the root directory of the
     #   collection.
+    # @return [Lifer::Collection]
     def generate(name:, directory:)
       collection = new name: name, directory: directory
       collection.entries
@@ -79,4 +90,4 @@ class Lifer::Collection
   end
 end
 
-require_relative "collection/pseudo"
+require_relative "selection"

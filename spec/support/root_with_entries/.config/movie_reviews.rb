@@ -1,4 +1,4 @@
-class MovieReviews < Lifer::Collection::Pseudo
+class MovieReviews < Lifer::Selection
   def entries
     @entries ||=
       Lifer::Entry::Markdown.all.select { |entry|

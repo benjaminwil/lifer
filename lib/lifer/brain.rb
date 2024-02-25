@@ -55,14 +55,14 @@ class Lifer::Brain
     Lifer::Builder.build! *setting(:global, :build), root: root
   end
 
-  # Returns all collections and pseudo-collections within the Lifer root.
+  # Returns all collections and selections within the Lifer root.
   #
   # Collections only exist if they're explicitly configured in a configuration
   # file and they match a subdirectory within the root.
   #
-  # Pseudo-collections, on the other hand, reorganize entries from literal
-  # collections. For example, a user could collect all of their entries that were
-  # authored by Harry B. Cutler.
+  # Selections, on the other hand, reorganize entries from literal collections.
+  # For example, a user could collect all of their entries that were authored
+  # by Harry B. Cutler.
   #
   # Every Lifer build contains at least one collection. (That collection is
   # `:root`.)
@@ -70,7 +70,7 @@ class Lifer::Brain
   # @return [Array<Lifer::Collection] All the collections for the current Lifer
   #   project.
   def collections
-    @collections ||= generate_collections + generate_pseudo_collections
+    @collections ||= generate_collections + generate_selections
   end
 
   def config
@@ -144,16 +144,16 @@ class Lifer::Brain
   end
 
   # @private
-  # Requires user-provided pseudo collection classes (classes that subclass
-  # `Lifer::Collection::Pseudo` and implement an `#entries` method) so that
-  # users can bring their own pseudo collections.
+  # Requires user-provided selection classes (classes that subclass
+  # `Lifer::Selection` and implement an `#entries` method) so that users can
+  # bring their own pseudo-collections of entries.
   #
-  # @return [Set<Lifer::Collection::Pseudo>]
-  def generate_pseudo_collections
+  # @return [Set<Lifer::Selection>]
+  def generate_selections
     return [] if config.file.to_s.include? Lifer.gem_root
 
-    config.setting(:global, :pseudo_collections).map { |pseudo_collection_name|
-      klass = Lifer::Utilities.classify(pseudo_collection_name)
+    config.setting(:selections).map { |selection_name|
+      klass = Lifer::Utilities.classify selection_name
       klass.generate
     }.to_set
   end

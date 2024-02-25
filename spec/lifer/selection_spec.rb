@@ -1,7 +1,7 @@
 require "spec_helper"
 
-RSpec.describe Lifer::Collection::Pseudo do
-  describe "a pseudo collection subclass" do
+RSpec.describe Lifer::Selection do
+  describe "a selectionsubclass" do
     context "an only-initialized subclass" do
       let(:my_subclass) {
         Class.new described_class do
@@ -9,7 +9,7 @@ RSpec.describe Lifer::Collection::Pseudo do
       }
 
       it "is given a default name" do
-        expect(my_subclass.name).to eq :unnamed_pseudo_collection
+        expect(my_subclass.name).to eq :unnamed_selection
       end
 
       it "raises an error if `#entries` is not implemented" do
@@ -21,7 +21,7 @@ RSpec.describe Lifer::Collection::Pseudo do
     context "a well-formed, initialized subclass" do
       let(:my_subclass) {
         Class.new described_class do
-          self.name = :my_pseudo_collection
+          self.name = :my_selection
 
           def entries
             []
@@ -30,7 +30,7 @@ RSpec.describe Lifer::Collection::Pseudo do
       }
 
       it "has a name" do
-        expect(my_subclass.name).to eq :my_pseudo_collection
+        expect(my_subclass.name).to eq :my_selection
       end
 
       it "implements `#entries`" do

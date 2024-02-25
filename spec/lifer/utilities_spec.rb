@@ -13,13 +13,13 @@ RSpec.describe Lifer::Utilities do
     end
 
     context "when the given string does not match a constant" do
-      let(:string) { "lifer/collection/pseudo/doesnt_exist" }
+      let(:string) { "lifer/selection/doesnt_exist" }
 
       it "raises a helpful error" do
         expect { subject }.to raise_error RuntimeError,
           "could not find constant for path " \
-            "\"lifer/collection/pseudo/doesnt_exist\" " \
-            "(Lifer::Collection::Pseudo::DoesntExist)"
+            "\"lifer/selection/doesnt_exist\" " \
+            "(Lifer::Selection::DoesntExist)"
       end
     end
   end

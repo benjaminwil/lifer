@@ -33,6 +33,18 @@ uri_strategy: simple
 ###
 ###   layout_file: path/to/my_other_layout.html.erb
 
+# Selections
+#
+# Selections are pseudo-collections of entries. You may want to group disparate
+# entries together across many collections. Selections is a way to do that.
+# Lifer includes some basic selections but you can also create your own by
+# writing a simple Ruby class. See the `Lifer::Selection` class documentation for
+# more information.
+#
+selections:
+  - lifer/selection/all_markdown
+  - lifer/selection/included_in_feeds
+
 # Global settings
 #
 # These settings are special, and they're used for all of your collections and
@@ -44,5 +56,3 @@ global:
     - rss
   host: https://example.com
   output_directory: _build
-  pseudo_collections:
-    - lifer/collection/pseudo/all_markdown
