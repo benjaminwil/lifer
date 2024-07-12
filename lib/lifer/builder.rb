@@ -1,3 +1,5 @@
+require "open3"
+
 # Builders are a core part of Lifer. Builders are configured by users in the
 # configuration file and take the content of a Lifer project and turn it into
 # built stuff. That could be feeds, HTML documents, or other weird files.
@@ -33,6 +35,25 @@ class Lifer::Builder
       builder_names.each do |builder|
         Lifer::Builder.find(builder).execute root: root
       end
+    end
+
+    # Given a list of prebuild commands, execute each one in the shell.
+    # This is meant to be run once before `.build!` is run once.
+    #
+    # @param commands [Array<string>] A list of executable commands.
+    # @param root [string] The absolute path to the Lifer root directory.
+    # @return [void]
+    def prebuild!(*commands, root:)
+      commands.each do |command|
+        puts command
+
+        _stdin, stdout, _stderr, _wait_thread = Open3.popen3(command)
+
+        stdout.readlines.each { puts _1 }
+      end
+    rescue Errno::ENOENT => exception
+      raise "Lifer failed to complete building... A prebuild step failed to " \
+        "execute: #{exception}"
     end
 
     private

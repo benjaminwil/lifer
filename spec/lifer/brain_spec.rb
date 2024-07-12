@@ -91,6 +91,61 @@ RSpec.describe Lifer::Brain do
           .once
       end
     end
+
+    context "when prebuild steps are provided" do
+      context "when the given prebuild steps error out" do
+        let(:config) {
+          config_file = temp_config(<<~CONFIG)
+            global:
+              prebuild:
+                - not_an_executable_program
+          CONFIG
+
+          Lifer::Config.build file: config_file
+        }
+
+        it "provides a reasonable error message" do
+          allow(Lifer::Config).to receive(:build).and_return config
+
+          expect { subject }.to raise_error RuntimeError,
+            "Lifer failed to complete building... A prebuild step failed to " \
+              "execute: No such file or directory - not_an_executable_program"
+        end
+      end
+
+      context "when the given prebuild steps are acceptable" do
+        let(:config) {
+          config_file = temp_config(<<~CONFIG)
+            global:
+              prebuild:
+                - echo "command 1"
+                - echo "command 2"
+          CONFIG
+
+          Lifer::Config.build file: config_file
+        }
+
+        it "shells out execute each prebuild step" do
+          allow(Lifer::Config).to receive(:build).and_return config
+
+          dummy_stdout = instance_double(IO, readlines: ["output"])
+
+          allow(Open3)
+            .to receive(:popen3)
+            .with("echo \"command 1\"")
+            .and_return([double, dummy_stdout, double, double])
+          allow(Open3).to receive(:popen3).with("echo \"command 2\"")
+            .and_return([double, dummy_stdout, double, double])
+
+          subject
+
+          expect(Open3)
+            .to have_received(:popen3).with("echo \"command 1\"").once
+          expect(Open3)
+            .to have_received(:popen3).with("echo \"command 2\"").once
+        end
+      end
+    end
   end
 
   describe "#config" do

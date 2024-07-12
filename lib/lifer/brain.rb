@@ -52,6 +52,7 @@ class Lifer::Brain
   def build!
     brainwash!
 
+    Lifer::Builder.prebuild! *setting(:global, :prebuild), root: root
     Lifer::Builder.build! *setting(:global, :build), root: root
   end
 

@@ -37,6 +37,35 @@ RSpec.describe Lifer::Builder do
     end
   end
 
+  describe ".prebuild!" do
+    subject { described_class.prebuild! *list_of_commands, root: root }
+
+    context "when a given command is invalid" do
+      let(:list_of_commands) { ["echo 'this one is okay'", "not_executable"] }
+
+      it "raises an error" do
+        expect { subject }.to raise_error RuntimeError, "Lifer failed to "   \
+          "complete building... A prebuild step failed to execute: No such " \
+          "file or directory - not_executable"
+      end
+    end
+
+    context "when all commands are valid, executable commands" do
+      let(:list_of_commands) { ["echo 'do almost nothing'"] }
+
+      it "raises no errors" do
+        expect { subject }.not_to raise_error
+      end
+
+      it "outputs to STDOUT" do
+        expect { subject }.to output(<<~OUTPUT).to_stdout
+          echo 'do almost nothing'
+          do almost nothing
+        OUTPUT
+      end
+    end
+  end
+
   describe ".find" do
     subject { described_class.find name }
 
