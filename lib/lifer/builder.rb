@@ -26,7 +26,7 @@ class Lifer::Builder
     # Given a list of builder names, we execute every builder based on the
     # configured Lifer project root.
     #
-    # @param builder_names [<string>] A list of builder names.
+    # @param builder_names [Array<string>] A list of builder names.
     # @param root [string] The absolute path to the Lifer root directory.
     # @return [void]
     def build!(*builder_names, root:)

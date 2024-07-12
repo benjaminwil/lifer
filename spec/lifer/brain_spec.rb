@@ -69,21 +69,19 @@ RSpec.describe Lifer::Brain do
     end
 
     context "when using a custom configuration file" do
-      let!(:config_with_custom_config_file) {
+      let(:config) {
         config_file = temp_config(<<~CONFIG)
           global:
             output_directory: "haha"
             build:
               - rss
-          CONFIG
+        CONFIG
 
         Lifer::Config.build file: config_file
       }
 
       it "executes with the configured set of builders only" do
-        allow(Lifer::Config)
-          .to receive(:build)
-          .and_return config_with_custom_config_file
+        allow(Lifer::Config).to receive(:build).and_return config
 
         subject
 
