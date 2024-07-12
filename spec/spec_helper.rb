@@ -33,4 +33,10 @@ RSpec.configure do |config|
   # littering garbage files all over the developer's filesystem.
   #
   config.include Support::LiferTestHelpers::Files
+
+  # Provide helper methods that deal with subshells started by Lifer builds.
+  # For example, sometimes we don't care to see STDOUT in our test runner
+  # output.
+  #
+  config.include Support::LiferTestHelpers::Shell
 end

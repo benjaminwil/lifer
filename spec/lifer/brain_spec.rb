@@ -33,7 +33,11 @@ RSpec.describe Lifer::Brain do
   end
 
   describe "#build!" do
-    subject { brain.build! }
+    subject {
+      with_stdout_silenced do
+        brain.build!
+      end
+    }
 
     before do
       allow(Lifer::Builder).to receive(:build!)
@@ -59,7 +63,9 @@ RSpec.describe Lifer::Brain do
 
     context "when using a default configuration file" do
       it "executes a build with the default set of builders" do
-        subject
+        with_stdout_silenced do
+          subject
+        end
 
         expect(Lifer::Builder)
           .to have_received(:build!)
@@ -107,7 +113,11 @@ RSpec.describe Lifer::Brain do
         it "provides a reasonable error message" do
           allow(Lifer::Config).to receive(:build).and_return config
 
-          expect { subject }.to raise_error RuntimeError,
+          expect {
+            with_stdout_silenced do
+              subject
+            end
+          }.to raise_error RuntimeError,
             "Lifer failed to complete building... A prebuild step failed to " \
               "execute: No such file or directory - not_an_executable_program"
         end
@@ -212,7 +222,9 @@ RSpec.describe Lifer::Brain do
       before do
         allow(Lifer).to receive(:brain).and_return(brain)
 
-        brain.build!
+        with_stdout_silenced do
+          brain.build!
+        end
       end
 
       let(:directory_entries) {
@@ -241,7 +253,9 @@ RSpec.describe Lifer::Brain do
       before do
         allow(Lifer).to receive(:brain).and_return(brain)
 
-        brain.build!
+        with_stdout_silenced do
+          brain.build!
+        end
       end
 
       let(:directory_entries) {

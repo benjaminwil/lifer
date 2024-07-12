@@ -88,6 +88,10 @@ RSpec.shared_examples "Lifer::Entry subclass" do
         .and_return(support_file "root_with_entries")
     end
 
-    it { is_expected.to eq "https://example.com/tiny_entry.html" }
+    it "responds with a well-formed URL" do
+      with_stdout_silenced do
+        expect(subject).to eq "https://example.com/tiny_entry.html"
+      end
+    end
   end
 end

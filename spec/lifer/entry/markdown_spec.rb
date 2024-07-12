@@ -4,8 +4,7 @@ RSpec.describe Lifer::Entry::Markdown do
   let(:entry) { described_class.new file: file, collection: collection }
 
   let(:collection) {
-    Lifer::Collection.generate name: "Collection",
-      directory: File.dirname(file)
+    Lifer::Collection.generate name: "Collection", directory: File.dirname(file)
   }
 
   it_behaves_like "Lifer::Entry subclass"
@@ -86,7 +85,11 @@ RSpec.describe Lifer::Entry::Markdown do
         support_file "root_with_entries/entry_with_invalid_date_frontmatter.md"
       }
 
-      it { is_expected.to be_nil }
+      it "returns nothing" do
+        with_stdout_silenced do
+          expect(subject).to be_nil
+        end
+      end
 
       it "prints an error to STDOUT" do
         expect { subject }.to output("[#{file}]: invalid date\n").to_stdout
@@ -96,7 +99,11 @@ RSpec.describe Lifer::Entry::Markdown do
     context "when there's no date metadata" do
       let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
-      it { is_expected.to be_nil }
+      it "returns nothing" do
+        with_stdout_silenced do
+          expect(subject).to be_nil
+        end
+      end
 
       it "prints an error STDOUT" do
           expect { subject }
@@ -111,7 +118,11 @@ RSpec.describe Lifer::Entry::Markdown do
             "2012-999-01-entry_with_invalid_date_in_filename.md"
         }
 
-        it { is_expected.to be_nil }
+        it "returns nothing" do
+          with_stdout_silenced do
+            expect(subject).to be_nil
+          end
+        end
 
         it "prints an error to STDOUT" do
           expect { subject }
@@ -195,7 +206,11 @@ RSpec.describe Lifer::Entry::Markdown do
     context "when an entry title is not set in the frontmatter" do
       let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
-      it { is_expected.to eq "Untitled Entry" }
+      it "uses the default title according to the current Lifer configuration" do
+        with_stdout_silenced do
+          expect(subject).to eq "Untitled Entry"
+        end
+      end
     end
   end
 end

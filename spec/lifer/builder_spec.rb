@@ -44,9 +44,11 @@ RSpec.describe Lifer::Builder do
       let(:list_of_commands) { ["echo 'this one is okay'", "not_executable"] }
 
       it "raises an error" do
-        expect { subject }.to raise_error RuntimeError, "Lifer failed to "   \
-          "complete building... A prebuild step failed to execute: No such " \
-          "file or directory - not_executable"
+        with_stdout_silenced do
+          expect { subject }.to raise_error RuntimeError, "Lifer failed to "   \
+            "complete building... A prebuild step failed to execute: No such " \
+            "file or directory - not_executable"
+          end
       end
     end
 
@@ -54,7 +56,9 @@ RSpec.describe Lifer::Builder do
       let(:list_of_commands) { ["echo 'do almost nothing'"] }
 
       it "raises no errors" do
-        expect { subject }.not_to raise_error
+        with_stdout_silenced do
+          expect { subject }.not_to raise_error
+        end
       end
 
       it "outputs to STDOUT" do

@@ -4,3 +4,4 @@ module Support::LiferTestHelpers
 end
 
 require_relative "lifer_test_helpers/files"
+require_relative "lifer_test_helpers/shell"
