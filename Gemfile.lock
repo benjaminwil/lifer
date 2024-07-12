@@ -18,12 +18,14 @@ GEM
       reline (>= 0.4.2)
     kramdown (2.4.0)
       rexml
+    language_server-protocol (3.17.0.3)
     nokogiri (1.16.2-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.2-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
+    prism (0.29.0)
     psych (5.1.2)
       stringio
     racc (1.7.3)
@@ -48,6 +50,11 @@ GEM
     rspec-support (3.13.1)
     rss (0.3.0)
       rexml
+    ruby-lsp (0.17.2)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 0.29.0, < 0.30)
+      sorbet-runtime (>= 0.5.10782)
+    sorbet-runtime (0.5.11415)
     stringio (3.1.0)
     yard (0.9.34)
 
@@ -63,6 +70,7 @@ DEPENDENCIES
   nokogiri
   rake (~> 13.0)
   rspec (~> 3.0)
+  ruby-lsp
   yard
 
 BUNDLED WITH
