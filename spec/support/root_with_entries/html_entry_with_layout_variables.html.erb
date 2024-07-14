@@ -1,0 +1,13 @@
+<h1>HTML entry with layout variables</h1>
+
+<h2>Some root collection entry titles</h2>
+
+<%= collections.root.entries.map { |entry| entry.title }.first(2).join(", ") %>
+
+<h2>All collection names</h2>
+
+<%= collections.all.map { |collection| collection.name }.join(", ") %>
+
+<h2>This project's settings</h2>
+
+<%= settings %>

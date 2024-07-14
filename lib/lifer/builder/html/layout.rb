@@ -37,12 +37,18 @@ class Lifer::Builder::HTML
     # Each collection name is provided as a local variable. This allows you to
     # make ERB files that contain loops like:
     #
-    #     <% my_collection.entries.each do |entry| %>
+    #     <% my_collection_name.entries.each do |entry| %>
     #       <%= entry.title %>
     #     <% end %>
     #
-    # In addition to collection names, the following variables are provided:
+    # You can also access a complete list of collections via `collections.all` or
+    # an individual collection via `collections.my_collection_name`.
     #
+    # So, he following variables are provided:
+    #
+    #   - Any collection by name.
+    #   - `:collections`: Access collections on this variable via an `#all`
+    #     array or via any collection name.
     #   - `:settings`: For all your (non-default) Lifer settings.
     #   - `:content`: The HTML version of the in-scope entry.
     #
@@ -55,12 +61,27 @@ class Lifer::Builder::HTML
       binding.tap { |binding|
         Lifer.collections.each do |collection|
           binding.local_variable_set collection.name, collection
+
+          collection_context_module.define_singleton_method(collection.name) do
+            collection
+          end
         end
 
+        binding.local_variable_set :collections, collection_context_module
         binding.local_variable_set :settings, Lifer.settings
         binding.local_variable_set :content,
           ERB.new(entry.to_html).result(binding)
       }
+    end
+
+    # @private
+    def collection_context_module
+      @collection_context_module ||=
+        Module.new do
+          class << self
+            def all = Lifer.collections
+          end
+        end
     end
   end
 end

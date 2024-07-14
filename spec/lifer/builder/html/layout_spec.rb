@@ -13,6 +13,38 @@ RSpec.describe Lifer::Builder::HTML::Layout do
     }
     let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
+
+    context "when using layout-provided variables" do
+      let(:entry) {
+        Lifer::Entry::HTML.new collection: collection,
+          file: support_file(
+            "root_with_entries/html_entry_with_layout_variables.html.erb"
+          )
+      }
+
+      before do
+        spec_lifer!
+      end
+
+      it "renders a valid HTML document, including rendered layout variables" do
+        expect(subject).to fuzzy_match <<~RESULT
+          <html>
+           <head>
+           </head>
+           <body>
+             <h1>HTML entry with layout variables</h1>
+             <h2>Some root collection entry titles</h2>
+             Untitled Entry, Untitled Entry
+             <h2>All collection names</h2>
+             subdirectory_one, root, all_markdown, included_in_feeds
+             <h2>This project's settings</h2>
+             {:uri_strategy=>"simple", :subdirectory_one=>{:uri_strategy=>"pretty"}}
+           </body>
+         </html>
+       RESULT
+      end
+    end
+
     context "when not assigning a template file" do
       before do
         spec_lifer!
