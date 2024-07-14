@@ -108,6 +108,10 @@ class Lifer::Entry
         .output_file(self)
   end
 
+  def title
+    raise NotImplementedError, "subclasses must implemented this method"
+  end
+
   def to_html
     raise NotImplementedError, "subclasses must implemented this method"
   end
