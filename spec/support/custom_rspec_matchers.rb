@@ -41,10 +41,7 @@ expected: #{expected_normalized.inspect}
       RSpec::Expectations.differ.diff(actual_normalized, expected_normalized)
 
     unless diff.strip.empty?
-      diff_label =
-        RSpec::Matchers::ExpectedsForMultipleDiffs::DEFAULT_DIFF_LABEL
-
-      message << "\n\n" << diff_label << diff
+      message << "\n\n" << "Diff" << diff
     end
 
     message
