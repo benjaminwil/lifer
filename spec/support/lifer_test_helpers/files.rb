@@ -51,6 +51,32 @@ module Support::LiferTestHelpers::Files
     "#{SPEC_ROOT}/support/#{path_to_file}"
   end
 
+  # A simple helper that provides a path to a real tempfile with the given
+  # contents.
+  #
+  # @param filename [String] The filename for the temp file.
+  # @param contents [String] The contents of the temp file.
+  # @param temp_root [String] The absolute path to the Lifer project root.
+  # @return [String] The absolute path to the temp file.
+  def temp_file(
+    filename,
+    contents = "",
+    temp_root = temp_root(support_file "root_with_entries")
+  )
+    path = nil
+
+    Dir.chdir temp_root do
+      FileUtils.mkdir_p ".config"
+
+      File.open File.join(temp_root, ".config", filename), "w" do |file|
+        file.puts contents
+        path = file.path
+      end
+    end
+
+    path
+  end
+
   # Create a temporary Lifer config file on the fly. For example:
   #
   #     temp_config(<<~MY_CONFIG)

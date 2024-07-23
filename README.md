@@ -31,6 +31,14 @@ Lifer autoloads any Ruby files included in the root of your project
 automatically. This lets you specify your own custom output builders, feed
 formats, and meta-collections of entries.
 
+### Development server
+
+Need to preview your static site before your build it on your production server?
+No problem. Just use the Lifer commandline interface to start a development
+server at `http://localhost:9292`:
+
+    $ lifer serve
+
 ## Installation
 
 _This installation guide assumes you already have Ruby 3 installed on your
