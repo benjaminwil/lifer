@@ -63,6 +63,30 @@ RSpec.describe "bin/lifer", type: :system do
     end
   end
 
+  describe "bin/lifer -h" do
+    subject {
+      Dir.chdir(Lifer.root) do
+        system "lifer -h"
+      end
+    }
+
+    # FIXME:
+    # `#to_stdout_from_any_process` is slow.
+    #
+    it "displays help text" do
+      expect { subject }.to output(<<~HELP_TEXT).to_stdout_from_any_process
+        Lifer, the static site generator
+
+        Usage:
+          lifer [subcommand]
+
+        Subcommands:
+          build: Build the Lifer project as configured in your Lifer configuration file.
+          serve: Run a Lifer development server.
+      HELP_TEXT
+    end
+  end
+
   describe "bin/lifer serve" do
     subject {
       Dir.chdir(Lifer.root) do

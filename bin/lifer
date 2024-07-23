@@ -2,10 +2,16 @@
 
 require "bundler/setup"
 require_relative "../lib/lifer"
+require_relative "../lib/lifer/cli"
 
-arg = ARGV[0]
+parser = Lifer::CLI::ArgumentParser.new(input: ARGV)
+args = parser.output
+subcommand = parser.subcommand
+subcommand = :help if args[:h] || args[:help]
 
-if ["-h", "--help", "help"].include?(arg)
+case subcommand
+when :build, nil then Lifer.build!
+when :help
   puts <<~HELP_TEXT
     Lifer, the static site generator
 
@@ -16,16 +22,10 @@ if ["-h", "--help", "help"].include?(arg)
       build: Build the Lifer project as configured in your Lifer configuration file.
       serve: Run a Lifer development server.
   HELP_TEXT
-end
-
-if arg == "serve"
+when :serve
   Lifer.build!
 
   require "lifer/dev/server"
 
   Lifer::Dev::Server.start!
-end
-
-if arg.nil? || arg == "build"
-  Lifer.build!
 end
