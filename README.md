@@ -3,7 +3,7 @@
 Lifer is an extensible static site generator. Out of the box, it provides a
 classic static site generation experience, complete with RSS feed and ERB
 templating. Unlike other Ruby-based static site generators, Lifer encourages you
-to bring your own asset compiler pipeline and configure it as a pre-build step.
+to bring your own asset pipeline and configure it as a pre-build step.
 
 _Lifer is currently in pre-release. Features are incomplete. Your mileage may
 vary._
@@ -52,8 +52,6 @@ And then execute:
     $ bundle install
 
 ## Development
-
-_TODO_
 
 _This development guide assumes you already have Ruby 3 installed on your
 system._
