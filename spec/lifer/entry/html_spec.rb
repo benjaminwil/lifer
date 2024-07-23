@@ -15,6 +15,10 @@ RSpec.describe Lifer::Entry::HTML do
       support_file "root_with_entries/html_entry_with_layout_variables.html.erb"
     }
 
-    it { is_expected.to eq "html_entry_with_layout_variables.html" }
+    it "returns the output filename" do
+      with_stdout_silenced do
+        expect(subject).to eq "html_entry_with_layout_variables.html"
+      end
+    end
   end
 end
