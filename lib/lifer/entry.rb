@@ -96,16 +96,29 @@ class Lifer::Entry
   end
 
   # Using the current Lifer configuration, we can calculate the expected
-  # permalink for the entry. This would be useful for indexes and feeds and so
-  # on.
+  # permalink for the entry. For example:
+  #
+  #    https://example.com/index.html
+  #    https://example.com/blog/my-trip-to-toronto.html
+  #
+  # This would be useful for indexes and feeds and so on.
   #
   # @return [String] A permalink to the current entry.
-  def permalink
-    File.join Lifer.setting(:global, :host),
-      Lifer::URIStrategy
-        .find(collection.setting :uri_strategy)
-        .new(root: Lifer.root)
-        .output_file(self)
+  def permalink(host: Lifer.setting(:global, :host))
+    File.join host, Lifer::URIStrategy
+      .find(collection.setting :uri_strategy)
+      .new(root: Lifer.root)
+      .output_file(self)
+  end
+
+  # The expected, absolute URI path to the entry. For example:
+  #
+  #    /index.html
+  #    /blog/my-trip-to-toronto.html
+  #
+  # @return [String] The absolute URI path to the entry.
+  def path
+    permalink host: "/"
   end
 
   def title

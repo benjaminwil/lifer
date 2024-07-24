@@ -72,6 +72,27 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
   end
 
+  describe "#path" do
+    subject { entry.path }
+
+    let(:entry) { described_class.new file: file, collection: collection }
+    let(:file) { support_file "root_with_entries/tiny_entry.md" }
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+
+    before do
+      allow(Lifer)
+        .to receive(:root)
+        .and_return(support_file "root_with_entries")
+    end
+
+    it "responds with the path relative from root" do
+      expect(subject).to eq "/tiny_entry.html"
+    end
+  end
+
   describe "#permalink" do
     subject { entry.permalink }
 
