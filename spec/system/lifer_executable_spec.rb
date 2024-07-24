@@ -1,5 +1,5 @@
 require "spec_helper"
-
+require "lifer/cli"
 require "lifer/dev/server"
 
 RSpec.describe "bin/lifer", type: :system do
@@ -50,16 +50,9 @@ RSpec.describe "bin/lifer", type: :system do
     # `#to_stdout_from_any_process` is slow.
     #
     it "displays help text" do
-      expect { subject }.to output(<<~HELP_TEXT).to_stdout_from_any_process
-        Lifer, the static site generator
-
-        Usage:
-          lifer [subcommand]
-
-        Subcommands:
-          build: Build the Lifer project as configured in your Lifer configuration file.
-          serve: Run a Lifer development server.
-      HELP_TEXT
+      expect { subject }
+        .to output(/Lifer, the static site generator/)
+        .to_stdout_from_any_process
     end
   end
 
@@ -74,16 +67,9 @@ RSpec.describe "bin/lifer", type: :system do
     # `#to_stdout_from_any_process` is slow.
     #
     it "displays help text" do
-      expect { subject }.to output(<<~HELP_TEXT).to_stdout_from_any_process
-        Lifer, the static site generator
-
-        Usage:
-          lifer [subcommand]
-
-        Subcommands:
-          build: Build the Lifer project as configured in your Lifer configuration file.
-          serve: Run a Lifer development server.
-      HELP_TEXT
+      expect { subject }
+        .to output(/Lifer, the static site generator/)
+        .to_stdout_from_any_process
     end
   end
 

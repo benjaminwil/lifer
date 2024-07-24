@@ -1,27 +1,21 @@
 #!/usr/bin/env -S ruby -Eutf-8
 
 require "bundler/setup"
-require_relative "../lib/lifer"
-require_relative "../lib/lifer/cli"
+
+require "lifer"
+require "lifer/cli"
 
 parser = Lifer::CLI::ArgumentParser.new(input: ARGV)
-args = parser.output
 subcommand = parser.subcommand
+
+Lifer::CLI::ArgumentExecutor.execute!(args: parser.output)
+
+args = parser.output
 subcommand = :help if args[:h] || args[:help]
 
 case subcommand
 when :build, nil then Lifer.build!
-when :help
-  puts <<~HELP_TEXT
-    Lifer, the static site generator
-
-    Usage:
-      lifer [subcommand]
-
-    Subcommands:
-      build: Build the Lifer project as configured in your Lifer configuration file.
-      serve: Run a Lifer development server.
-  HELP_TEXT
+when :help then Lifer::CLI.help_text
 when :serve
   Lifer.build!
 

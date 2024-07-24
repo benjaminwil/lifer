@@ -7,7 +7,7 @@ module Lifer::CLI
   class ArgumentParser
     attr_accessor :input, :output, :subcommand
 
-    def initialize(input: [], subcommands: Lifer::CLI::SUBCOMMANDS)
+    def initialize(input: [], subcommands: Lifer::CLI::SUBCOMMANDS.keys)
       @subcommand =
         input.delete_at(0).to_sym if subcommand?(input[0], subcommands:)
       @input = input
