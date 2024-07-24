@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Minimal static weblog generator."
   spec.description   = "Minimal static weblog generator. Good RSS feeds."
   spec.homepage      = "https://github.com/benjaminwil/lifer"
-  spec.required_ruby_version = ">= 3.1"
+  spec.required_ruby_version = ">= 3.3"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
