@@ -1,5 +1,11 @@
+require "optparse"
+
+require "lifer/dev/server"
+
 module Lifer
-  module CLI
+  class CLI
+    # This constant tracks the supported Lifer CLI subcommands. Key: name;
+    # value: description.
     SUBCOMMANDS = {
       build:
         "Build the Lifer project as configured in your Lifer configuration " \
@@ -8,55 +14,57 @@ module Lifer
         "Display help text for the Lifer commandline interface.",
       serve:
         "Run a Lifer development server. (http://localhost:9292 by default.)"
-    }
-    PARAMETERS = {
-      help: {
-        description:
-          "Ignore other parameters and display help text for the Lifer " \
-          "commandline interface.",
-        method: -> {
-          Lifer::CLI.help_text
-          Lifer::CLI.exit!
-        }
-      }
-    }
-    SHORT_PARAMETERS = {
-      help: :h
-    }
-    HELP_PARAMETERS = [:help, :h]
+   }
 
     class << self
-      # When called, this method immediately exits the Ruby program. This
-      # wrapper method basically exists to make testing the CLI easier.
+      # This method parses the given CLI subcommands and arguments, and then
+      # starts the Lifer program as requested.
       #
       # @return [void]
-      def exit! = exit
+      def start! = self.new.start!
+    end
 
-      # Print help text to inform the user about the commandline interface
-      # options.
-      #
-      # @return [void]
-      def help_text
-        puts <<~TXT.rstrip
-          Lifer, the static site generator
+    attr_accessor :args, :subcommand, :parser
 
-          Usage:
-            lifer [subcommand]
+    def initialize
+      @subcommand, @args = user_input
+      @parser =
+        OptionParser.new do |parser|
+          parser.banner = ERB.new(<<~BANNER).result
+            Lifer, the static site generator. Usage: lifer [subcommand] [options]
 
-          Subcommands:
-        TXT
-        puts SUBCOMMANDS.map { "  %s: %s" % [_1, _2] }.join("\n")
-        puts <<~TXT.rstrip
+            Subcommands:
+              <%= Lifer::CLI::SUBCOMMANDS
+                .map { [Lifer::Utilities.bold_text(_1), _2].join(": ") }
+                .join("\n  ") %>
+          BANNER
+        end
+    end
 
-          Flags:
-        TXT
-        puts PARAMETERS.map { |name, info|
-          "  --%s, -%s: %s" % [name, SHORT_PARAMETERS[name], info[:description]]
-        }.join("\n")
+    def start!
+      case subcommand
+      when :build then parser.parse!(args) && Lifer.build!
+      when :help then parser.parse!(["--help"])
+      when :serve then parser.parse!(args) && Lifer::Dev::Server.start!
+      else
+        puts "%s is not a supported subcommand. Running %s instead." % [
+          Lifer::Utilities.bold_text(subcommand),
+          Lifer::Utilities.bold_text("lifer build"),
+        ]
+        parser.parse!(args) && Lifer.build!
       end
+    end
+
+    private
+
+    # @private
+    # Pre-parse the given CLI arguments to check for subcommands.
+    #
+    def user_input
+      return [:build, ARGV] if ARGV.empty?
+      return [:build, ARGV] if ARGV.first.start_with?("-")
+
+      [ARGV.first.to_sym, ARGV[1..]]
     end
   end
 end
-
-require_relative "cli/argument_executor"
-require_relative "cli/argument_parser"

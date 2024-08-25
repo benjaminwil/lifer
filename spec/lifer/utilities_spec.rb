@@ -3,6 +3,12 @@ require "spec_helper"
 RSpec.describe Lifer::Utilities do
   let(:described_module) { described_class }
 
+  describe ".bold_text" do
+    subject { described_module.bold_text "string" }
+
+    it { is_expected.to eq "\e[1mstring\e[0m" }
+  end
+
   describe ".classify" do
     subject { described_module.classify string }
 

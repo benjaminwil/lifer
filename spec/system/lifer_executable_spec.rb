@@ -1,6 +1,5 @@
 require "spec_helper"
 require "lifer/cli"
-require "lifer/dev/server"
 
 RSpec.describe "bin/lifer", type: :system do
   before do
@@ -29,6 +28,28 @@ RSpec.describe "bin/lifer", type: :system do
         system "lifer build"
       end
     }
+
+    it "builds the Lifer project" do
+      expect { subject }
+        .to change { Dir.glob("#{Lifer.output_directory}/*").size }
+        .from(0)
+        .and output(/Using default configuration/)
+        .to_stdout_from_any_process
+    end
+  end
+
+  describe "bin/lifer haha" do
+    subject {
+      Dir.chdir(Lifer.root) do
+        system "lifer haha"
+      end
+    }
+
+    it "outputs a useful message" do
+      expect { subject }
+        .to output(/\e\[1mhaha\e\[0m is not a supported subcommand/i)
+        .to_stdout_from_any_process
+    end
 
     it "builds the Lifer project" do
       expect { subject }

@@ -5,21 +5,4 @@ require "bundler/setup"
 require "lifer"
 require "lifer/cli"
 
-parser = Lifer::CLI::ArgumentParser.new(input: ARGV)
-subcommand = parser.subcommand
-
-Lifer::CLI::ArgumentExecutor.execute!(args: parser.output)
-
-args = parser.output
-subcommand = :help if args[:h] || args[:help]
-
-case subcommand
-when :build, nil then Lifer.build!
-when :help then Lifer::CLI.help_text
-when :serve
-  Lifer.build!
-
-  require "lifer/dev/server"
-
-  Lifer::Dev::Server.start!
-end
+Lifer::CLI.start!

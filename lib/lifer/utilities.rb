@@ -1,5 +1,13 @@
 module Lifer::Utilities
   class << self
+    # Output a string using bold escape sequences to the output TTY text.
+    #
+    # @param string [String] The string to display in bold.
+    # @return [String] The string, but in bold.
+    def bold_text(string)
+      "\e[1m#{string}\e[0m"
+    end
+
     # Given a string path, classify it into a namespaced Ruby constant. If the
     # constant does not exist, we raise a helpful error. For example:
     #
