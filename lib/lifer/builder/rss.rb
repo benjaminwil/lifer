@@ -10,6 +10,11 @@ class Lifer::Builder::RSS < Lifer::Builder
   self.settings = [:rss]
 
   class << self
+    # Traverses and renders an RSS feed for each feedable collection in the
+    # configured output directory for the Lifer project.
+    #
+    # @param root [String] The Lifer root.
+    # @return [void]
     def execute(root:)
       Dir.chdir Lifer.output_directory do
         new(root: root).execute
@@ -17,6 +22,9 @@ class Lifer::Builder::RSS < Lifer::Builder
     end
   end
 
+  # Traverses and renders an RSS feed for feedable collection.
+  #
+  # @return [void]
   def execute
     collections_with_feeds.each do |collection|
       next unless (filename = output_filename(collection))
