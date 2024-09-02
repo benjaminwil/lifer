@@ -14,10 +14,10 @@ module Lifer::Dev
       #
       # @param port [Integer] The port to start the Puma server with.
       # @return [void] The foregrounded Puma process.
-      def start!(port: DEFAULT_PORT)
+      def start!(port:)
         puma_configuration = Puma::Configuration.new do |config|
           config.app rack_app
-          config.bind "tcp://127.0.0.1:#{port}"
+          config.bind "tcp://127.0.0.1:#{port || DEFAULT_PORT}"
           config.environment "development"
           config.log_requests true
         end

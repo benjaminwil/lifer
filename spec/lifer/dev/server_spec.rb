@@ -3,7 +3,7 @@ require "lifer/dev/server"
 
 RSpec.describe Lifer::Dev::Server do
   describe ".start!" do
-    subject { described_class.start! }
+    subject { described_class.start! port: 9292 }
 
     it "starts a Puma server" do
       dummy_runner = double(run: "running!")

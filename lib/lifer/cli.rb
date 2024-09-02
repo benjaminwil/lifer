@@ -37,7 +37,20 @@ module Lifer
               <%= Lifer::CLI::SUBCOMMANDS
                 .map { [Lifer::Utilities.bold_text(_1), _2].join(": ") }
                 .join("\n  ") %>
+
+            Options:
           BANNER
+
+          parser
+            .on(
+              "-pPORT",
+              "--port=PORT",
+              "Specify a custom port for the dev server."
+            ) do |port|
+            @dev_server_port = Integer port
+          rescue => e
+            raise "Problem with port argument: #{e}"
+          end
         end
     end
 
@@ -45,7 +58,8 @@ module Lifer
       case subcommand
       when :build then parser.parse!(args) && Lifer.build!
       when :help then parser.parse!(["--help"])
-      when :serve then parser.parse!(args) && Lifer::Dev::Server.start!
+      when :serve then parser.parse!(args) &&
+        Lifer::Dev::Server.start!(port: @dev_server_port)
       else
         puts "%s is not a supported subcommand. Running %s instead." % [
           Lifer::Utilities.bold_text(subcommand),
