@@ -1,3 +1,4 @@
+require "listen"
 require "puma"
 require "puma/configuration"
 require "rack"
@@ -18,17 +19,60 @@ module Lifer::Dev
           config.app rack_app
           config.bind "tcp://127.0.0.1:#{port}"
           config.environment "development"
+          config.log_requests true
         end
+
+        Lifer.build!
+
+        listener.start
 
         Puma::Launcher.new(puma_configuration).run
       end
 
+      # A proc that follows the [Rack server specification][1]. Because we don't
+      # want to commit a rackup configuration file at this time, any "middleware"
+      # we want to insert should be a part of this method.
+      #
+      # [1]: https://github.com/rack/rack/blob/main/SPEC.rdoc
+      #
+      # @return [Array] A Rack server-compatible array.
       def rack_app
-        -> (env) { router.response_for(env) }
+        -> (env) {
+          reload!
+          router.response_for(env)
+        }
       end
 
       private
 
+      # @private
+      # We notify the dev server whether there are changes within the Lifer root
+      # using a Listener callback method.
+      #
+      def listener
+        @listener ||=
+          Listen.to(Lifer.root) do |modified, added, removed|
+            @changes = true
+          end
+      end
+
+      # @private
+      # On reload, we rebuild the Lifer project.
+      #
+      # FIXME:
+      # Partial rebuilds would be a nice enhancement for performance reasons.
+      #
+      def reload!
+        if @changes
+          Lifer.build!
+
+          @changes = false
+        end
+      end
+
+      # @private
+      # @return [Lifer::Dev::Router] Our dev server router.
+      #
       def router
         @router ||=
           Lifer::Dev::Router.new(build_directory: Lifer.output_directory)
