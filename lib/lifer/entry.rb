@@ -92,7 +92,7 @@ class Lifer::Entry
   #
   # @return [String]
   def full_text
-    File.readlines(file).join if file
+    @full_text ||= File.readlines(file).join if file
   end
 
   # Using the current Lifer configuration, we can calculate the expected
@@ -105,10 +105,11 @@ class Lifer::Entry
   #
   # @return [String] A permalink to the current entry.
   def permalink(host: Lifer.setting(:global, :host))
-    File.join host, Lifer::URIStrategy
-      .find(collection.setting :uri_strategy)
-      .new(root: Lifer.root)
-      .output_file(self)
+    @permalink ||=
+      File.join host, Lifer::URIStrategy
+        .find(collection.setting :uri_strategy)
+        .new(root: Lifer.root)
+        .output_file(self)
   end
 
   # The expected, absolute URI path to the entry. For example:
@@ -118,7 +119,7 @@ class Lifer::Entry
   #
   # @return [String] The absolute URI path to the entry.
   def path
-    permalink host: "/"
+    @path ||= permalink host: "/"
   end
 
   def title
