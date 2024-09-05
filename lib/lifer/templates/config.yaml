@@ -50,6 +50,24 @@ selections:
 # These settings are special, and they're used for all of your collections and
 # cannot be set per collection.
 #
+# Note that the `build:` and `prebuild:` keys can be configured to work
+# differently per environment (`build` or `serve`):
+#
+# Valid:
+#
+#    # global:
+#    #   prebuild:
+#    #     serve:
+#    #       - watch_and_rebuild_assets_command
+#    #     build:
+#    #       - final_minified_build_assets_command
+#
+# Also valid:
+#
+#    # global:
+#    #   prebuild:
+#    #     - final_minified_build_assets_command
+#
 global:
   build:
     - html

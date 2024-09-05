@@ -22,7 +22,7 @@ module Lifer::Dev
           config.log_requests true
         end
 
-        Lifer.build!
+        Lifer.build!(environment: :serve)
 
         listener.start
 

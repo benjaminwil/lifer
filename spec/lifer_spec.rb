@@ -19,7 +19,7 @@ RSpec.describe Lifer do
 
         subject
 
-        expect(brain).to have_received(:build!).once
+        expect(brain).to have_received(:build!).with(environment: :build).once
       end
     end
   end

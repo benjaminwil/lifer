@@ -1,11 +1,21 @@
 require_relative "utilities"
 
 class Lifer::Config
+  # Some settings may take variants based on the current Lifer environment. The
+  # environments with variant configurations include "build" (for static builds,
+  # or: production mode) and "serve" (for development mode).
+  #
+  CONFIG_ENVIRONMENTS = [:build, :serve]
+
+  # The "global" section of the config file is the one explicitly special part
+  # of the config. It's used to provide information Lifer needs to keep track of
+  # across the entire pre-build and build process.
+  #
   GLOBAL_SETTINGS = [
-    :build,
+    {build: CONFIG_ENVIRONMENTS},
     :host,
     :output_directory,
-    :prebuild
+    {prebuild: CONFIG_ENVIRONMENTS}
   ]
   DEFAULT_CONFIG_FILE = "%s/lib/lifer/templates/config.yaml" % Lifer.gem_root
   DEFAULT_LAYOUT_FILE = "%s/lib/lifer/templates/layout.html.erb" % Lifer.gem_root

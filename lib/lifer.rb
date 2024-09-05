@@ -20,8 +20,13 @@ module Lifer
       @@brain ||= Lifer::Brain.init(root: root, config_file: config_file)
     end
 
-    def build!
-      brain.build!
+    # Initiates the Lifer build process.
+    #
+    # @param environment [Symbol] The name of the current Lifer environment.
+    #   Valid environments are `:build` or `:serve`.
+    # @return [void]
+    def build!(environment: :build)
+      brain.build! environment:
     end
 
     def collections

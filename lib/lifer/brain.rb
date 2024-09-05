@@ -57,13 +57,26 @@ class Lifer::Brain
   # Destroy any existing build output and then build the Lifer project with all
   # configured `Lifer::Builder`s.
   #
+  # @param environment [Symbol] The current Lifer environment.
   # @return [void] This builds the Lifer site to the configured output
   #   directory.
-  def build!
+  def build!(environment: :build)
     brainwash!
 
-    Lifer::Builder.prebuild! *setting(:global, :prebuild), root: root
-    Lifer::Builder.build! *setting(:global, :build), root: root
+    prebuild_steps =
+      case setting(:global, :prebuild)
+      when Array, NilClass then setting(:global, :prebuild)
+      when Hash then setting(:global, :prebuild, environment)
+      end
+
+    builder_list =
+      case setting(:global, :build)
+      when Array, NilClass then setting(:global, :build)
+      when Hash then setting(:global, :build, environment)
+      end
+
+    Lifer::Builder.prebuild!(*prebuild_steps, root:)
+    Lifer::Builder.build!(*builder_list, root:)
   end
 
   # Returns all collections and selections within the Lifer root.

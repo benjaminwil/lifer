@@ -123,6 +123,41 @@ RSpec.describe Lifer::Brain do
         end
       end
 
+      context "when steps are provided per environment" do
+        let(:config) {
+          config_file = temp_config(<<~CONFIG)
+            global:
+              prebuild:
+                serve:
+                  - echo "serve command"
+                build:
+                  - echo "build command"
+          CONFIG
+
+          Lifer::Config.build file: config_file
+        }
+
+        it "shells out to execute each command for the current environment" do
+          allow(Lifer::Config).to receive(:build).and_return config
+
+          dummy_stdout = instance_double(IO, readlines: ["output"])
+
+          allow(Open3)
+            .to receive(:popen3)
+            .with("echo \"serve command\"")
+            .and_return([double, dummy_stdout, double, double])
+          allow(Open3).to receive(:popen3).with("echo \"build command\"")
+            .and_return([double, dummy_stdout, double, double])
+
+          subject
+
+          expect(Open3)
+            .not_to have_received(:popen3).with("echo \"serve command\"")
+          expect(Open3)
+            .to have_received(:popen3).with("echo \"build command\"").once
+        end
+      end
+
       context "when the given prebuild steps are acceptable" do
         let(:config) {
           config_file = temp_config(<<~CONFIG)
@@ -135,7 +170,7 @@ RSpec.describe Lifer::Brain do
           Lifer::Config.build file: config_file
         }
 
-        it "shells out execute each prebuild step" do
+        it "shells out to execute each prebuild step" do
           allow(Lifer::Config).to receive(:build).and_return config
 
           dummy_stdout = instance_double(IO, readlines: ["output"])
