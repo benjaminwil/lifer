@@ -51,7 +51,8 @@ class Lifer::Config
   #
   # @return [Array<Symbol>] A list of non-root collection names.
   def collectionables
-    raw.keys.select { |setting| has_collection_settings? setting }
+    @collectionables ||=
+      raw.keys.select { |setting| has_collection_settings? setting }
   end
 
   # This method allows user scripts and extensions to register arbitrary
@@ -113,12 +114,14 @@ class Lifer::Config
   end
 
   def collection_candidates
-    subdirectories = Dir.glob("#{root}/**/*")
-      .select { |entry| File.directory? entry }
-      .map { |entry| entry.gsub("#{root}/", "") }
-
-    subdirectories
-      .select { |dir| !Lifer.ignoreable? dir }.map(&:to_sym).sort.reverse
+    @collection_candidates ||=
+      Dir.glob("#{root}/**/*")
+        .select { |entry| File.directory? entry }
+        .map { |entry| entry.gsub("#{root}/", "") }
+        .select { |dir| !Lifer.ignoreable? dir }
+        .map(&:to_sym)
+        .sort
+        .reverse
   end
 
   def default_settings
