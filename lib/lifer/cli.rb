@@ -46,6 +46,16 @@ module Lifer
 
           parser
             .on(
+              "-d",
+              "--dump-default-config",
+              "Print the default configuration file to STDOUT and exit."
+            ) do |_|
+            puts File.read(Lifer::Config::DEFAULT_CONFIG_FILE)
+            exit
+          end
+
+          parser
+            .on(
               "-pPORT",
               "--port=PORT",
               "Specify a custom port for the dev server."

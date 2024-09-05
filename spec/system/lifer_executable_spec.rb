@@ -22,6 +22,23 @@ RSpec.describe "bin/lifer", type: :system do
     end
   end
 
+  describe "bin/lifer --dump-default-config" do
+    subject {
+      Dir.chdir(Lifer.root) do
+        system "lifer --dump-default-config"
+      end
+    }
+
+    it "outputs the default configuration file and doesn't build anything" do
+      expect { subject }.to output(
+        /# This file provides the default configuration settings for Lifer./i
+      ).to_stdout_from_any_process
+
+      expect { subject }
+        .not_to change { Dir.glob("#{Lifer.output_directory}/*").size }
+    end
+  end
+
   describe "bin/lifer build" do
     subject {
       Dir.chdir(Lifer.root) do
