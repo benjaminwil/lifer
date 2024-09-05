@@ -25,7 +25,7 @@ RSpec.describe Lifer::Utilities do
         expect { subject }.to raise_error RuntimeError,
           "could not find constant for path " \
             "\"lifer/selection/doesnt_exist\" " \
-            "(Lifer::Selection::DoesntExist)"
+            "(Lifer::Selection::DoesntExist)\n"
       end
     end
   end

@@ -26,8 +26,11 @@ module Lifer::Utilities
     def classify(string_constant)
       Object.const_get camelize(string_constant)
     rescue NameError => exception
-      raise "could not find constant for path \"#{string_constant}\" " \
-        "(#{camelize(string_constant)})"
+      raise I18n.t(
+        "utilities.classify_error",
+        string_constant:,
+        camel_cased_string_constant: camelize(string_constant)
+      )
     end
 
     # Given a path, figure out what the extension is. It supports

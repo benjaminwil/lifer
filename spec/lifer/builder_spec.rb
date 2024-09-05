@@ -47,7 +47,7 @@ RSpec.describe Lifer::Builder do
         with_stdout_silenced do
           expect { subject }.to raise_error RuntimeError, "Lifer failed to "   \
             "complete building... A prebuild step failed to execute: No such " \
-            "file or directory - not_executable"
+            "file or directory - not_executable\n"
           end
       end
     end

@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
     spec.files.grep(%r{\Abin/}) { |bin_file| File.basename(bin_file) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "i18n", "< 2"
   spec.add_dependency "kramdown", "~> 2.4"
   spec.add_dependency "listen", "< 4"
   spec.add_dependency "puma", "< 7"

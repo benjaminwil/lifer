@@ -45,7 +45,7 @@ class Lifer::Selection < Lifer::Collection
   #
   # @raise [NotImplementedError]
   def entries
-    raise NotImplementedError, "all selections must implement `#entries`"
+    raise NotImplementedError, I18n.t("selection.entries_not_implemented")
   end
 
   # FIXME:
@@ -69,7 +69,7 @@ class Lifer::Selection < Lifer::Collection
   # file of a selection, it would be wrong to. So we would raise an error.
   #
   def layout_file
-    raise "selections do not have layout files"
+    raise I18n.t("selection.layouts_not_allowed")
   end
 
   self.name = :selection

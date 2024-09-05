@@ -12,7 +12,7 @@ class Lifer::URIStrategy
   end
 
   def output_file(entry)
-    raise NotImplementedError, "implement on a subclass"
+    raise NotImplementedError, I18n.t("shared.not_implemented_method")
   end
 
   self.name = :uri_strategy

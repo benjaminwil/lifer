@@ -89,6 +89,10 @@ module Lifer
   end
 end
 
+require "i18n"
+I18n.load_path += Dir["%s/locales/*.yml" % Lifer.gem_root]
+I18n.available_locales = [:en]
+
 # `Lifer::Shared` contains modules that that may or may not be included on other
 # classes required below.
 #

@@ -54,7 +54,7 @@ class Lifer::Entry::Markdown < Lifer::Entry
     when Time then date_data
     when String then DateTime.parse(date_data).to_time
     else
-      puts "[%s]: no date metadata" % [file]
+      puts "[%s]: %s" % [file, I18n.t("entry.markdown.no_date_metadata")]
       nil
     end
   rescue ArgumentError => error

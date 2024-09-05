@@ -1,0 +1,45 @@
+en:
+  builder:
+    prebuild_failure: >
+      Lifer failed to complete building... A prebuild step failed to execute: %{exception}
+  cli:
+    bad_port: >
+      Problem with port argument: %{exception}
+    banner:
+      description: >
+        %{program_name}, the static site generator
+      subcommands: Subcommands
+      options: Options
+      usage: Usage
+    no_subcommand: >
+      %{subcommand} is not a supported subcommand. Running %{default_command} instead.
+    options:
+      dump_default_config: Print the default configuration file to STDOUT and exit.
+      port: Specify a custom port for the dev server.
+    subcommands:
+      build: Build the Lifer project as configured in your Lifer configuration file.
+      help: Display help text for the Lifer commandline interface.
+      serve: Run a Lifer development server. (http://localhost:9292 by default.)
+  dev:
+    router:
+      content_type_not_implemented: no content type defined for files like %{path} yet
+      four_oh_four: 404 Not Found
+  entry:
+    feedable_error: >
+      please set `%{entry_class}.include_in_feeds` to true or false
+    markdown:
+      no_date_metadata: no date metadata
+    not_found: >
+      file "%{file}" does not exist
+  config:
+    no_config_file_at: No configuration file at %{file}. Using default configuration.
+  selection:
+    entries_not_implemented: all selections must implement the `#entries` method
+    layouts_not_allowed: selections do not have layout files
+  shared:
+    not_implemented_method: subclasses must implement this method
+    finder_methods:
+      unknown_class: no class with name "%{name}"
+  utilities:
+    classify_error: >
+      could not find constant for path "%{string_constant}" (%{camel_cased_string_constant})

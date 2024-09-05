@@ -7,13 +7,9 @@ module Lifer
     # This constant tracks the supported Lifer CLI subcommands. Key: name;
     # value: description.
     SUBCOMMANDS = {
-      build:
-        "Build the Lifer project as configured in your Lifer configuration " \
-        "file.",
-      help:
-        "Display help text for the Lifer commandline interface.",
-      serve:
-        "Run a Lifer development server. (http://localhost:9292 by default.)"
+      build: I18n.t("cli.subcommands.build"),
+      help: I18n.t("cli.subcommands.help"),
+      serve: I18n.t("cli.subcommands.serve")
    }
 
     class << self
@@ -31,38 +27,27 @@ module Lifer
       @parser =
         OptionParser.new do |parser|
           parser.banner = ERB.new(<<~BANNER).result
-            Lifer, the static site generator.
-
-            Usage:
+            <%= I18n.t "cli.banner.description", program_name: "Lifer" %>
+            <%= I18n.t "cli.banner.usage" %>:
               lifer [subcommand] [options]
 
-            Subcommands:
+            <%= I18n.t "cli.banner.subcommands" %>:
               <%= Lifer::CLI::SUBCOMMANDS
                 .map { [Lifer::Utilities.bold_text(_1), _2].join(": ") }
                 .join("\n  ") %>
 
-            Options:
+            <%= I18n.t "cli.banner.options" %>:
           BANNER
 
-          parser
-            .on(
-              "-d",
-              "--dump-default-config",
-              "Print the default configuration file to STDOUT and exit."
-            ) do |_|
+          parser.on("-d", "--dump-default-config", topt(:dump_default_config)) do |_|
             puts File.read(Lifer::Config::DEFAULT_CONFIG_FILE)
             exit
           end
 
-          parser
-            .on(
-              "-pPORT",
-              "--port=PORT",
-              "Specify a custom port for the dev server."
-            ) do |port|
+          parser.on("-pPORT", "--port=PORT", topt(:port)) do |port|
             @dev_server_port = Integer port
-          rescue => e
-            raise "Problem with port argument: #{e}"
+          rescue => exception
+            raise I18n.t("cli.bad_port", exception:)
           end
         end
     end
@@ -74,15 +59,24 @@ module Lifer
       when :serve then parser.parse!(args) &&
         Lifer::Dev::Server.start!(port: @dev_server_port)
       else
-        puts "%s is not a supported subcommand. Running %s instead." % [
-          Lifer::Utilities.bold_text(subcommand),
-          Lifer::Utilities.bold_text("lifer build"),
-        ]
+        puts I18n.t(
+          "cli.no_subcommand",
+          subcommand: Lifer::Utilities.bold_text(subcommand),
+          default_command: Lifer::Utilities.bold_text("lifer build")
+        )
+
         parser.parse!(args) && Lifer.build!
       end
     end
 
     private
+
+    # @private
+    # Convenience method to get translated option documentation.
+    #
+    def topt(i18n_key)
+      I18n.t("cli.options.#{i18n_key}")
+    end
 
     # @private
     # Pre-parse the given CLI arguments to check for subcommands.

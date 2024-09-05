@@ -52,8 +52,7 @@ class Lifer::Builder
         stdout.readlines.each { puts _1 }
       end
     rescue Errno::ENOENT => exception
-      raise "Lifer failed to complete building... A prebuild step failed to " \
-        "execute: #{exception}"
+      raise I18n.t("builder.prebuild_failure", exception:)
     end
 
     private

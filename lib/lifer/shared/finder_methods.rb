@@ -21,7 +21,11 @@ module Lifer::Shared::FinderMethods
     def find(name)
       result = descendants.detect { |descendant| descendant.name == name.to_sym }
 
-      raise StandardError, "no class with name \"%s\"" % name if result.nil?
+      if result.nil?
+        raise StandardError, I18n.t("shared.finder_methods.unknown_class", name:)
+        return
+      end
+
       result
     end
 

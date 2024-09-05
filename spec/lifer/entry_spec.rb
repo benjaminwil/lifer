@@ -11,7 +11,7 @@ RSpec.describe Lifer::Entry do
 
       it "raises an error" do
         expect { subject }
-          .to raise_error StandardError, "file \"doesnt-exist\" does not exist"
+          .to raise_error StandardError, "file \"doesnt-exist\" does not exist\n"
       end
     end
 

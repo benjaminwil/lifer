@@ -64,7 +64,7 @@ class Lifer::Entry
 
     # @private
     def error!(file)
-      raise StandardError, "file \"#{file}\" does not exist"
+      raise StandardError, I18n.t("entry.not_found", file:)
     end
   end
 
@@ -82,7 +82,7 @@ class Lifer::Entry
   def feedable?
     if (setting = self.class.include_in_feeds).nil?
       raise NotImplementedError,
-        "please set `#{self.class}.include_in_feeds` to true or false."
+        I18n.t("entry.feedable_error", entry_class: self.class)
     end
 
     setting
@@ -123,11 +123,11 @@ class Lifer::Entry
   end
 
   def title
-    raise NotImplementedError, "subclasses must implemented this method"
+    raise NotImplementedError, I18n.t("shared.not_implemented_method")
   end
 
   def to_html
-    raise NotImplementedError, "subclasses must implemented this method"
+    raise NotImplementedError, I18n.t("shared.not_implemented_method")
   end
 
   self.include_in_feeds = false

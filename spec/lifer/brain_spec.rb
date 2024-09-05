@@ -119,7 +119,7 @@ RSpec.describe Lifer::Brain do
             end
           }.to raise_error RuntimeError,
             "Lifer failed to complete building... A prebuild step failed to " \
-              "execute: No such file or directory - not_an_executable_program"
+              "execute: No such file or directory - not_an_executable_program\n"
         end
       end
 

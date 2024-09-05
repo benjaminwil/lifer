@@ -1,6 +1,5 @@
 module Lifer::Dev
   class Response
-    FOUR_OH_FOUR_TEXT = "404 Not Found"
     attr_accessor :path
 
     def initialize(path)
@@ -14,7 +13,7 @@ module Lifer::Dev
     private
 
     def contents
-      return [FOUR_OH_FOUR_TEXT] unless File.exist?(path)
+      return [I18n.t("dev.router.four_oh_four")] unless File.exist?(path)
 
       [File.read(path)]
     end
@@ -26,7 +25,8 @@ module Lifer::Dev
       when ".js" then "text/javascript"
       when ".ico" then "image/ico"
       else
-        raise NotImplementedError, "no content type defined for files like #{path} yet"
+        raise NotImplementedError,
+          I18n.t("dev.router.content_type_not_implemented", path:)
       end
     end
 
