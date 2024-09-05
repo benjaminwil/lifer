@@ -1,5 +1,9 @@
 require_relative "utilities"
 
+# This class is responsible for reading the Lifer configuration YAML file. This
+# file should provided by the user, but the Lifer Ruby gem does provide a default
+# file, as well.
+#
 class Lifer::Config
   # Some settings may take variants based on the current Lifer environment. The
   # environments with variant configurations include "build" (for static builds,
@@ -17,11 +21,30 @@ class Lifer::Config
     :output_directory,
     {prebuild: CONFIG_ENVIRONMENTS}
   ]
+
+  # The Lifer Ruby gem provides default configuration and layout files in case
+  # the user does not supply their own.
+  #
   DEFAULT_CONFIG_FILE = "%s/lib/lifer/templates/config.yaml" % Lifer.gem_root
   DEFAULT_LAYOUT_FILE = "%s/lib/lifer/templates/layout.html.erb" % Lifer.gem_root
+
+  # FIXME:
+  # I don't think this really belongs here. But in some cases we need to provide
+  # the implicit setting key and a default value when calling the `#setting`
+  # method. It would be nicer if the HTML builder handled this, somehow.
+  #
   DEFAULT_IMPLICIT_SETTINGS = {
     layout_file: DEFAULT_LAYOUT_FILE
   }
+
+  # A setting must be registered before Lifer will read it and do anything with
+  # it. The following settings are registered by default.
+  #
+  # (Note that when users add their own custom Ruby classes with custom
+  # settings, they must register those settings dynamically. Search this source
+  # code for `Lifer.register_settings` to see examples of settings being
+  # registered.)
+  #
   DEFAULT_REGISTERED_SETTINGS = [
     :author,
     :description,

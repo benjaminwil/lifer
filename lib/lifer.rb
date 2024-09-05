@@ -3,12 +3,15 @@
 require "set"
 
 module Lifer
+  # Lifer considers files and directories that have the following names or
+  # contain the following patterns special and ignoreable when they're at the
+  # root of the Lifer project.
+  #
   IGNORE_DIRECTORIES = [
     "assets",
     "bin",
     "vendor"
   ]
-
   IGNORE_PATTERNS = [
     "^(\\.)",     # Starts with a dot.
     "^(_)",       # Starts with an underscore.
@@ -16,8 +19,15 @@ module Lifer
   ] | IGNORE_DIRECTORIES.map { |d| "^(#{d})" }
 
   class << self
+    # The first time `Lifer.brain` is referenced, we build a new `Lifer::Brain`
+    # object that is used and reused until the current process has ended.
+    #
+    # @param root [String] The absolute path to the Lifer project root.
+    # @param config_file [String] The absolute path to the Lifer project's
+    #   configuration file.
+    # @return [Lifer::Brain] A brain!
     def brain(root: Dir.pwd, config_file: nil)
-      @@brain ||= Lifer::Brain.init(root: root, config_file: config_file)
+      @@brain ||= Lifer::Brain.init root:, config_file:
     end
 
     # Initiates the Lifer build process.
