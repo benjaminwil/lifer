@@ -31,7 +31,10 @@ module Lifer
       @parser =
         OptionParser.new do |parser|
           parser.banner = ERB.new(<<~BANNER).result
-            Lifer, the static site generator. Usage: lifer [subcommand] [options]
+            Lifer, the static site generator.
+
+            Usage:
+              lifer [subcommand] [options]
 
             Subcommands:
               <%= Lifer::CLI::SUBCOMMANDS
