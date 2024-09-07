@@ -9,8 +9,11 @@ module Lifer
     BANNER_ERB =
       File.read("%s/lib/lifer/templates/cli.txt.erb" % Lifer.gem_root)
 
-    # This constant tracks the supported Lifer CLI subcommands. Key: name;
-    # value: description.
+    # This constant tracks the supported Lifer CLI subcommands.
+    #
+    #   Key: name
+    #   Value: description
+    #
     SUBCOMMANDS = {
       build: I18n.t("cli.subcommands.build"),
       help: I18n.t("cli.subcommands.help"),
