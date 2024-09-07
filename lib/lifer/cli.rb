@@ -36,28 +36,36 @@ module Lifer
         OptionParser.new do |parser|
           parser.banner = ERB.new(BANNER_ERB).result
 
-            <%= I18n.t "cli.banner.options" %>:
-          BANNER
+          parser.on "-cCONFIG", "--config=CONFIG", topt(:config) do |config|
+            @config_file = config
+          end
 
-          parser.on("-d", "--dump-default-config", topt(:dump_default_config)) do |_|
+          parser.on "-d", "--dump-default-config", topt(:dump_default_config) do |_|
             puts File.read(Lifer::Config::DEFAULT_CONFIG_FILE)
             exit
           end
 
-          parser.on("-pPORT", "--port=PORT", topt(:port)) do |port|
+          parser.on "-pPORT", "--port=PORT", topt(:port) do |port|
             @dev_server_port = Integer port
           rescue => exception
             raise I18n.t("cli.bad_port", exception:)
+          end
+
+          parser.on "-rROOT", "--root=ROOT", topt(:root) do |root|
+            @root = root
           end
         end
     end
 
     def start!
+      parser.parse! args
+
+      Lifer.brain(**{root: @root, config_file: @config_file}.compact)
+
       case subcommand
-      when :build then parser.parse!(args) && Lifer.build!
+      when :build then Lifer.build!
       when :help then parser.parse!(["--help"])
-      when :serve then parser.parse!(args) &&
-        Lifer::Dev::Server.start!(port: @dev_server_port)
+      when :serve then Lifer::Dev::Server.start!(port: @dev_server_port)
       else
         puts I18n.t(
           "cli.no_subcommand",

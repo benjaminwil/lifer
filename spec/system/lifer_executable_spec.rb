@@ -39,6 +39,30 @@ RSpec.describe "bin/lifer", type: :system do
     end
   end
 
+  describe "bin/lifer --config <custom-config> --root <custom-root>" do
+    subject {
+      Dir.chdir(Lifer.root) do
+        system "lifer --config #{config_file} --root #{root}"
+      end
+    }
+
+    let(:config_file) {
+      temp_config(<<~CONFIG)
+        global:
+          build:
+            - html
+          output_directory: _custom-output-directory
+      CONFIG
+    }
+    let(:root) { temp_root }
+
+    it "builds the project using the given config and root arguments" do
+      expect { subject }
+        .to change { Dir.glob("#{root}/_custom-output-directory/**/*").size }
+        .from(0)
+    end
+  end
+
   describe "bin/lifer build" do
     subject {
       Dir.chdir(Lifer.root) do
