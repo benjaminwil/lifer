@@ -4,6 +4,11 @@ require "lifer/dev/server"
 
 module Lifer
   class CLI
+    # The core CLI help text lives in a template file.
+    #
+    BANNER_ERB =
+      File.read("%s/lib/lifer/templates/cli.txt.erb" % Lifer.gem_root)
+
     # This constant tracks the supported Lifer CLI subcommands. Key: name;
     # value: description.
     SUBCOMMANDS = {
@@ -26,15 +31,7 @@ module Lifer
       @subcommand, @args = user_input
       @parser =
         OptionParser.new do |parser|
-          parser.banner = ERB.new(<<~BANNER).result
-            <%= I18n.t "cli.banner.description", program_name: "Lifer" %>
-            <%= I18n.t "cli.banner.usage" %>:
-              lifer [subcommand] [options]
-
-            <%= I18n.t "cli.banner.subcommands" %>:
-              <%= Lifer::CLI::SUBCOMMANDS
-                .map { [Lifer::Utilities.bold_text(_1), _2].join(": ") }
-                .join("\n  ") %>
+          parser.banner = ERB.new(BANNER_ERB).result
 
             <%= I18n.t "cli.banner.options" %>:
           BANNER

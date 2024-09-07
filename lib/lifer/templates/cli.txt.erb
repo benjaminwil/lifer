@@ -1,0 +1,10 @@
+<%= I18n.t "cli.banner.description", program_name: "Lifer" %>
+<%= I18n.t "cli.banner.usage" %>:
+  lifer [subcommand] [options]
+
+<%= I18n.t "cli.banner.subcommands" %>:
+  <%= Lifer::CLI::SUBCOMMANDS
+    .map { [Lifer::Utilities.bold_text(_1), _2].join(": ") }
+    .join("\n  ") %>
+
+<%= I18n.t "cli.banner.options" %>:
