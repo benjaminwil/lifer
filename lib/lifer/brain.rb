@@ -8,7 +8,6 @@ require_relative "config"
 #
 class Lifer::Brain
   DEFAULT_CONFIG_FILE_URI = ".config/lifer.yaml"
-  DEFAULT_OUTPUT_DIRECTORY_NAME = "_build"
 
   attr_reader :root
 
