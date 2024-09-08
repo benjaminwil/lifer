@@ -4,9 +4,9 @@ require "fileutils"
 # `#to_html`.
 #
 class Lifer::Builder::HTML < Lifer::Builder
-  require_relative "html/layout"
-
   self.name = :html
+
+  require_relative "html/from_erb"
 
   class << self
     # Traverses and renders each entry for each collection in the configured
@@ -64,7 +64,7 @@ class Lifer::Builder::HTML < Lifer::Builder
   #   this return value.
   def generate_output_file_for(entry)
     File.open(output_file(entry), "w") { |file|
-      file.write(Layout.build entry: entry)
+      file.write(LayoutFromERB.build entry: entry)
     }
   end
 

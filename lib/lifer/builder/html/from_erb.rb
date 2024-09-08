@@ -1,7 +1,7 @@
 require "erb"
 
 class Lifer::Builder::HTML
-  class Layout
+  class FromERB
     class << self
       # Build and render an entry.
       #
@@ -47,8 +47,8 @@ class Lifer::Builder::HTML
     # So, he following variables are provided:
     #
     #   - Any collection by name.
-    #   - `:collections`: Access collections on this variable via an `#all`
-    #     array or via any collection name.
+    #   - `:collections`: The array of Lifer collections. Also accessible via
+    #     any collection name.
     #   - `:settings`: For all your (non-default) Lifer settings.
     #   - `:content`: The HTML version of the in-scope entry.
     #
@@ -62,12 +62,14 @@ class Lifer::Builder::HTML
         Lifer.collections.each do |collection|
           binding.local_variable_set collection.name, collection
 
-          collection_context_module.define_singleton_method(collection.name) do
+          collection_context_class.define_method(collection.name) do
             collection
           end
         end
 
-        binding.local_variable_set :collections, collection_context_module
+        collections = collection_context_class.new Lifer.collections.to_a
+
+        binding.local_variable_set :collections, collections
         binding.local_variable_set :settings, Lifer.settings
         binding.local_variable_set :content,
           ERB.new(entry.to_html).result(binding)
@@ -75,13 +77,8 @@ class Lifer::Builder::HTML
     end
 
     # @private
-    def collection_context_module
-      @collection_context_module ||=
-        Module.new do
-          class << self
-            def all = Lifer.collections
-          end
-        end
+    def collection_context_class
+      @collection_context_class ||= Class.new(Array) do end
     end
   end
 end
