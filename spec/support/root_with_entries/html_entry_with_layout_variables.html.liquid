@@ -1,0 +1,28 @@
+<h1>HTML entry with layout variables</h1>
+
+<h2>Some root collection entry titles</h2>
+
+{% for entry in collections.root.entries limit: 2 -%}
+  {% if forloop.first -%}
+    {{ entry.title | append: ", " }}
+  {%- else -%}
+    {{ entry.title }}
+  {%- endif%}
+{%- endfor %}
+
+<h2>All collection names</h2>
+
+{% for collection in collections -%}
+  {% if forloop.last -%}
+    {{ collection.name }}
+  {%- else -%}
+    {{ collection.name | append: ", " }}
+  {%- endif %}
+{%- endfor %}
+
+<h2>This project's settings</h2>
+
+all settings: {{ settings }}
+root layout file: {{ settings.layout_file }}
+root URI strategy: {{ settings.uri_strategy }}
+subdirectory one URI strategy: {{ settings.subdirectory_one.uri_strategy }}

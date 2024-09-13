@@ -1,5 +1,26 @@
 require "erb"
 
+# If the HTML builder is given an ERB template, it uses this class to parse the
+# ERB into HTML. Lifer project metadata is provided as context. For example:
+#
+#     <html>
+#       <head>
+#         <title><%= my_collection.name %></title>
+#       </head>
+#
+#       <body>
+#         <h1><%= my_collection.name %></h1>
+#
+#         <% my_collection.entries.each do |entry| %>
+#           <section>
+#             <h2><%= entry.title %></h2>
+#             <p><%= entry.summary %></p>
+#             <a href="<%= entry.permalink %>">Read more</a>
+#           </section>
+#         <% end %>
+#       </body>
+#     </html>
+#
 class Lifer::Builder::HTML
   class FromERB
     class << self
@@ -40,20 +61,6 @@ class Lifer::Builder::HTML
     #     <% my_collection_name.entries.each do |entry| %>
     #       <%= entry.title %>
     #     <% end %>
-    #
-    # You can also access a complete list of collections via `collections.all` or
-    # an individual collection via `collections.my_collection_name`.
-    #
-    # So, he following variables are provided:
-    #
-    #   - Any collection by name.
-    #   - `:collections`: The array of Lifer collections. Also accessible via
-    #     any collection name.
-    #   - `:settings`: For all your (non-default) Lifer settings.
-    #   - `:content`: The HTML version of the in-scope entry.
-    #
-    # The `:content` variable is especially powerful, as it also parses any
-    # given entry that's an ERB file with the same local variables in context.
     #
     # @return [Binding] A binding object with preset context from the current
     #   Lifer project and in-scope entry.

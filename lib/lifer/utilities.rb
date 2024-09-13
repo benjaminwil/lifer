@@ -42,6 +42,29 @@ module Lifer::Utilities
       File.basename(path.to_s.downcase).match(/(?<=.)\..*/).to_s
     end
 
+    # Given a hash, take all of its keys (and sub-keys) and convert them into
+    # strings.
+    #
+    # @param hash [Hash] Any hash.
+    # @return [Hash] The hash with keys transformed to strings.
+    def stringify_keys(hash)
+      stringified_hash = {}
+
+      hash.each do |key, value|
+        stringified_hash[(key.to_s rescue key) || key] =
+          value.is_a?(Hash) ? stringify_keys(value) : value
+
+        stringify_keys(value) if value.is_a?(Hash)
+      end
+
+      stringified_hash
+    end
+
+    # Given a hash, take all of its keys (and sub-keys) and convert them into
+    # symbols.
+    #
+    # @param hash [Hash] Any hash.
+    # @return [Hash] The hash with keys transformed to symbols.
     def symbolize_keys(hash)
       symbolized_hash = {}
 

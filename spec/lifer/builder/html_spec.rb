@@ -32,6 +32,24 @@ RSpec.describe Lifer::Builder::HTML do
         .to(entry_count)
     end
 
+    context "when the layout file is a Liquid file" do
+      before do
+        spec_lifer! config: <<~CONFIG
+          layout_file: ./layouts/layout_with_greeting.html.liquid
+        CONFIG
+      end
+
+      it "builds using the correct layout" do
+        subject
+
+        entry =
+          File.read(File.join spec_lifer.output_directory, "tiny_entry.html")
+
+        expect(entry).to include "Liquid greetings!"
+        expect(entry).to include "A testable entry."
+      end
+    end
+
     context "when a custom layout is configured in the root settings" do
       before do
         spec_lifer! config: <<~CONFIG

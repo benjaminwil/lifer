@@ -52,6 +52,31 @@ RSpec.describe Lifer::Utilities do
     end
   end
 
+  describe ".stringify_keys" do
+    subject { described_class.stringify_keys(hash) }
+
+    let(:hash) {
+      {
+        "string": "value",
+        symbol: "value",
+        sub_hash: {"string": "value", symbol: :value}
+      }
+    }
+
+    it "stringifies keys" do
+      expect(subject).to eq(
+        {
+          "string" => "value",
+          "symbol" => "value",
+          "sub_hash" => {
+            "string" => "value",
+            "symbol" => :value
+          }
+        }
+      )
+    end
+  end
+
   describe ".symbolize_keys" do
     subject { described_class.symbolize_keys(hash) }
 

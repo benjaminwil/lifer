@@ -1,12 +1,40 @@
 require "fileutils"
 
 # This builder makes HTML documents out of any entry type that responds to
-# `#to_html`.
+# `#to_html` and writes them to the configured Lifer output directory.
+#
+# The HTML builder depends on the collection's layout file. Layout files can be
+# ERB[1] or Liquid[2] template files. The layout file yields entry contents
+# via a `content` call that is parsed by ERB or Liquid.
+#
+# Layout files can also include other contextual information about the current
+# Lifer project to provide "normal website features" like navigation links,
+# indexes, and so on. Context is provided via:
+#
+#  - `my_collection_name`: Or, any collection by name.
+#
+#    For example, you can iterate over the entries of any named collection by
+#    accessing the collection like this:
+#
+#        my_collection.entries
+#
+#  - `settings`: Serialized Lifer settings from the configuration file.
+#
+#  - `collections`: A list of collections.
+#
+#  - `content`: The content of the current entry.
+#
+# The `:content` variable is especially powerful, as it also parses any
+# given entry that's an ERB file with the same local variables in context.
+#
+# [1]: https://docs.ruby-lang.org/en/3.3/ERB.html
+# [2]: https://shopify.github.io/liquid/
 #
 class Lifer::Builder::HTML < Lifer::Builder
   self.name = :html
 
   require_relative "html/from_erb"
+  require_relative "html/from_liquid"
 
   class << self
     # Traverses and renders each entry for each collection in the configured
@@ -64,8 +92,21 @@ class Lifer::Builder::HTML < Lifer::Builder
   #   this return value.
   def generate_output_file_for(entry)
     File.open(output_file(entry), "w") { |file|
-      file.write(LayoutFromERB.build entry: entry)
+      file.write layout_class_for(entry).build(entry: entry)
     }
+  end
+
+  # @private
+  # Given the path to a layout file, this method determines what layout builder
+  # will be used. The builder class must implement a `.build` class method.
+  #
+  # @param entry [Lifer::Entry] An entry
+  # @return [Class] A layout builder class name.
+  def layout_class_for(entry)
+    case entry.collection.setting(:layout_file)
+    when /.*\.erb$/ then FromERB
+    when /.*\.liquid$/ then FromLiquid
+    end
   end
 
   # @private
