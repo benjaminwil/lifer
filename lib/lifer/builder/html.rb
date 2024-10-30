@@ -106,6 +106,14 @@ class Lifer::Builder::HTML < Lifer::Builder
     case entry.collection.setting(:layout_file)
     when /.*\.erb$/ then FromERB
     when /.*\.liquid$/ then FromLiquid
+    else
+      file = entry.collection.setting(:layout_file)
+      puts I18n.t(
+        "builder.html.no_builder_error",
+        file:,
+        type: File.extname(file)
+      )
+      exit
     end
   end
 

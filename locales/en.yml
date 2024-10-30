@@ -2,6 +2,8 @@ en:
   builder:
     prebuild_failure: >
       Lifer failed to complete building... A prebuild step failed to execute: %{exception}
+    html:
+      no_builder_error: No builder for layout file `%{file}` with type `%{type}`. Aborting!
   cli:
     bad_port: >
       Problem with port argument: %{exception}

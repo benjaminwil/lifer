@@ -50,6 +50,21 @@ RSpec.describe Lifer::Builder::HTML do
       end
     end
 
+    context "when the layout file is an unknown type of file" do
+      before do
+        spec_lifer! config: <<~CONFIG
+          layout_file: ./layouts/unknown.zzz
+        CONFIG
+      end
+
+      it "exits the program" do
+        expect { subject }
+          .to output(/No builder for layout file/)
+          .to_stdout
+          .and raise_error SystemExit
+      end
+    end
+
     context "when a custom layout is configured in the root settings" do
       before do
         spec_lifer! config: <<~CONFIG
