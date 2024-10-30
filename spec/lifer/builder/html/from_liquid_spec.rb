@@ -48,7 +48,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
                <h2>All collection names</h2>
                subdirectory_one, root, all_markdown, included_in_feeds
                <h2>This project's settings</h2>
-               all settings: {"layout_file"=>"./layouts/layout_with_greeting.html.liquid", "uri_strategy"=>"simple", "subdirectory_one"=>{"uri_strategy"=>"pretty"}}
+               all settings: {"layout_file":"./layouts/layout_with_greeting.html.liquid","uri_strategy":"simple","subdirectory_one":{"uri_strategy":"pretty"}}
                root layout file: ./layouts/layout_with_greeting.html.liquid
                root URI strategy: simple
                subdirectory one URI strategy: pretty

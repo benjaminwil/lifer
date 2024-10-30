@@ -37,11 +37,19 @@ class Lifer::Builder::HTML
       @layout_file = entry.collection.layout_file
     end
 
+    def render_options
+      {
+        strict_variables: true,
+        strict_filters: true
+      }
+    end
+
     def render
       document_context = context.merge!(
-        "content" => Liquid::Template.parse(entry.to_html).render(context)
+        "content" => Liquid::Template.parse(entry.to_html, error_mode: :strict).render(context, render_options)
       )
-      Liquid::Template.parse(File.read layout_file).render(document_context)
+      Liquid::Template.file_system = Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
+      Liquid::Template.parse(File.read(layout_file), error_mode: :strict).render(document_context, render_options)
     end
 
     private
