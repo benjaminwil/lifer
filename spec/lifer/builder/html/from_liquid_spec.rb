@@ -39,7 +39,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
            </head>
            <body>
              <header>
-               Liquid greetings! Have this beverage!
+               Header From Partial for "html_entry_with_layout_variables.html"
              </header>
              <article>
                <h1>HTML entry with layout variables</h1>
@@ -91,7 +91,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
             </head>
             <body>
               <header>
-                Liquid greetings! Have this beverage!
+                Header From Partial for "Untitled Entry"
               </header>
               <article>
                 <h1 id="tiny">Tiny</h1>

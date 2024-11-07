@@ -45,7 +45,7 @@ RSpec.describe Lifer::Builder::HTML do
         entry =
           File.read(File.join spec_lifer.output_directory, "tiny_entry.html")
 
-        expect(entry).to include "Liquid greetings!"
+        expect(entry).to include "Header From Partial for \"Untitled Entry\""
         expect(entry).to include "A testable entry."
       end
     end

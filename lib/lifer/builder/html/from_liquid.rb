@@ -56,6 +56,7 @@ class Lifer::Builder::HTML
 
     def context
       {
+        "entry" => EntryDrop.new(entry),
         "collections" => CollectionsDrop.new,
         "settings" => SettingsDrop.new
       }

@@ -3,9 +3,7 @@
     <title>Layout with Greeting</title>
   </head>
   <body>
-    <header>
-      Liquid greetings! Have this beverage!
-    </header>
+    {% render "_partials/included_header_partial" with entry: entry %}
     <article>
       {{ content }}
     </article>
