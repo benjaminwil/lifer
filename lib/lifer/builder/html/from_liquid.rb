@@ -11,13 +11,13 @@ require_relative "from_liquid/drops/settings_drop"
 #
 #     <html>
 #       <head>
-#         <title>{{ my_collection.name }}</title>
+#         <title>{{ collections.my_collection.name }}</title>
 #       </head>
 #
 #       <body>
-#         <h1>{{ my_collection.name }}</h1>
+#         <h1>{{ collections.my_collection.name }}</h1>
 #
-#         {% for entry in my_collection.entries %}
+#         {% for entry in collections.my_collection.entries %}
 #           <section>
 #             <h2>{{ entry.title }}</h2>
 #             <p>{{ entry.summary }}</p>
@@ -49,10 +49,16 @@ class Lifer::Builder::HTML
 
     def render
       document_context = context.merge!(
-        "content" => Liquid::Template.parse(entry.to_html, error_mode: :strict).render(context, render_options)
+        "content" => Liquid::Template
+          .parse(entry.to_html, error_mode: :strict)
+          .render(context, render_options)
       )
-      Liquid::Template.file_system = Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
-      Liquid::Template.parse(File.read(layout_file), error_mode: :strict).render(document_context, render_options)
+      Liquid::Template.file_system =
+        Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
+
+      Liquid::Template
+        .parse(File.read(layout_file), error_mode: :strict)
+        .render(document_context, render_options)
     end
 
     private
