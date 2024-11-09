@@ -31,5 +31,7 @@ class CollectionDrop < Liquid::Drop
       lifer_collection.entries.map { EntryDrop.new(_1, collection: self) }
   end
 
-  def layout_file = @lifer_collection.layout_file
+  def layout_file
+    @lifer_collection.layout_file
+  end
 end

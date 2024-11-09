@@ -6,8 +6,10 @@ require_relative "from_liquid/drops/entry_drop"
 require_relative "from_liquid/drops/settings_drop"
 
 require_relative "from_liquid/filters"
+require_relative "from_liquid/tags"
 
 Liquid::Template.register_filter(LiferLiquidFilters)
+Liquid::Template.register_tag(:layout, LayoutTag)
 
 # If the HTML builder is given a Liquid template, it uses this class to parse
 # the Liquid into HTML. Lifer project metadata is provided as context. For
@@ -61,7 +63,7 @@ class Lifer::Builder::HTML
         Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
 
       Liquid::Template
-        .parse(File.read(layout_file), error_mode: :strict)
+        .parse(layout, error_mode: :strict)
         .render(document_context, render_options)
     end
 
@@ -69,15 +71,23 @@ class Lifer::Builder::HTML
 
     def context
       collections = CollectionsDrop.new
+      collection = collections
+        .to_a
+        .detect { _1.name.to_sym == entry.collection.name }
 
       {
         "collections" => collections,
-        "entry" => EntryDrop.new(
-          entry,
-          collection: collections.to_a.detect { _1.name == entry.collection.name }
-        ),
+        "entry" => EntryDrop.new(entry, collection:),
         "settings" => SettingsDrop.new
       }
+    end
+
+    def layout
+      contents = File.read layout_file
+
+      return contents unless contents.match?(/\{%\s*#{LayoutTag::NAME}.*%\}/)
+
+      contents + "\n{% #{LayoutTag::ENDNAME} %}"
     end
   end
 end

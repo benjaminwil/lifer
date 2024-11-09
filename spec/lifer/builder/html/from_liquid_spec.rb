@@ -24,10 +24,10 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
       before do
         spec_lifer! config: <<~CONFIG
           layout_file: ./layouts/layout_with_greeting.html.liquid
-          uri_strategy: simple
+          uri_strategy: pretty
 
           subdirectory_one:
-            uri_strategy: pretty
+            uri_strategy: simple
         CONFIG
       end
 
@@ -48,10 +48,10 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
                <h2>All collection names</h2>
                subdirectory_one, root, all_markdown, included_in_feeds
                <h2>This project's settings</h2>
-               all settings: {"layout_file":"./layouts/layout_with_greeting.html.liquid","uri_strategy":"simple","subdirectory_one":{"uri_strategy":"pretty"}}
+               all settings: {"layout_file":"./layouts/layout_with_greeting.html.liquid","uri_strategy":"pretty","subdirectory_one":{"uri_strategy":"simple"}}
                root layout file: ./layouts/layout_with_greeting.html.liquid
-               root URI strategy: simple
-               subdirectory one URI strategy: pretty
+               root URI strategy: pretty
+               subdirectory one URI strategy: simple
              </article>
            </body>
          </html>
@@ -95,6 +95,35 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
               </header>
               <article>
                 <h1 id="tiny">Tiny</h1>
+                <p>A testable entry.</p>
+              </article>
+            </body>
+          </html>
+        RESULT
+      end
+    end
+
+    context "when a layout requests a parent layout" do
+      before do
+        spec_lifer! config: <<~CONFIG
+          layout_file: ../_layouts/child_layout.html.liquid
+          subdirectory_one:
+            uri_strategy: pretty
+        CONFIG
+      end
+
+      it "renders the parent layout enveloping the child layout" do
+        expect(subject).to fuzzy_match <<~RESULT
+          <html>
+            <head>
+              <title> Parent Layout. Full HTML document. </title>
+            </head>
+
+            <body>
+              <article class="child">
+                <h1> Child of Parent Layout. Not a complete HTML document. </h1>
+                <h1 id="tiny">Tiny</h1>
+
                 <p>A testable entry.</p>
               </article>
             </body>
