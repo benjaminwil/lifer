@@ -52,6 +52,16 @@ RSpec.describe Lifer::Utilities do
     end
   end
 
+  describe ".handleize" do
+    subject {
+      described_class.handleize(
+        "111. complex_string with ?? --- lots of 'interesting' things in it"
+      )
+    }
+
+    it { is_expected.to eq "111-complex_string-with-lots-of-interesting-things-in-it" }
+  end
+
   describe ".stringify_keys" do
     subject { described_class.stringify_keys(hash) }
 

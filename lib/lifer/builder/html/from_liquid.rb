@@ -5,6 +5,10 @@ require_relative "from_liquid/drops/collections_drop"
 require_relative "from_liquid/drops/entry_drop"
 require_relative "from_liquid/drops/settings_drop"
 
+require_relative "from_liquid/filters"
+
+Liquid::Template.register_filter(LiferLiquidFilters)
+
 # If the HTML builder is given a Liquid template, it uses this class to parse
 # the Liquid into HTML. Lifer project metadata is provided as context. For
 # example:

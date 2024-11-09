@@ -42,6 +42,15 @@ module Lifer::Utilities
       File.basename(path.to_s.downcase).match(/(?<=.)\..*/).to_s
     end
 
+    # Given any string, normalize it into a "kabab-case", single-word string.
+    #
+    #    Input:  "Hi, how are you?"
+    #    Output: "hi-how-are-you"
+    #
+    # @param string [String] Any string.
+    # @return string [String] The kabab-cased output.
+    def handleize(string) = parameterize(string, separator: "-")
+
     # Given a hash, take all of its keys (and sub-keys) and convert them into
     # strings.
     #
@@ -88,6 +97,22 @@ module Lifer::Utilities
         .map(&:capitalize)
         .map { |mod| mod.split("_").map(&:capitalize).join }
         .join("::")
+    end
+
+    def parameterize(string, separator: "-", preserve_case: false)
+      string.gsub!(/[^a-z0-9\-_]+/, separator)
+
+      unless separator.nil? || separator.empty?
+        re_sep = Regexp.escape(separator)
+        re_duplicate_separator        = /#{re_sep}{2,}/
+        re_leading_trailing_separator = /^#{re_sep}|#{re_sep}$/
+
+        string.gsub!(re_duplicate_separator, separator)
+        string.gsub!(re_leading_trailing_separator, "")
+      end
+
+      string.downcase! unless preserve_case
+      string
     end
   end
 end
