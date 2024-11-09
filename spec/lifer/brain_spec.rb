@@ -7,29 +7,7 @@ RSpec.describe Lifer::Brain do
   describe ".init" do
     subject { described_class.init root: root, config_file: "path/to/file" }
 
-    # This is a bit of a hack. What I'm trying to do is ensure the `MovieReviews`
-    # class is being loaded when `Lifer::Brain.init` is called, to assert that
-    # user-provided Ruby files are being loaded. But the reason this hack is
-    # required is because the file loads are not being *unloaded* between test
-    # runs. I am not sure what the nicest way to do this would be.
-    #
-    # `MovieReviews`, by the way, is included in the `root_with_entries` test
-    # project.
-    #
-    before do
-      if Object.constants.include? :MovieReviews
-        Object.send :remove_const, :MovieReviews
-      end
-    end
-
     it { is_expected.to be_an_instance_of Lifer::Brain }
-
-    it "loads Ruby files within the Lifer root directory" do
-      expect { subject }
-        .to change { defined? MovieReviews }
-        .from(nil)
-        .to("constant")
-    end
   end
 
   describe "#build!" do
@@ -221,6 +199,13 @@ RSpec.describe Lifer::Brain do
         CONFIG
       }
 
+      before do
+        # The "movie_reviews" selection depends on user-provided Ruby files
+        # having been loaded.
+        #
+        brain.require_user_provided_ruby_files!
+      end
+
       it "returns all collections and selections" do
         expect(subject).to contain_exactly(
           an_instance_of(Lifer::Collection),
@@ -305,6 +290,31 @@ RSpec.describe Lifer::Brain do
         expect(subject).to be_an_instance_of Set
         expect(subject.count).to eq directory_entries.count
       end
+    end
+  end
+
+  describe "#require_user_provided_ruby_files!" do
+    subject { brain.require_user_provided_ruby_files! }
+
+    # This is a bit of a hack. What I'm trying to do is ensure the `MovieReviews`
+    # class is being loaded. But we also need to ensure the file is *unloaded*
+    # between test runs. There may be a better way to do this, but... whatever?
+    #
+    # `MovieReviews`, by the way, is included in the `root_with_entries` test
+    # project.
+    #
+    before do
+      if Object.constants.include? :MovieReviews
+        Object.send :remove_const, :MovieReviews
+      end
+    end
+
+
+    it "loads Ruby files within the Lifer root directory" do
+      expect { subject }
+        .to change { defined? MovieReviews }
+        .from(nil)
+        .to("constant")
     end
   end
 

@@ -20,37 +20,7 @@ class Lifer::Brain
     #   left empty, the brain uses the one at the default path or the one
     #   bundled with the gem.
     # @return [Lifer::Brain] The brain object for the current Lifer project.
-    def init(root: Dir.pwd, config_file: nil)
-      new(root: root, config_file: config_file).tap { |brain|
-        require_user_provided_ruby_files! brain
-      }
-    end
-
-    private
-
-    # @private
-    # The user can bring their own Ruby files to be read by Lifer. This ensures
-    # they are loaded before the build starts.
-    #
-    # Note that the user's Bundler path may be in scope, so we need to skip
-    # those Ruby files.
-    #
-    # @param [Lifer::Brain]
-    # @return [void]
-    def require_user_provided_ruby_files!(brain)
-      return if brain.root.include? Lifer.gem_root
-
-      rb_files = Dir.glob("#{brain.root}/**/*.rb", File::FNM_DOTMATCH)
-
-      if Bundler.bundle_path.to_s.include? brain.root
-        rb_files -=
-          Dir.glob("#{Bundler.bundle_path}/**/*.rb", File::FNM_DOTMATCH)
-      end
-
-      rb_files.each do |rb_file|
-        load rb_file
-      end
-    end
+    def init(root: Dir.pwd, config_file: nil) = new(root:, config_file:)
   end
 
   # Destroy any existing build output and then build the Lifer project with all
@@ -122,6 +92,29 @@ class Lifer::Brain
         Dir.mkdir(dir)
         Pathname(dir)
       end
+  end
+
+  # The user can bring their own Ruby files to be read by Lifer. This ensures
+  # they are loaded before the build starts.
+  #
+  # Note that the user's Bundler path may be in scope, so we need to skip
+  # those Ruby files.
+  #
+  # @param [Lifer::Brain]
+  # @return [void]
+  def require_user_provided_ruby_files!
+    return if root.include? Lifer.gem_root
+
+    rb_files = Dir.glob("#{root}/**/*.rb", File::FNM_DOTMATCH)
+
+    if Bundler.bundle_path.to_s.include? root
+      rb_files -=
+        Dir.glob("#{Bundler.bundle_path}/**/*.rb", File::FNM_DOTMATCH)
+    end
+
+    rb_files.each do |rb_file|
+      load rb_file
+    end
   end
 
   def setting(*name, collection: nil, strict: false)
