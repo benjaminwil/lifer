@@ -60,8 +60,8 @@ module Lifer
     def start!
       parser.parse! args
 
-      Lifer.brain(**{root: @root, config_file: @config_file}.compact)
-        .tap { |brain| brain.require_user_provided_ruby_files! }
+      brain = Lifer.brain(**{root: @root, config_file: @config_file}.compact)
+      brain.require_user_provided_ruby_files!
 
       case subcommand
       when :build then Lifer.build!
