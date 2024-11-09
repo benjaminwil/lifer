@@ -79,7 +79,7 @@ class Lifer::Collection
   attr_reader :directory
 
   def initialize(name:, directory:)
-    @name = name
+    @name = name.to_sym
     @directory = directory
   end
 
