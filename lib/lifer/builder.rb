@@ -47,11 +47,15 @@ class Lifer::Builder
       commands.each do |command|
         puts command
 
-        _stdin, stdout, _stderr, _wait_thread = Open3.popen3(command)
+        _stdin, stdout, stderr, _wait_thread = Open3.popen3(command)
+
+        if (error_messages = stderr.readlines).any?
+          raise error_messages.join("\n")
+        end
 
         stdout.readlines.each { puts _1 }
       end
-    rescue Errno::ENOENT => exception
+    rescue => exception
       raise I18n.t("builder.prebuild_failure", exception:)
     end
 

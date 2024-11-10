@@ -119,13 +119,14 @@ RSpec.describe Lifer::Brain do
           allow(Lifer::Config).to receive(:build).and_return config
 
           dummy_stdout = instance_double(IO, readlines: ["output"])
+          dummy_stderr = instance_double(IO, readlines: [])
 
           allow(Open3)
             .to receive(:popen3)
             .with("echo \"serve command\"")
-            .and_return([double, dummy_stdout, double, double])
+            .and_return([double, dummy_stdout, dummy_stderr, double])
           allow(Open3).to receive(:popen3).with("echo \"build command\"")
-            .and_return([double, dummy_stdout, double, double])
+            .and_return([double, dummy_stdout, dummy_stderr, double])
 
           subject
 
@@ -152,13 +153,14 @@ RSpec.describe Lifer::Brain do
           allow(Lifer::Config).to receive(:build).and_return config
 
           dummy_stdout = instance_double(IO, readlines: ["output"])
+          dummy_stderr = instance_double(IO, readlines: [])
 
           allow(Open3)
             .to receive(:popen3)
             .with("echo \"command 1\"")
-            .and_return([double, dummy_stdout, double, double])
+            .and_return([double, dummy_stdout, dummy_stderr, double])
           allow(Open3).to receive(:popen3).with("echo \"command 2\"")
-            .and_return([double, dummy_stdout, double, double])
+            .and_return([double, dummy_stdout, dummy_stderr, double])
 
           subject
 
