@@ -28,7 +28,13 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
 
           subdirectory_one:
             uri_strategy: simple
+
+          test_setting:
+            - number: 123
+              description: To tests arrays of objects.
         CONFIG
+
+        spec_lifer.config.register_settings :test_setting
       end
 
       it "renders a valid HTML document, including rendered layout variables" do
@@ -48,7 +54,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
                <h2>All collection names</h2>
                subdirectory_one, root, all_markdown, included_in_feeds
                <h2>This project's settings</h2>
-               all settings: {"layout_file":"./layouts/layout_with_greeting.html.liquid","uri_strategy":"pretty","subdirectory_one":{"uri_strategy":"simple"}}
+               all settings: {"layout_file":"./layouts/layout_with_greeting.html.liquid","uri_strategy":"pretty","subdirectory_one":{"uri_strategy":"simple"},"test_setting":[{"number":123,"description":"To tests arrays of objects."}]}
                root layout file: ./layouts/layout_with_greeting.html.liquid
                root URI strategy: pretty
                subdirectory one URI strategy: simple

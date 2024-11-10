@@ -25,7 +25,7 @@ class SettingsDrop < Liquid::Drop
     if value.is_a?(Hash)
       as_drop(value)
     elsif value.is_a?(Array) && value.all? { _1.is_a?(Hash) }
-      as_drop(value)
+      value.map { as_drop(_1) }
     else
       value
     end
