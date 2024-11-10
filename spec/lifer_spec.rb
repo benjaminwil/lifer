@@ -25,16 +25,31 @@ RSpec.describe Lifer do
   end
 
   describe ".collections" do
-    subject { described_class.collections }
+    subject {
+      described_class.collections(without_selections: without_selections)
+    }
 
-    let(:brain) { instance_double Lifer::Brain, collections: [] }
+    before do
+      spec_lifer!
+    end
 
-    it "delegates to the brain" do
-      allow(Lifer::Brain).to receive(:init).and_return(brain)
+    context "by default" do
+      let(:without_selections) { false }
 
-      subject
+      it "returns all collections and selections", :aggregate_failures do
+        expect(subject).to include instance_of(Lifer::Collection)
 
-      expect(brain).to have_received(:collections).once
+        expect(subject.map(&:class).map(&:superclass))
+          .to include(Lifer::Selection)
+      end
+    end
+
+    context "when excluding selections" do
+      let(:without_selections) { true }
+
+      it "returns only `Lifer::Collection`s" do
+        expect(subject.map(&:class).uniq).to contain_exactly Lifer::Collection
+      end
     end
   end
 

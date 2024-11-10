@@ -39,8 +39,10 @@ module Lifer
       brain.build! environment:
     end
 
-    def collections
-      brain.collections
+    def collections(without_selections: false)
+      return brain.collections unless without_selections
+
+      brain.collections.select { _1.class == Lifer::Collection }
     end
 
     # Used to locate the configuration file being used by the current Lifer
