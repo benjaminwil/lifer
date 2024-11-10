@@ -19,4 +19,5 @@ class Lifer::URIStrategy
 end
 
 require_relative "uri_strategy/pretty"
+require_relative "uri_strategy/root"
 require_relative "uri_strategy/simple"
