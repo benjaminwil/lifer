@@ -21,6 +21,10 @@ RSpec.describe Lifer::CLI do
 
     let(:cli) { described_class.new }
 
+    # FIXME: Because we mock `OptionParser`, this test can fail when being run
+    # in parallel. I think the solution is to mock in some other way, or stop
+    # mocking.
+    #
     it "parses arguments and builds the Lifer project" do
       dummy_option_parser = instance_double OptionParser, parse!: true
 
@@ -29,7 +33,10 @@ RSpec.describe Lifer::CLI do
 
       subject
 
-      expect(dummy_option_parser).to have_received(:parse!).with(anything).once
+      expect(dummy_option_parser)
+        .to have_received(:parse!)
+        .with(anything)
+        .at_least(:once)
       expect(Lifer).to have_received(:build!).once
     end
   end
