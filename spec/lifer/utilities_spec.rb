@@ -30,6 +30,14 @@ RSpec.describe Lifer::Utilities do
     end
   end
 
+  describe ".date_as_iso8601" do
+    subject { described_module.date_as_iso8601 datetime }
+
+    let(:datetime) { "1990-01-01" }
+
+    it { is_expected.to eq "1990-01-01T00:00:00+00:00" }
+  end
+
   describe ".file_extension" do
     subject { described_module.file_extension path }
 

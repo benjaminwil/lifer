@@ -1,3 +1,6 @@
 module LiferLiquidFilters
-  def handleize(input) = Lifer::Utilities.handleize(input)
+  Util = Lifer::Utilities
+
+  def date_to_xmlschema(input) = Util.date_as_iso8601(input)
+  def handleize(input) = Util.handleize(input)
 end
