@@ -5,6 +5,8 @@ require "debug"
 require_relative "shared_examples"
 require_relative "support"
 
+require "parallel_tests"
+
 RSpec.configure do |config|
   # Use the built-in `documentation` formatter for runs.
   config.add_formatter :documentation
@@ -14,6 +16,16 @@ RSpec.configure do |config|
     # each test run. This will avoid order-dependent test failures.
     #
     Lifer.class_variable_set "@@brain", nil
+  end
+
+  config.around(:each) do |example|
+    # Only run test flagged `:ci_only` on CI.
+    #
+    if example.metadata[:ci_only]
+      example.run if ENV["CI"]
+    else
+      example.run
+    end
   end
 
   # If RSpec runs on somethign other than TTY, try to display colours.
@@ -28,6 +40,11 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Don't even show pending output for tests flagged CI only. Unless the runner
+  # is on CI.
+  #
+  config.filter_run_excluding ci_only: true unless ENV["CI"]
 
   # Provide helper methods for initializing test Lifer projects without
   # littering garbage files all over the developer's filesystem.

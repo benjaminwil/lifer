@@ -135,7 +135,7 @@ RSpec.describe "bin/lifer", type: :system do
     end
   end
 
-  describe "bin/lifer serve" do
+  describe "bin/lifer serve", :ci_only do
     subject {
       Dir.chdir(Lifer.root) do
         # FIXME:
