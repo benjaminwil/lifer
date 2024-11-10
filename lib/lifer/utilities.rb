@@ -33,6 +33,18 @@ module Lifer::Utilities
       )
     end
 
+    # Takes a date and renders it in ISO 8601 format.
+    #
+    # @param datetime [Date, Time, DateTime, String] A representation of a date.
+    # @return [String] An ISO 8601 representation of that date.
+    def date_as_iso8601(datetime)
+      return unless (data = DateTime.parse(datetime.to_s))
+
+      data.strftime("%Y-%m-%dT%H:%M:%S%:z")
+    rescue Date::Error
+      nil
+    end
+
     # Given a path, figure out what the extension is. It supports
     # multi-extensions like ".html.erb".
     #
