@@ -112,19 +112,19 @@ module Lifer::Utilities
     end
 
     def parameterize(string, separator: "-", preserve_case: false)
-      string.gsub!(/[^a-z0-9\-_]+/, separator)
+      text = string.gsub(/[^A-z0-9\-_]+/, separator)
 
       unless separator.nil? || separator.empty?
         re_sep = Regexp.escape(separator)
         re_duplicate_separator        = /#{re_sep}{2,}/
         re_leading_trailing_separator = /^#{re_sep}|#{re_sep}$/
 
-        string.gsub!(re_duplicate_separator, separator)
-        string.gsub!(re_leading_trailing_separator, "")
+        text.gsub!(re_duplicate_separator, separator)
+        text.gsub!(re_leading_trailing_separator, "")
       end
 
-      string.downcase! unless preserve_case
-      string
+      text.downcase! unless preserve_case
+      text
     end
   end
 end
