@@ -17,7 +17,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
       let(:entry) {
         Lifer::Entry::HTML.new collection: collection,
           file: support_file(
-            "root_with_entries/html_entry_with_layout_variables.html.liquid"
+            "root_with_entries/html_liquid_entry_with_layout_variables.html.liquid"
           )
       }
 
@@ -45,7 +45,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
            </head>
            <body>
              <header>
-               Header From Partial for "html_entry_with_layout_variables.html"
+               Header From Partial for "html_liquid_entry_with_layout_variables.html"
              </header>
              <article>
                <h1>HTML entry with layout variables</h1>

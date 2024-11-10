@@ -20,6 +20,17 @@ RSpec.describe Lifer::Builder::HTML do
         .to(entry_files.count)
     end
 
+    it "errors out when an there's a file conflict" do
+      File.open("#{spec_lifer.output_directory}/tiny_entry.html", "w") {
+        _1.write "Pre-existing file."
+      }
+
+      expect { subject }.to raise_error(
+        RuntimeError,
+        /Cannot build HTML file because.* already exists/
+      )
+    end
+
     it "generates HTML in the correct subdirectories" do
       entry_count = Dir.glob("#{spec_lifer.root}/subdirectory_one/**/*.*").count
 

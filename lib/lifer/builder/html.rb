@@ -91,7 +91,14 @@ class Lifer::Builder::HTML < Lifer::Builder
   # @return [Integer] The length of the written file. We should not care about
   #   this return value.
   def generate_output_file_for(entry)
-    File.open(output_file(entry), "w") { |file|
+    relative_path = output_file entry
+    absolute_path = File.join(Lifer.output_directory, relative_path)
+
+    if File.exist?(absolute_path)
+      raise I18n.t("builder.html.file_conflict_error", path: absolute_path)
+    end
+
+    File.open(relative_path, "w") { |file|
       file.write layout_class_for(entry).build(entry: entry)
     }
   end
