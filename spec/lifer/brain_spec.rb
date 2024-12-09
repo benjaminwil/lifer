@@ -249,17 +249,19 @@ RSpec.describe Lifer::Brain do
         end
       end
 
-      let(:directory_entries) {
-        Dir
-          .glob("#{root}/**/*")
-          .reject { |entry| entry.include? "_build" }
-          .select { |entry| File.file? entry }
-          .select { |entry| Lifer::Entry.supported? entry }
-      }
-
       it "lists all entries" do
         expect(subject).to be_an_instance_of Set
-        expect(subject.count).to eq directory_entries.count
+
+        input_files = directory_entries_for(root)
+          .map { _1.gsub Lifer::Utilities.file_extension(_1), "" }
+        output_files = subject.map(&:file).map(&:to_s)
+          .map { _1.gsub Lifer::Utilities.file_extension(_1), "" }
+
+        expect(output_files).to contain_exactly(*input_files),
+          "This failure indicates that the input files and output files are " \
+          "out of sync for some reason. Perhaps the `#directory_entries` " \
+          "needs to be refactored to better reflect the intended manifest " \
+          "contents."
       end
     end
   end
@@ -280,17 +282,19 @@ RSpec.describe Lifer::Brain do
         end
       end
 
-      let(:directory_entries) {
-        Dir
-          .glob("#{root}/**/*")
-          .reject { |entry| entry.include? "_build" }
-          .select { |entry| File.file? entry }
-          .select { |entry| Lifer::Entry.supported? entry }
-      }
-
       it "lists all entries" do
         expect(subject).to be_an_instance_of Set
-        expect(subject.count).to eq directory_entries.count
+
+        input_files = directory_entries_for(root)
+          .map { _1.gsub Lifer::Utilities.file_extension(_1), "" }
+        output_files =
+          subject.map { _1.gsub Lifer::Utilities.file_extension(_1), "" }
+
+        expect(output_files).to contain_exactly(*input_files),
+          "This failure indicates that the input files and output files are " \
+          "out of sync for some reason. Perhaps the `#directory_entries` " \
+          "needs to be refactored to better reflect the intended manifest " \
+          "contents."
       end
     end
   end
@@ -338,5 +342,13 @@ RSpec.describe Lifer::Brain do
         .with(:some_argument, {collection_name: nil, strict: false})
         .once
     end
+  end
+
+  def directory_entries_for(root)
+    Dir
+      .glob("#{root}/**/*")
+      .reject { |entry| entry.match? /\/_(build|layouts|partials)/ }
+      .select { |entry| File.file? entry }
+      .select { |entry| Lifer::Entry.supported? entry }
   end
 end
