@@ -1,27 +1,29 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::HTML do
-  before do
-    spec_lifer!
-  end
+  let(:project) { Support::LiferTestHelpers::FilesV2.new files:, config: }
 
   describe ".execute" do
-    subject { described_class.execute(root: spec_lifer.root) }
+    subject { described_class.execute(root: project.root) }
+    let(:config) { nil }
+    let(:files) {
+      {
+        "subdirectory_one/entry.md" => nil,
+        "tiny_entry.md" => nil
+      }
+    }
 
     it "generates HTML for each entry" do
-      entry_files = Dir.glob("#{spec_lifer.root}/**/*.*")
-        .select { |entry| Lifer::Entry.supported? entry }
-
       expect { subject }
         .to change {
-          Dir.glob("#{spec_lifer.output_directory}/**/*.html").count
+          Dir.glob("#{project.brain.output_directory}/**/*.html").count
         }
         .from(0)
-        .to(entry_files.count)
+        .to(2)
     end
 
     it "errors out when an there's a file conflict" do
-      File.open("#{spec_lifer.output_directory}/tiny_entry.html", "w") {
+      File.open("#{project.brain.output_directory}/tiny_entry.html", "w") {
         _1.write "Pre-existing file."
       }
 
@@ -32,29 +34,40 @@ RSpec.describe Lifer::Builder::HTML do
     end
 
     it "generates HTML in the correct subdirectories" do
-      entry_count = Dir.glob("#{spec_lifer.root}/subdirectory_one/**/*.*").count
-
       expect { subject }
         .to change {
-          Dir.glob("#{spec_lifer.output_directory}/subdirectory_one/**/*.html")
+          Dir
+            .glob("#{project.brain.output_directory}/subdirectory_one/**/*.html")
             .count
         }
         .from(0)
-        .to(entry_count)
+        .to(1)
     end
 
     context "when the layout file is a Liquid file" do
-      before do
-        spec_lifer! config: <<~CONFIG
-          layout_file: ./layouts/layout_with_greeting.html.liquid
+      let(:config) {
+        <<~CONFIG
+          layout_file: ./layouts/layout.html.liquid
         CONFIG
-      end
+      }
+      let(:files) {
+        {
+          ".config/layouts/layout.html.liquid" => <<~LAYOUT,
+            {% render "_partials/header" with entry: entry %}
+            {{ content }}
+          LAYOUT
+          "_partials/header.html.liquid" => <<~PARTIAL,
+            Header From Partial for "{{ entry.title }}"
+          PARTIAL
+          "tiny_entry.md" => "A testable entry."
+        }
+      }
 
       it "builds using the correct layout" do
         subject
 
         entry =
-          File.read(File.join spec_lifer.output_directory, "tiny_entry.html")
+          File.read(File.join project.brain.output_directory, "tiny_entry.html")
 
         expect(entry).to include "Header From Partial for \"Untitled Entry\""
         expect(entry).to include "A testable entry."
@@ -62,11 +75,11 @@ RSpec.describe Lifer::Builder::HTML do
     end
 
     context "when the layout file is an unknown type of file" do
-      before do
-        spec_lifer! config: <<~CONFIG
+      let(:config) {
+        <<~CONFIG
           layout_file: ./layouts/unknown.zzz
         CONFIG
-      end
+      }
 
       it "exits the program" do
         expect { subject }
@@ -77,51 +90,67 @@ RSpec.describe Lifer::Builder::HTML do
     end
 
     context "when a custom layout is configured in the root settings" do
-      before do
-        spec_lifer! config: <<~CONFIG
-          layout_file: ./layouts/layout_with_greeting.html.erb
+      let(:config) {
+        <<~CONFIG
+          layout_file: ./layouts/good_layout.html.erb
           uri_strategy: simple
           subdirectory_one:
             uri_strategy: pretty
         CONFIG
-      end
+      }
+      let(:files) {
+        {
+          ".config/layouts/good_layout.html.erb" => "Greetings! <%= content %>",
+          "subdirectory_one/entry_in_subdirectory.md" => nil,
+          "tiny_entry.md" => nil
+        }
+      }
 
       it "builds using the correct layout" do
         subject
 
         collection_entry =
           File.read File.join(
-            spec_lifer.output_directory,
+            project.brain.output_directory,
             "subdirectory_one/entry_in_subdirectory/index.html"
           )
         root_collection_entry =
-          File.read File.join(spec_lifer.output_directory, "tiny_entry.html")
+          File.read File.join(project.brain.output_directory, "tiny_entry.html")
 
         expect(collection_entry).to include "Greetings!"
         expect(root_collection_entry).to include "Greetings!"
       end
 
       context "when a custom layout is configured for a collection" do
-        before do
-          spec_lifer! config: <<~CONFIG
-            layout_file: ./layouts/layout_with_greeting.html.erb
+        let(:config) {
+          <<~CONFIG
+            layout_file: ./layouts/simple.html.erb
             uri_strategy: simple
             subdirectory_one:
-              layout_file: ./layouts/layout_for_subdirectory_one_collection.html.erb
+              layout_file: ./layouts/collection.html.erb
               uri_strategy: pretty
           CONFIG
-        end
+        }
+        let(:files) {
+          {
+            ".config/layouts/simple.html.erb" => "Greetings! <%= content %>",
+            ".config/layouts/collection.html.erb" =>
+              "Layout for Subdirectory One\n <%= content %>",
+            "subdirectory_one/entry_in_subdirectory.md" => nil,
+            "tiny_entry.md" => nil
+          }
+        }
 
         it "builds using all the correct layouts" do
           subject
 
           collection_entry =
             File.read File.join(
-              spec_lifer.output_directory,
+              project.brain.output_directory,
               "subdirectory_one/entry_in_subdirectory/index.html"
             )
           root_collection_entry =
-            File.read File.join(spec_lifer.output_directory, "tiny_entry.html")
+            File.read File.join(project.brain.output_directory, "tiny_entry.html")
 
           expect(collection_entry).not_to include "Greetings!"
           expect(collection_entry)
