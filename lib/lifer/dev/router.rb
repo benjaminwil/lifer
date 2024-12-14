@@ -17,8 +17,12 @@ module Lifer::Dev
     private
 
     def local_path_to(requested_path)
-      requested_path =
-        requested_path + "index.html" if requested_path.end_with?("/")
+      if requested_path.end_with?("/")
+        requested_path = requested_path + "index.html"
+      elsif Lifer::Utilities.file_extension(requested_path) == ""
+        requested_path = requested_path + "/index.html"
+      end
+
       "%s%s" % [build_directory, requested_path]
     end
   end
