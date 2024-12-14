@@ -29,14 +29,44 @@ RSpec.describe Lifer::Collection do
   end
 
   describe "#entries" do
-    subject { collection.entries }
+    subject { collection.entries order: }
 
-    it "includes entries from a directory" do
-      expect(subject).to contain_exactly(
-        an_instance_of(Lifer::Entry::HTML),
-        an_instance_of(Lifer::Entry::Markdown),
-        an_instance_of(Lifer::Entry::Markdown)
-      )
+    let(:project) { Support::LiferTestHelpers::FilesV2.new files: }
+    let(:files) {
+      {
+        "old.md" => <<~CONTENT,
+          ---
+          date: 2020-03-31 00:00:00 -0700
+          ---
+        CONTENT
+        "older.md" => <<~CONTENT,
+          ---
+          date: 2010-11-31 00:00:00 -0700
+          ---
+        CONTENT
+        "oldest.html" => ""
+      }
+    }
+    let(:collection) {
+      described_class.generate name: "name", directory: project.root
+    }
+
+    context "when the given order is 'latest'" do
+      let(:order) { :latest }
+
+      it "includes entries from a directory in order" do
+        expect(File.basename subject.first.file).to eq "old.md"
+        expect(File.basename subject.last.file).to eq "oldest.html"
+      end
+    end
+
+    context "when the given order is 'oldest'" do
+      let(:order) { :oldest }
+
+      it "includes entries from a directory in order" do
+        expect(File.basename subject.first.file).to eq "oldest.html"
+        expect(File.basename subject.last.file).to eq "old.md"
+      end
     end
   end
 

@@ -85,9 +85,9 @@ RSpec.describe Lifer::Entry::Markdown do
         support_file "root_with_entries/entry_with_invalid_date_frontmatter.md"
       }
 
-      it "returns nothing" do
+      it "returns a default date" do
         with_stdout_silenced do
-          expect(subject).to be_nil
+          expect(subject).to be_a Time
         end
       end
 
@@ -99,9 +99,9 @@ RSpec.describe Lifer::Entry::Markdown do
     context "when there's no date metadata" do
       let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
-      it "returns nothing" do
+      it "returns a default date" do
         with_stdout_silenced do
-          expect(subject).to be_nil
+          expect(subject).to be_a Time
         end
       end
 
@@ -118,9 +118,9 @@ RSpec.describe Lifer::Entry::Markdown do
             "2012-999-01-entry_with_invalid_date_in_filename.md"
         }
 
-        it "returns nothing" do
+        it "returns a default date" do
           with_stdout_silenced do
-            expect(subject).to be_nil
+            expect(subject).to be_a Time
           end
         end
 

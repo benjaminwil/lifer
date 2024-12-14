@@ -19,19 +19,17 @@ class Lifer::Collection
     #   collection.
     # @return [Lifer::Collection]
     def generate(name:, directory:)
-      collection = new name: name, directory: directory
-      collection.entries
+      collection = new(name: name, directory:)
+      build_collection_entries!(collection, directory:)
       collection
     end
-  end
 
-  # Each collection has a collection of entries. An entry only belongs to one
-  # collection.
-  #
-  # @return [Array<Lifer::Entry>] A collection of entries.
-  def entries
-    @entries ||=
-      entry_glob.select { |entry|
+    def build_collection_entries!(collection, directory:)
+      entry_glob = Dir.glob("#{directory}/**/*")
+        .select { |candidate| File.file? candidate }
+        .select { |candidate| Lifer::Entry.supported? candidate }
+
+      entries = entry_glob.select { |entry|
         if Lifer.manifest.include? entry
           false
         elsif Lifer.ignoreable? entry.gsub("#{directory}/", "")
@@ -40,7 +38,28 @@ class Lifer::Collection
           Lifer.manifest << entry
           true
         end
-      }.map { |entry| Lifer::Entry.generate file: entry, collection: self }
+      }.map { |entry| Lifer::Entry.generate file: entry, collection: }
+
+      collection.instance_variable_set("@entries_collection", entries)
+    end
+  end
+
+  # Each collection has a collection of entries. An entry only belongs to one
+  # collection.
+  #
+  # @return [Array<Lifer::Entry>] A collection of entries.
+  def entries(order: :latest)
+    cached_entries_variable = "@collection_entries_#{order}"
+    instance_variable_get(cached_entries_variable) ||
+      instance_variable_set(
+        cached_entries_variable,
+        case order
+        when :latest
+          @entries_collection.sort_by { |entry| entry.date }.reverse
+        when :oldest
+          @entries_collection.sort_by { |entry| entry.date }
+        end
+      )
   end
 
   # To allow for flexible configuration, a layout file may be set by users to
@@ -81,12 +100,6 @@ class Lifer::Collection
   def initialize(name:, directory:)
     @name = name.to_sym
     @directory = directory
-  end
-
-  def entry_glob
-    Dir.glob("#{directory}/**/*")
-      .select { |candidate| File.file? candidate }
-      .select { |candidate| Lifer::Entry.supported? candidate }
   end
 end
 

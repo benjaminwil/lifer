@@ -55,11 +55,11 @@ class Lifer::Entry::Markdown < Lifer::Entry
     when String then DateTime.parse(date_data).to_time
     else
       puts "[%s]: %s" % [file, I18n.t("entry.markdown.no_date_metadata")]
-      nil
+      Lifer::Entry::DEFAULT_DATE
     end
   rescue ArgumentError => error
     puts "[%s]: %s" % [file, error]
-    nil
+    Lifer::Entry::DEFAULT_DATE
   end
 
   # Frontmatter is a widely supported YAML metadata block found at the top of

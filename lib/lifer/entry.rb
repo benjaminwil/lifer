@@ -1,4 +1,5 @@
 class Lifer::Entry
+  DEFAULT_DATE = Time.new(1900, 01, 01, 0, 0, 0, "+00:00")
   HTML_FILE_EXTENSIONS = ["html", "html.erb"]
   MARKDOWN_FILE_EXTENSIONS = ["md"]
   FILE_EXTENSIONS =
