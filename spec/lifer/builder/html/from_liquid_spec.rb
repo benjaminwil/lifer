@@ -11,7 +11,13 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
     let(:entry) {
       Lifer::Entry::Markdown.new file: file, collection: collection
     }
-    let(:file) { support_file "root_with_entries/tiny_entry.md" }
+    let(:file) {
+      temp_file "tiny_entry.md", <<~CONTENT
+        # Tiny
+
+        A testable entry.
+      CONTENT
+    }
 
     context "when using layout-provided variables" do
       let(:entry) {
@@ -45,7 +51,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
            </head>
            <body>
              <header>
-               Header From Partial for "html_liquid_entry_with_layout_variables.html"
+               Header From Partial for "html_liquid_entry_with_layout_variables"
              </header>
              <article>
                <h1>HTML entry with layout variables</h1>
