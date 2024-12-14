@@ -9,7 +9,5 @@ class Lifer::Entry::HTML < Lifer::Entry
   # doesn't do much here.
   #
   # @return [String]
-  def to_html
-    full_text
-  end
+  def to_html = full_text
 end
