@@ -5,6 +5,18 @@ RSpec.describe Lifer::Entry::HTML do
 
   let(:entry) { described_class.generate collection:, file: }
 
+  describe "#date" do
+    subject { entry.date }
+
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+    let(:file) { temp_file "file.html" }
+
+    it { is_expected.to be_a Time }
+  end
+
   describe "#title" do
     subject { entry.title }
 

@@ -1,6 +1,13 @@
 class Lifer::Entry::HTML < Lifer::Entry
   self.include_in_feeds = false
 
+  # FIXME: This could probably get more sophisticated, but at the moment HTML
+  # entries don't have any way to provide metadata about themselves. So let's
+  # just give them a default date to start.
+  #
+  # @return [Time] The publication date of the HTML entry.
+  def date = Lifer::Entry::DEFAULT_DATE
+
   # Since HTML entries cannot provide metadata about themselves, we must extract
   # a title from the permalink. Depending on the filename and URI strategy being
   # used for the collection, it's possible that the extracted title would be
