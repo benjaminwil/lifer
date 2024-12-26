@@ -108,11 +108,19 @@ class Lifer::Entry
   #
   # @return [String] A permalink to the current entry.
   def permalink(host: Lifer.setting(:global, :host))
-    @permalink ||=
-      File.join host, Lifer::URIStrategy
-        .find(collection.setting :uri_strategy)
-        .new(root: Lifer.root)
-        .output_file(self)
+    cached_permalink_variable =
+      "@entry_permalink_" + Digest::SHA1.hexdigest(host)
+
+    instance_variable_get(cached_permalink_variable) ||
+      instance_variable_set(
+        cached_permalink_variable,
+        File.join(
+          host,
+          Lifer::URIStrategy.find(collection.setting :uri_strategy)
+            .new(root: Lifer.root)
+            .output_file(self)
+        )
+      )
   end
 
   # The expected, absolute URI path to the entry. For example:
@@ -121,9 +129,7 @@ class Lifer::Entry
   #    /blog/my-trip-to-toronto.html
   #
   # @return [String] The absolute URI path to the entry.
-  def path
-    @path ||= permalink host: "/"
-  end
+  def path = permalink(host: "/")
 
   def title
     raise NotImplementedError, I18n.t("shared.not_implemented_method")
