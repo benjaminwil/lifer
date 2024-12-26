@@ -5,6 +5,7 @@ RSpec.describe Lifer::Builder::HTML do
 
   describe ".execute" do
     subject { described_class.execute(root: project.root) }
+
     let(:config) { nil }
     let(:files) {
       {
@@ -58,8 +59,16 @@ RSpec.describe Lifer::Builder::HTML do
           LAYOUT
           "_partials/header.html.liquid" => <<~PARTIAL,
             Header From Partial for "{{ entry.title }}"
+
+            The authors of this article are {{ entry.frontmatter.authors }}
           PARTIAL
-          "tiny_entry.md" => "A testable entry."
+          "tiny_entry.md" => <<~CONTENT
+            ---
+            authors: Good Person, Great Human
+            ---
+
+            A testable entry.
+          CONTENT
         }
       }
 
@@ -71,6 +80,15 @@ RSpec.describe Lifer::Builder::HTML do
 
         expect(entry).to include "Header From Partial for \"Untitled Entry\""
         expect(entry).to include "A testable entry."
+      end
+
+      it "supports frontmatter" do
+        subject
+
+        entry =
+          File.read(File.join project.brain.output_directory, "tiny_entry.html")
+        expect(entry)
+          .to include "The authors of this article are Good Person, Great Human"
       end
     end
 
