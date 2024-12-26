@@ -1,6 +1,8 @@
+require "digest/sha1"
+
 class Lifer::Entry
   DEFAULT_DATE = Time.new(1900, 01, 01, 0, 0, 0, "+00:00")
-  HTML_FILE_EXTENSIONS = ["html", "html.erb"]
+  HTML_FILE_EXTENSIONS = ["html", "html.erb", "html.liquid"]
   MARKDOWN_FILE_EXTENSIONS = ["md"]
   FILE_EXTENSIONS =
     HTML_FILE_EXTENSIONS + MARKDOWN_FILE_EXTENSIONS
