@@ -69,7 +69,7 @@ class Lifer::Config
       if File.file? file
         new file: file, root: root
       else
-        puts I18n.t("config.no_config_file_at", file:)
+        Lifer::Message.log("config.no_config_file_at", file:)
 
         new file: DEFAULT_CONFIG_FILE, root: root
       end

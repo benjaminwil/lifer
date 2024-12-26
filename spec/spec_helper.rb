@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ENV["LIFER_ENV"] ||= "test"
+
 require "debug"
 
 require_relative "shared_examples"

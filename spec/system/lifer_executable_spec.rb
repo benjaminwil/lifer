@@ -6,6 +6,14 @@ RSpec.describe "bin/lifer", type: :system do
     spec_lifer!
   end
 
+  around do |example|
+    original_value = ENV["LIFER_ENV"]
+    ENV["LIFER_ENV"] = "production-like"
+    example.run
+  ensure
+    ENV["LIFER_ENV"] = original_value
+  end
+
   describe "bin/lifer (no arguments)" do
     subject {
       Dir.chdir(Lifer.root) do
@@ -42,7 +50,7 @@ RSpec.describe "bin/lifer", type: :system do
   describe "bin/lifer --config <custom-config> --root <custom-root>" do
     subject {
       Dir.chdir(Lifer.root) do
-        system "lifer --config #{config_file} --root #{root}"
+        system "lifer --config #{config_file} --root #{root}", out: File::NULL
       end
     }
 

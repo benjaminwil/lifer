@@ -86,13 +86,15 @@ RSpec.describe Lifer::Entry::Markdown do
       }
 
       it "returns a default date" do
-        with_stdout_silenced do
-          expect(subject).to be_a Time
-        end
+        expect(subject).to be_a Time
       end
 
       it "prints an error to STDOUT" do
-        expect { subject }.to output("[#{file}]: invalid date\n").to_stdout
+        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
+        expect { subject }
+          .to output("\e[31mERR: [#{file}]: invalid date\e[0m\n")
+          .to_stdout
       end
     end
 
@@ -100,14 +102,14 @@ RSpec.describe Lifer::Entry::Markdown do
       let(:file) { support_file "root_with_entries/tiny_entry.md" }
 
       it "returns a default date" do
-        with_stdout_silenced do
-          expect(subject).to be_a Time
-        end
+        expect(subject).to be_a Time
       end
 
       it "prints an error STDOUT" do
-          expect { subject }
-            .to output("[#{file}]: no date metadata\n").to_stdout
+        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
+        expect { subject }
+          .to output("[#{file}]: no date metadata\n").to_stdout
       end
     end
 
@@ -119,12 +121,12 @@ RSpec.describe Lifer::Entry::Markdown do
         }
 
         it "returns a default date" do
-          with_stdout_silenced do
-            expect(subject).to be_a Time
-          end
+          expect(subject).to be_a Time
         end
 
         it "prints an error to STDOUT" do
+          allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
           expect { subject }
             .to output("[#{file}]: no date metadata\n").to_stdout
         end

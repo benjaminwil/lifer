@@ -33,11 +33,15 @@ en:
     feedable_error: >
       please set `%{entry_class}.include_in_feeds` to true or false
     markdown:
-      no_date_metadata: no date metadata
+      date_error: "[%{filename}]: %{error}"
+      no_date_metadata: "[%{filename}]: no date metadata"
     not_found: >
       file "%{file}" does not exist
   config:
     no_config_file_at: No configuration file at %{file}. Using default configuration.
+  message:
+    prefix:
+      error: ERR
   selection:
     entries_not_implemented: all selections must implement the `#entries` method
     layouts_not_allowed: selections do not have layout files

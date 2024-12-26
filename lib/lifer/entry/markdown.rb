@@ -54,11 +54,11 @@ class Lifer::Entry::Markdown < Lifer::Entry
     when Time then date_data
     when String then DateTime.parse(date_data).to_time
     else
-      puts "[%s]: %s" % [file, I18n.t("entry.markdown.no_date_metadata")]
+      Lifer::Message.log("entry.markdown.no_date_metadata", filename: file)
       Lifer::Entry::DEFAULT_DATE
     end
   rescue ArgumentError => error
-    puts "[%s]: %s" % [file, error]
+    Lifer::Message.error("entry.markdown.date_error", filename: file, error:)
     Lifer::Entry::DEFAULT_DATE
   end
 

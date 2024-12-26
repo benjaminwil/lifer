@@ -29,6 +29,9 @@ RSpec.describe Lifer::Config do
       let(:file) { "../haha" }
 
       it "notifies the user there's no configuration file being loaded" do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
         expect { subject }
           .to output(/^No configuration file at/)
           .to_stdout
