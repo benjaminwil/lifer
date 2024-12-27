@@ -5,7 +5,25 @@ require "tmpdir"
 
 require "lifer"
 
-class Support::LiferTestHelpers::FilesV2
+# Create a Lifer project inline during a test using this class. You can define a
+# list of files and their contents, as well as the contents of a Lifer
+# configuration file, to be created.
+#
+# Example usage:
+#
+#    let(:project) {
+#      Support::LiferTestHelpers::TestProject.new(files:, config:)
+#    }
+#    let(:files) { {"relative/path/to/entry.md" => "entry contents"} }
+#    let(:config) {
+#      <<~YAML
+#        uri_strategy: root
+#        other_collection:
+#          uri_strategy: pretty
+#      YAML
+#    }
+#
+class Support::LiferTestHelpers::TestProject
   DEFAULT_TEST_CONFIG = <<~CONFIG
     unregistered_setting: does nothing
     uri_strategy: simple
@@ -20,6 +38,17 @@ class Support::LiferTestHelpers::FilesV2
 
   attr_accessor :root, :config
 
+  # This initializer does all of the work required to get the Lifer directories,
+  # files, and configuration up and running. By the end, a brain has been
+  # created against temporary files on your filesystem.
+  #
+  # If a Lifer brain had previously been created, it gets destroyed to make way
+  # for the new one being created for the current test.
+  #
+  # @param config [String] The contents of Lifer configuration file.
+  # @param files [Hash] A hash with keys referring to relative file paths and
+  #   values referring to the contents of the file.
+  # @return [void]
   def initialize(
     config: DEFAULT_TEST_CONFIG,
     files: DEFAULT_TEST_FILES
@@ -34,6 +63,9 @@ class Support::LiferTestHelpers::FilesV2
     @@spec_lifer = Lifer.brain(root:, config_file: @config)
   end
 
+  # Access the brain for the current test project.
+  #
+  # @return [Lifer::Brain] The brain!
   def brain = @@spec_lifer
 
   private

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::HTML do
-  let(:project) { Support::LiferTestHelpers::FilesV2.new files:, config: }
+  let(:project) { Support::LiferTestHelpers::TestProject.new files:, config: }
 
   describe ".execute" do
     subject { described_class.execute(root: project.root) }

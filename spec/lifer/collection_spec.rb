@@ -31,7 +31,7 @@ RSpec.describe Lifer::Collection do
   describe "#entries" do
     subject { collection.entries order: }
 
-    let(:project) { Support::LiferTestHelpers::FilesV2.new files: }
+    let(:project) { Support::LiferTestHelpers::TestProject.new files: }
     let(:files) {
       {
         "old.md" => <<~CONTENT,
