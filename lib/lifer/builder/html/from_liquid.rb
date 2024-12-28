@@ -54,14 +54,14 @@ class Lifer::Builder::HTML
     end
 
     def render
+      Liquid::Template.file_system =
+        Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
+
       document_context = context.merge!(
         "content" => Liquid::Template
           .parse(entry.to_html, error_mode: :strict)
           .render(context, render_options)
       )
-      Liquid::Template.file_system =
-        Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
-
       Liquid::Template
         .parse(layout, error_mode: :strict)
         .render(document_context, render_options)
