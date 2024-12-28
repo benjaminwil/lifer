@@ -31,6 +31,7 @@ module Lifer::Dev
       when ".map" then "application/json"
       when ".woff" then "application/font-woff2"
       when ".woff2" then "application/font-woff2"
+      when ".xml" then "application/xml"
       else
         raise NotImplementedError,
           I18n.t("dev.router.content_type_not_implemented", path:)
