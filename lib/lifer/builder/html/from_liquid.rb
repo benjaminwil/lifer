@@ -1,15 +1,11 @@
 require "liquid"
 
-require_relative "from_liquid/drops/collection_drop"
-require_relative "from_liquid/drops/collections_drop"
-require_relative "from_liquid/drops/entry_drop"
-require_relative "from_liquid/drops/settings_drop"
-
+require_relative "from_liquid/drops"
 require_relative "from_liquid/filters"
-require_relative "from_liquid/tags"
+require_relative "from_liquid/layout_tag"
 
-Liquid::Template.register_filter(LiferLiquidFilters)
-Liquid::Template.register_tag(:layout, LayoutTag)
+Liquid::Template.register_filter(Lifer::Builder::HTML::FromLiquid::Filters)
+Liquid::Template.register_tag(:layout, Lifer::Builder::HTML::FromLiquid::LayoutTag)
 
 # If the HTML builder is given a Liquid template, it uses this class to parse
 # the Liquid into HTML. Lifer project metadata is provided as context. For
@@ -70,15 +66,15 @@ class Lifer::Builder::HTML
     private
 
     def context
-      collections = CollectionsDrop.new
+      collections = Drops::CollectionsDrop.new
       collection = collections
         .to_a
         .detect { _1.name.to_sym == entry.collection.name }
 
       {
         "collections" => collections,
-        "entry" => EntryDrop.new(entry, collection:),
-        "settings" => SettingsDrop.new
+        "entry" => Drops::EntryDrop.new(entry, collection:),
+        "settings" => Drops::SettingsDrop.new
       }
     end
 
