@@ -1,9 +1,9 @@
 en:
   builder:
+    file_conflict_error: "Cannot build HTML file because `%{path}` already exists."
     prebuild_failure: >
       Lifer failed to complete building... A prebuild step failed to execute: %{exception}
     html:
-      file_conflict_error: "Cannot build HTML file because `%{path}` already exists."
       no_builder_error: No builder for layout file `%{file}` with type `%{type}`. Aborting!
   cli:
     bad_port: >

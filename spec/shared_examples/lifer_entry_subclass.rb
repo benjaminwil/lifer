@@ -25,18 +25,10 @@ RSpec.shared_examples "Lifer::Entry subclass" do
         # This test sets up one entry of each supported type in order to work as
         # a shared example for any `Lifer::Entry` subclass.
         #
-        Lifer::Entry.generate(
-          file: support_file("root_with_entries/tiny_entry.md"),
-          collection: "whatever"
-        )
-
-        Lifer::Entry.generate(
-          file: support_file(
-            "root_with_entries/subdirectory_one/" \
-              "page_entry_in_subdirectory.html.erb"
-          ),
-          collection: "whatever"
-        )
+        collection = "whatever"
+        Lifer::Entry.generate(file: temp_file("my-markdown.md"), collection:)
+        Lifer::Entry.generate(file: temp_file("my-html.html.erb"), collection:)
+        Lifer::Entry.generate(file: temp_file("my-text.txt"), collection:)
       }
         .to change { described_class.manifest }
         .from([])
@@ -97,7 +89,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
 
     it "responds with the path relative from root" do
-      expect(subject).to eq "/tiny_entry.html"
+      expect(subject).to eq "/tiny_entry.#{described_class.output_extension}"
     end
   end
 
@@ -119,7 +111,8 @@ RSpec.shared_examples "Lifer::Entry subclass" do
 
     it "responds with a well-formed URL" do
       with_stdout_silenced do
-        expect(subject).to eq "https://example.com/tiny_entry.html"
+        expect(subject).to eq "https://example.com/tiny_entry." \
+          "#{described_class.output_extension}"
       end
     end
   end

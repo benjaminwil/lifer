@@ -47,7 +47,7 @@ RSpec.describe Lifer::Brain do
 
         expect(Lifer::Builder)
           .to have_received(:build!)
-          .with(*["html", "rss"], root: root)
+          .with(*["html", "rss", "txt"], root: root)
           .once
       end
     end

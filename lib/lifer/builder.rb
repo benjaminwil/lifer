@@ -98,3 +98,4 @@ end
 
 require_relative "builder/rss"
 require_relative "builder/html"
+require_relative "builder/txt"

@@ -7,7 +7,7 @@ RSpec.describe Lifer::Builder do
     subject { described_class.all }
 
     it "returns all builders by name" do
-      expect(subject).to contain_exactly :html, :rss
+      expect(subject).to contain_exactly :html, :rss, :txt
     end
   end
 

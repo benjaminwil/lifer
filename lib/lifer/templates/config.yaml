@@ -72,5 +72,6 @@ global:
   build:
     - html
     - rss
+    - txt
   host: https://example.com
   output_directory: _build

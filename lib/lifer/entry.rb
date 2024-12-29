@@ -4,8 +4,9 @@ class Lifer::Entry
   DEFAULT_DATE = Time.new(1900, 01, 01, 0, 0, 0, "+00:00")
   HTML_FILE_EXTENSIONS = ["html", "html.erb", "html.liquid"]
   MARKDOWN_FILE_EXTENSIONS = ["md"]
+  TXT_FILE_EXTENSIONS = ["txt"]
   FILE_EXTENSIONS =
-    HTML_FILE_EXTENSIONS + MARKDOWN_FILE_EXTENSIONS
+    HTML_FILE_EXTENSIONS + MARKDOWN_FILE_EXTENSIONS + TXT_FILE_EXTENSIONS
 
   attr_reader :file, :collection
 
@@ -24,10 +25,9 @@ class Lifer::Entry
 
       new_entry =
         case entry_type(file)
-        when :html
-          Lifer::Entry::HTML.new(file: file, collection: collection)
-        when :markdown
-          Lifer::Entry::Markdown.new(file: file, collection: collection)
+        when :html then Lifer::Entry::HTML.new(file:, collection:)
+        when :markdown then Lifer::Entry::Markdown.new(file:, collection:)
+        when :txt then Lifer::Entry::TXT.new(file:, collection:)
         end
 
       Lifer.entry_manifest << new_entry if new_entry
@@ -63,6 +63,7 @@ class Lifer::Entry
       case
       when supported?(filename, HTML_FILE_EXTENSIONS) then :html
       when supported?(filename, MARKDOWN_FILE_EXTENSIONS) then :markdown
+      when supported?(filename, TXT_FILE_EXTENSIONS) then :txt
       end
     end
 
@@ -146,3 +147,4 @@ end
 
 require_relative "entry/html"
 require_relative "entry/markdown"
+require_relative "entry/txt"

@@ -97,7 +97,7 @@ class Lifer::Builder::HTML < Lifer::Builder
     absolute_path = File.join(Lifer.output_directory, relative_path)
 
     if File.exist?(absolute_path)
-      raise I18n.t("builder.html.file_conflict_error", path: absolute_path)
+      raise I18n.t("builder.file_conflict_error", path: absolute_path)
     end
 
     File.open(relative_path, "w") { |file|

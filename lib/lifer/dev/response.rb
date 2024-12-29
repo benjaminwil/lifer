@@ -29,6 +29,7 @@ module Lifer::Dev
       when ".ico" then "image/ico"
       when ".js" then "text/javascript"
       when ".map" then "application/json"
+      when ".txt" then "text/plain"
       when ".woff" then "application/font-woff2"
       when ".woff2" then "application/font-woff2"
       when ".xml" then "application/xml"
