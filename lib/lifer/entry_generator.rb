@@ -1,2 +1,0 @@
-module Lifer::EntryGenerator
-end
