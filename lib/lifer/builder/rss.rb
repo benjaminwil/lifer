@@ -1,3 +1,4 @@
+require "fileutils"
 require "rss"
 
 # Builds a simple RSS 2.0[1] feed using the Ruby standard library's RSS
@@ -28,6 +29,8 @@ class Lifer::Builder::RSS < Lifer::Builder
   def execute
     collections_with_feeds.each do |collection|
       next unless (filename = output_filename(collection))
+
+      FileUtils.mkdir_p File.dirname(filename)
 
       File.open filename, "w" do |file|
         file.puts(
