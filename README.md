@@ -8,6 +8,11 @@ to bring your own asset pipeline and configure it as a pre-build step.
 _Lifer is currently in pre-release. Features are incomplete. Your mileage may
 vary._
 
+**What's with the name?** Lifer aims to be easy to maintain for the lifetime of
+your static site by requiring few dependencies and being very extensible by the
+end user, without the need for gem plugins. The generator should also "breathe
+life" into your project because it's so easy to use.
+
 ## Features
 
 Here's a short overview of Lifer's flagship features.
@@ -17,6 +22,11 @@ Here's a short overview of Lifer's flagship features.
 Whether you want to compile assets with Ruby-based tools, JavaScript-based
 tools, or other tools, Lifer is okay with that. As long as those tools come with
 a commandline interface, Lifer can shell out to those tools as a prebuild step.
+
+The tradeoff here is that your templates will not be asset aware, meaning asset
+fingerprinting and complex asset locating isn't really possible at this time. If
+you need features like that, consider other static site generators or consider
+*not* using a static site generator.
 
 ### Collections and selections
 
@@ -38,6 +48,9 @@ No problem. Just use the Lifer commandline interface to start a development
 server at `http://localhost:9292`:
 
     $ lifer serve
+
+The development server is not very sophisticated and can still be improved. But
+for previewing new entries? It works just fine.
 
 ## Installation
 
@@ -74,4 +87,12 @@ suite can run on your machine:
 
 ## Contributing
 
-_TODO_
+I'm not currently accepting unsolicited contributions to Lifer. I'm still
+figuring out what the shape of this project is.
+
+If you encounter bugs, please open an issue.
+
+If you have ideas for improving existing functionality or adding *missing*
+functionality, please open an issue. Maybe there is room for you to contribute,
+but I don't want you to waste your time preparing a merge request that I won't
+accept.

@@ -2,6 +2,9 @@
 
 require "set"
 
+# The root Lifer module is a great entrypoint into the system, with convenience
+# methods to access global resources like collections and configuration settings.
+#
 module Lifer
   # Lifer considers files and directories that have the following names or
   # contain the following patterns special and ignoreable when they're at the
@@ -12,6 +15,9 @@ module Lifer
     "bin",
     "vendor"
   ]
+
+  # Lifer projects ignore files and directories that contain particular patterns.
+  #
   IGNORE_PATTERNS = [
     "^(\\.)",     # Starts with a dot.
     "^(_)",       # Starts with an underscore.
@@ -35,10 +41,14 @@ module Lifer
     # @param environment [Symbol] The name of the current Lifer environment.
     #   Valid environments are `:build` or `:serve`.
     # @return [void]
-    def build!(environment: :build)
-      brain.build! environment:
-    end
+    def build!(environment: :build) = (brain.build! environment:)
 
+    # List all collections in the project. By default, selections are also
+    # included.
+    #
+    # @param without_selections [boolean] Whether to include selections in the list.
+    #   (Default: false.)
+    # @return [Array<Lifer::Collection>] A list of all collections.
     def collections(without_selections: false)
       return brain.collections unless without_selections
 
@@ -49,45 +59,89 @@ module Lifer
     # project.
     #
     # @return [Pathname] The path to the current Lifer config file.
-    def config_file
-      brain.config.file
-    end
+    def config_file = brain.config.file
 
-    def entry_manifest
-      brain.entry_manifest
-    end
+    # A set of all entries currently in the project.
+    #
+    # FIXME: Do we need this as well as `Lifer.manifest`?
+    #
+    # @return [Set] All entries.
+    def entry_manifest = brain.entry_manifest
 
-    def gem_root
-      File.dirname __dir__
-    end
+    # This convenience method locates the Ruby gem root, which is always
+    # distinct from the Lifer project root. This is helpful, for example, if
+    # default templates provided by the gem are required in the current project.
+    #
+    # @return [String] The absolute path to the installed Lifer gem root.
+    def gem_root = File.dirname(__dir__)
 
+    # Check if the given path matches the Lifer ignore patterns.
+    #
+    # @param directory_or_file [String] The path to a directory or file.
+    # @return [boolean] True if the directory of file is ignoreable.
     def ignoreable?(directory_or_file)
       directory_or_file.match?(/#{IGNORE_PATTERNS.join("|")}/)
     end
 
-    def manifest
-      brain.manifest
-    end
+    # A set of all entries currently in the project.
+    #
+    # FIXME: Do we need this as well as `Lifer.manifest`?
+    #
+    # @return [Set] All entries.
+    def manifest = brain.manifest
 
-    def output_directory
-      brain.output_directory
-    end
+    # The build directory for the Lifer project.
+    #
+    # @return [Pathname] The absolute path to the directory where the Lifer
+    #   project would be built to.
+    def output_directory = brain.output_directory
 
-    def register_settings(*settings)
-      brain.config.register_settings(*settings)
-    end
+    # Register new settings so that they are "safe" and can be read from a Lifer
+    # configuration file. Unregistered settings are ignored.
+    #
+    # Example usage:
+    #
+    #    register_settings(
+    #      :hidden,
+    #      :birthday,
+    #      jsonfeed: [:enabled, :url, :style]
+    #    )
+    #
+    # @overload register_settings(setting, ...)
+    #  @param setting [Symbol, Hash] A setting or setting tree to be registered.
+    #  @param ... [Symbol, Hash] More settings or settings trees to be
+    #    registered.
+    #  @return [void]
+    def register_settings(*settings) = brain.config.register_settings(*settings)
 
-    def root
-      brain.root
-    end
+    # The project brain.
+    #
+    # @return [Lifer::Brain] The project brain.
+    def root = brain.root
 
+    # Given a path to a setting, with or without a collection scope, get the
+    # current configured value for that setting.
+    #
+    # Note that if a collection does not have a setting set, the setting
+    # returned will be the Lifer root collection setting or the default setting
+    # unless the `:strict` keyword argument is set to `true`.
+    #
+    # @overload setting(..., collection: nil, strict: false)
+    #   @param ... [Symbol] A list of settings to traverse the settings tree with.
+    #   @param collection [Lifer::Collection] The collection scope for the
+    #     wanted setting.
+    #   @param strict [boolean] Choose whether to strictly return the collection
+    #     setting or to fallback to the Lifer root and default settings.
+    #     (Default: false.)
+    #   @return [String, NilClass] The value of the best in-scope setting.
     def setting(*name, collection: nil, strict: false)
       brain.setting *name, collection: collection, strict: strict
     end
 
-    def settings
-      brain.config.settings
-    end
+    # The project's current settings tree.
+    #
+    # @return [Hash] The `Lifer::Config#settings`.
+    def settings = brain.config.settings
   end
 end
 
