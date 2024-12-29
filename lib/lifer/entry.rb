@@ -1,19 +1,26 @@
 require "digest/sha1"
 
 class Lifer::Entry
+  class << self
+    attr_accessor :include_in_feeds
+    attr_accessor :input_extensions
+    attr_accessor :output_extension
+  end
+
+  self.include_in_feeds = false
+  self.input_extensions = []
+  self.output_extension = nil
+
+  require_relative "entry/html"
+  require_relative "entry/markdown"
+  require_relative "entry/txt"
+
   DEFAULT_DATE = Time.new(1900, 01, 01, 0, 0, 0, "+00:00")
-  HTML_FILE_EXTENSIONS = ["html", "html.erb", "html.liquid"]
-  MARKDOWN_FILE_EXTENSIONS = ["md"]
-  TXT_FILE_EXTENSIONS = ["txt"]
-  FILE_EXTENSIONS =
-    HTML_FILE_EXTENSIONS + MARKDOWN_FILE_EXTENSIONS + TXT_FILE_EXTENSIONS
+  SUPPORTED_FILE_EXTENSIONS = subclasses.flat_map(&:input_extensions)
 
   attr_reader :file, :collection
 
   class << self
-    attr_accessor :include_in_feeds
-    attr_accessor :output_extension
-
     # The entrypoint for generating entry objects. We should never end up with
     # `Lifer::Entry` records: only subclasses.
     #
@@ -23,15 +30,9 @@ class Lifer::Entry
     def generate(file:, collection:)
       error!(file) unless File.exist?(file)
 
-      new_entry =
-        case entry_type(file)
-        when :html then Lifer::Entry::HTML.new(file:, collection:)
-        when :markdown then Lifer::Entry::Markdown.new(file:, collection:)
-        when :txt then Lifer::Entry::TXT.new(file:, collection:)
-        end
-
-      Lifer.entry_manifest << new_entry if new_entry
-
+      if (new_entry = subclass_for(file)&.new(file:, collection:))
+        Lifer.entry_manifest << new_entry
+      end
       new_entry
     end
 
@@ -52,19 +53,21 @@ class Lifer::Entry
     # @param supported_file_extensions [Array<String>] An array of file
     #   extensions to check agaainst.
     # @return [Boolean]
-    def supported?(filename, supported_file_extensions = FILE_EXTENSIONS)
+    def supported?(filename, supported_file_extensions = SUPPORTED_FILE_EXTENSIONS)
       supported_file_extensions.any? { |ext| filename.end_with? ext }
     end
 
     private
 
     # @private
-    def entry_type(filename)
-      case
-      when supported?(filename, HTML_FILE_EXTENSIONS) then :html
-      when supported?(filename, MARKDOWN_FILE_EXTENSIONS) then :markdown
-      when supported?(filename, TXT_FILE_EXTENSIONS) then :txt
-      end
+    # Retrieve the entry subclass based on the current filename.
+    #
+    # @param filename [String] The current entry's filename.
+    # @return [Class] The entry subclass for the current entry.
+    def subclass_for(filename)
+      Lifer::Entry.subclasses.detect { |klass|
+        klass.input_extensions.any? { |ext| filename.end_with? ext }
+      }
     end
 
     # @private
@@ -140,11 +143,5 @@ class Lifer::Entry
   def to_html
     raise NotImplementedError, I18n.t("shared.not_implemented_method")
   end
-
-  self.include_in_feeds = false
-  self.output_extension = nil
 end
 
-require_relative "entry/html"
-require_relative "entry/markdown"
-require_relative "entry/txt"

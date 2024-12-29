@@ -1,5 +1,6 @@
 class Lifer::Entry::TXT < Lifer::Entry
   self.include_in_feeds = false
+  self.input_extensions = ["txt"]
   self.output_extension = :txt
 
   # FIXME: This could probably get more sophisticated, but at the moment HTML

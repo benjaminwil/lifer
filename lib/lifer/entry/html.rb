@@ -1,5 +1,6 @@
 class Lifer::Entry::HTML < Lifer::Entry
   self.include_in_feeds = false
+  self.input_extensions = ["html", "html.erb", "html.liquid"]
   self.output_extension = :html
 
   # FIXME: This could probably get more sophisticated, but at the moment HTML
