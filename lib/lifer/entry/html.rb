@@ -1,5 +1,6 @@
 class Lifer::Entry::HTML < Lifer::Entry
   self.include_in_feeds = false
+  self.output_extension = :html
 
   # FIXME: This could probably get more sophisticated, but at the moment HTML
   # entries don't have any way to provide metadata about themselves. So let's

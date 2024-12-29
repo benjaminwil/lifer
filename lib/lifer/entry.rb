@@ -11,6 +11,7 @@ class Lifer::Entry
 
   class << self
     attr_accessor :include_in_feeds
+    attr_accessor :output_extension
 
     # The entrypoint for generating entry objects. We should never end up with
     # `Lifer::Entry` records: only subclasses.
@@ -140,6 +141,7 @@ class Lifer::Entry
   end
 
   self.include_in_feeds = false
+  self.output_extension = nil
 end
 
 require_relative "entry/html"

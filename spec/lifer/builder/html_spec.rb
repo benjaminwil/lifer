@@ -10,7 +10,8 @@ RSpec.describe Lifer::Builder::HTML do
     let(:files) {
       {
         "subdirectory_one/entry.md" => nil,
-        "tiny_entry.md" => nil
+        "tiny_entry.md" => nil,
+        "text_file.txt" => nil
       }
     }
 
@@ -21,6 +22,13 @@ RSpec.describe Lifer::Builder::HTML do
         }
         .from(0)
         .to(2)
+    end
+
+    it "does not generate non-HTML output files (like `.txt` files)" do
+      expect { subject }
+        .not_to change {
+          Dir.glob("#{project.brain.output_directory}/**/*.txt").count
+        }
     end
 
     it "errors out when an there's a file conflict" do

@@ -7,6 +7,14 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
   end
 
+  describe ".output_extension" do
+    subject { described_class.output_extension }
+
+    it "has an output file extension defined" do
+      expect(subject).not_to be_nil
+    end
+  end
+
   describe ".manifest" do
     subject { described_class.manifest }
 

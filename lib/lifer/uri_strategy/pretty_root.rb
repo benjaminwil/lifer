@@ -9,7 +9,7 @@ class Lifer::URIStrategy
       if basename == "index"
         Pathname "index.html"
       else
-        Pathname "#{basename}/index.html"
+        Pathname "#{basename}/index.#{file_extension(entry)}"
       end
     end
   end

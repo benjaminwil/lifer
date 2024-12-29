@@ -7,6 +7,6 @@ class Lifer::URIStrategy::Simple < Lifer::URIStrategy
 
     Pathname entry.file.to_s
       .gsub(/#{root}[\/]{0,1}/, "")
-      .gsub(/#{basename}(\..+)/, "#{basename}.html")
+      .gsub(/#{basename}(\..+)/, "#{basename}.#{file_extension(entry)}")
   end
 end

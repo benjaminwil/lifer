@@ -7,6 +7,6 @@ class Lifer::URIStrategy::Pretty < Lifer::URIStrategy
 
     Pathname entry.file.to_s
       .gsub(/#{root}[\/]{0,1}/, "")
-      .gsub(/#{basename}(\..+)/, "#{basename}/index.html")
+      .gsub(/#{basename}(\..+)/, "#{basename}/index.#{file_extension(entry)}")
   end
 end

@@ -55,6 +55,8 @@ class Lifer::Builder::HTML < Lifer::Builder
   def execute
     Lifer.collections(without_selections: true).each do |collection|
       collection.entries.each do |entry|
+        next unless entry.class.output_extension == :html
+
         generate_output_directories_for entry
         generate_output_file_for entry
       end

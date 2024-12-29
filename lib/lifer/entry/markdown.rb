@@ -19,6 +19,7 @@ class Lifer::Entry::Markdown < Lifer::Entry
   TRUNCATION_THRESHOLD = 120
 
   self.include_in_feeds = true
+  self.output_extension = :html
 
   # Given the entry's frontmatter, we should be able to get a list of authors.
   # We always prefer authors (as opposed to a singular author) because it makes

@@ -15,6 +15,10 @@ class Lifer::URIStrategy
     raise NotImplementedError, I18n.t("shared.not_implemented_method")
   end
 
+  private
+
+  def file_extension(entry) = entry.class.output_extension
+
   self.name = :uri_strategy
 end
 
