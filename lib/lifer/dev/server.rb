@@ -74,9 +74,12 @@ module Lifer::Dev
       # @return [Lifer::Dev::Router] Our dev server router.
       #
       def router
-        @router ||=
-          Lifer::Dev::Router.new(build_directory: Lifer.output_directory)
+        return @router if @router && !test_mode?
+
+        @router = Lifer::Dev::Router.new build_directory: Lifer.output_directory
       end
+
+      def test_mode? = ENV["LIFER_ENV"] == "test"
     end
   end
 end
