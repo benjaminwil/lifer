@@ -1,19 +1,21 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Collection do
-  before do
-    spec_lifer!
-  end
-
-  let(:collection) {
-    described_class.generate name: "name", directory: directory
+  let(:project) { Support::LiferTestHelpers::TestProject.new files:, config: }
+  let(:files) {
+    {
+      "subdirectory_one/entry.html" => nil,
+      "subdirectory_one/entry.md" => nil,
+      "subdirectory_one/entry2.md" => nil
+    }
   }
-  let(:directory) { "#{spec_lifer.root}/subdirectory_one" }
+  let(:config) { "" }
+
+  let(:collection) { described_class.generate(name: "name", directory:) }
+  let(:directory) { "#{project.root}/subdirectory_one" }
 
   describe ".generate" do
-    subject {
-      described_class.generate(name: :my_collection, directory: directory)
-    }
+    subject { described_class.generate(name: :my_collection, directory:) }
 
     it "generates a collection" do
       expect(subject.name).to eq :my_collection
@@ -31,7 +33,6 @@ RSpec.describe Lifer::Collection do
   describe "#entries" do
     subject { collection.entries order: }
 
-    let(:project) { Support::LiferTestHelpers::TestProject.new files: }
     let(:files) {
       {
         "old.md" => <<~CONTENT,
@@ -87,37 +88,26 @@ RSpec.describe Lifer::Collection do
       end
 
       context "containing the Lifer root" do
-        let(:absolute_path_to_layout_file) {
-          "#{spec_lifer.root}/.config/layouts/layout_with_greeting.html.erb"
-        }
-
         before do
           allow(Lifer)
             .to receive(:setting)
             .with(:layout_file, collection: collection, strict: false)
-            .and_return(absolute_path_to_layout_file)
+            .and_return("#{project.root}/my/layout_file.html.erb")
         end
 
-        it { is_expected.to eq absolute_path_to_layout_file }
+        it { is_expected.to eq "#{project.root}/my/layout_file.html.erb" }
       end
     end
 
     context "when the setting is a relative path" do
-      let(:absolute_path_to_layout_file) {
-        "#{spec_lifer.root}/.config/layouts/layout_with_greeting.html.erb"
-      }
-      let(:relative_path_to_layout_file) {
-        absolute_path_to_layout_file.gsub("#{spec_lifer.root}/.config/", "")
-      }
-
       before do
         allow(Lifer)
           .to receive(:setting)
           .with(:layout_file, collection: collection, strict: false)
-          .and_return(relative_path_to_layout_file)
+          .and_return("my/layout_file.html.erb")
       end
 
-      it { is_expected.to eq absolute_path_to_layout_file }
+      it { is_expected.to eq "#{project.root}/.config/my/layout_file.html.erb" }
     end
   end
 

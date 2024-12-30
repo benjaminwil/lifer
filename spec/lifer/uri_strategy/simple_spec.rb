@@ -1,7 +1,10 @@
 require "spec_helper"
 
 RSpec.describe Lifer::URIStrategy::Simple do
-  let(:root) { temp_root support_file("root_with_entries") }
+  let(:root) {
+    temp_dir_with_files "entry.md" => nil,
+      "subdir/subsubdir/sub_entry.md" => nil
+  }
   let(:uri_strategy) { described_class.new root: root }
 
   describe ".name" do
@@ -17,25 +20,19 @@ RSpec.describe Lifer::URIStrategy::Simple do
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
     }
-    let(:entry) {
-      Lifer::Entry::Markdown.new file: file, collection: collection
-    }
+    let(:entry) { Lifer::Entry::Markdown.new file:, collection: }
 
     context "in the root directory" do
-      let(:file) { Dir.glob("#{root}/**/tiny_entry.md").first }
+      let(:file) { Dir.glob("#{root}/**/entry.md").first }
 
-      it { is_expected.to eq Pathname("tiny_entry.html") }
+      it { is_expected.to eq Pathname("entry.html") }
     end
 
     context "in a subdirectory" do
-      let(:file) {
-        Dir.glob("#{root}/**/entry_in_sub_subdirectory_one.md").first
-      }
+      let(:file) { Dir.glob("#{root}/**/sub_entry.md").first }
 
       it "returns the output file path" do
-        expect(subject).to eq Pathname("subdirectory_one/" \
-          "sub_subdirectory_one/" \
-            "entry_in_sub_subdirectory_one.html")
+        expect(subject).to eq Pathname("subdir/subsubdir/sub_entry.html")
       end
     end
   end

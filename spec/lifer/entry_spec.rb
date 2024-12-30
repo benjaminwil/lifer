@@ -16,10 +16,7 @@ RSpec.describe Lifer::Entry do
     end
 
     context "when the file uses an unsupported extension" do
-      let(:file) {
-        support_file "root_with_entries/" \
-          "entry_with_unsupported_file_extension.zzz"
-      }
+      let(:file) { temp_file "does-not-exist.zzz" }
 
       it "skips the entry" do
         expect(subject).to be_nil
@@ -27,10 +24,7 @@ RSpec.describe Lifer::Entry do
     end
 
     context "when the file uses a supported HTML extension" do
-      let(:file) {
-        support_file "root_with_entries/subdirectory_one/" \
-          "page_entry_in_subdirectory.html.erb"
-      }
+      let(:file) { temp_file "subdir/sub-entry.html" }
 
       it "delegates to the proper subclass" do
         allow(Lifer::Entry::HTML).to receive(:new)
@@ -52,10 +46,7 @@ RSpec.describe Lifer::Entry do
     end
 
     context "when the file uses a supported Markdown extension" do
-      let(:file) {
-        support_file "root_with_entries/subdirectory_one/" \
-          "entry_in_subdirectory.md"
-      }
+      let(:file) { temp_file "markdown.md" }
 
       it "delegates to the proper subclass" do
         allow(Lifer::Entry::Markdown).to receive(:new)
@@ -82,10 +73,10 @@ RSpec.describe Lifer::Entry do
 
     it "returns a list of all currently-existing entries" do
       expect {
-        spec_lifer!
+        Support::LiferTestHelpers::TestProject.new
 
         described_class.generate(
-          file: support_file("root_with_entries/tiny_entry.md"),
+          file: temp_file("entry.md"),
           collection: "whatever"
         )
       }

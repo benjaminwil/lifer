@@ -2,21 +2,32 @@ require "spec_helper"
 
 RSpec.describe Lifer::Config do
   let(:config) { described_class.build file: file, root: root }
-  let(:root) { temp_root }
+  let(:root) {
+    temp_dir_with_files "entry.md" => nil,
+      "named_collection/sub.md" => nil
+  }
+  let(:file) { temp_file "temp.yaml", config_file_contents }
 
   describe "#collectionables" do
     subject { config.collectionables }
 
     context "when there are potential collections" do
-      let(:file) { temp_config }
+      let(:config_file_contents) {
+       <<~CONFIG
+         unregistered_setting: does nothing
+         uri_strategy: simple
+         named_collection:
+           uri_strategy: pretty
+        CONFIG
+      }
 
       it "returns any potential collections" do
-        expect(subject).to eq [:subdirectory_one]
+        expect(subject).to eq [:named_collection]
       end
     end
 
     context "when there are no potential collections" do
-      let(:file) { temp_config "uri_strategy: simple" }
+      let(:config_file_contents) { "uri_strategy: simple" }
 
       it { is_expected.to eq [] }
     end
@@ -39,7 +50,7 @@ RSpec.describe Lifer::Config do
     end
 
     context "when given an existing file" do
-      let(:file) { temp_config }
+      let(:config_file_contents) { "" }
 
       it "doesn't load the default configuration file" do
         expect { subject }
@@ -57,7 +68,7 @@ RSpec.describe Lifer::Config do
   describe "#register_settings" do
     subject { config.register_settings setting }
 
-    let(:file) { temp_config }
+    let(:config_file_contents) { "" }
 
     context "with a simple setting" do
       let(:setting) { :my_new_setting }
@@ -97,13 +108,20 @@ RSpec.describe Lifer::Config do
       config.setting name, collection_name: collection_name, strict: strict_mode
     }
 
-    let(:file) { temp_config }
+    let(:config_file_contents) {
+      <<~CONFIG
+        unregistered_setting: does nothing
+        uri_strategy: simple
+        named_collection:
+          uri_strategy: pretty
+      CONFIG
+    }
     let(:name) { :layout_file }
     let(:collection) {
-      Lifer::Collection.generate name: :subdirectory_one,
-        directory: support_file("root_with_entries/subdirectory_one")
+      Lifer::Collection.generate name: :named_collection,
+        directory: "#{root}/named_collection"
     }
-    let(:collection_name) { collection.name }
+    let(:collection_name) { :named_collection }
     let(:raw_settings_hash) { {} }
     let(:strict_mode) { false }
 
@@ -118,7 +136,7 @@ RSpec.describe Lifer::Config do
 
       before do
         raw_settings_hash
-          .merge!({subdirectory_one: {layout_file: "collection-layout-file"}})
+          .merge!({named_collection: {layout_file: "collection-layout-file"}})
       end
 
       context "and no collection name is given" do
@@ -138,7 +156,7 @@ RSpec.describe Lifer::Config do
       context "that has a collection-specific setting available" do
         before do
           raw_settings_hash
-            .merge!({subdirectory_one: {layout_file: "collection-layout-file"}})
+            .merge!({named_collection: {layout_file: "collection-layout-file"}})
         end
 
         it "uses the collection setting" do
@@ -186,12 +204,19 @@ RSpec.describe Lifer::Config do
   describe "#settings" do
     subject { config.settings }
 
-    let(:file) { temp_config }
+    let(:config_file_contents) {
+     <<~CONFIG
+       unregistered_setting: does nothing
+       uri_strategy: simple
+       named_collection:
+         uri_strategy: pretty
+      CONFIG
+    }
 
     it "loads some YAML" do
       expect(subject).to eq(
         {
-          subdirectory_one: {uri_strategy: "pretty"},
+          named_collection: {uri_strategy: "pretty"},
           uri_strategy: "simple"
         }
       )

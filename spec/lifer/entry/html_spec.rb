@@ -24,11 +24,11 @@ RSpec.describe Lifer::Entry::HTML do
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
     }
-    let(:file) { temp_file "html_entry_with_layout_variables.html" }
+    let(:file) { temp_file "test.html" }
 
     it "returns the output filename" do
       with_stdout_silenced do
-        expect(subject).to eq "html_entry_with_layout_variables"
+        expect(subject).to eq "test"
       end
     end
   end

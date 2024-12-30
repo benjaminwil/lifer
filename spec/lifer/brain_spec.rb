@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Lifer::Brain do
   let(:brain) { described_class.init root: root }
-  let(:root) { temp_root support_file("root_with_entries") }
+  let(:root) { temp_dir_with_files "entry.md" => nil }
 
   describe ".init" do
     subject { described_class.init root: root, config_file: "path/to/file" }
@@ -54,7 +54,7 @@ RSpec.describe Lifer::Brain do
 
     context "when using a custom configuration file" do
       let(:config) {
-        config_file = temp_config(<<~CONFIG)
+        config_file = temp_file("lifer.yaml", <<~CONFIG)
           global:
             output_directory: "haha"
             build:
@@ -79,7 +79,7 @@ RSpec.describe Lifer::Brain do
     context "when prebuild steps are provided" do
       context "when the given prebuild steps error out" do
         let(:config) {
-          config_file = temp_config(<<~CONFIG)
+          config_file = temp_file("temp.yaml", <<~CONFIG)
             global:
               prebuild:
                 - not_an_executable_program
@@ -103,7 +103,7 @@ RSpec.describe Lifer::Brain do
 
       context "when steps are provided per environment" do
         let(:config) {
-          config_file = temp_config(<<~CONFIG)
+          config_file = temp_file("temp.yaml", <<~CONFIG)
             global:
               prebuild:
                 serve:
@@ -139,7 +139,7 @@ RSpec.describe Lifer::Brain do
 
       context "when the given prebuild steps are acceptable" do
         let(:config) {
-          config_file = temp_config(<<~CONFIG)
+          config_file = temp_file("temp.yaml", <<~CONFIG)
             global:
               prebuild:
                 - echo "command 1"
@@ -191,14 +191,33 @@ RSpec.describe Lifer::Brain do
     subject { brain.collections }
 
     context "when the user has included their own selection class" do
+      let(:files) {
+        {
+          "entry.md" => "Root entry",
+          "subdirectory_one/entry.md" => "Collection entry",
+          ".config/movie_reviews.rb" => <<~RUBY
+            class MovieReviews < Lifer::Selection
+              def entries
+                @entries ||=
+                  Lifer::Entry::Markdown.all.select { |entry|
+                    entry.frontmatter[:tags]&.include?("review")
+                  }
+              end
+            end
+          RUBY
+        }
+      }
       let(:brain) {
-        spec_lifer! root: "root_with_entries", config: <<~CONFIG
-          subdirectory_one:
-            uri_strategy: pretty
+        project =
+          Support::LiferTestHelpers::TestProject.new(config: <<~CONFIG, files:)
+            subdirectory_one:
+              uri_strategy: pretty
 
-          selections:
-            - movie_reviews
-        CONFIG
+            selections:
+              - movie_reviews
+          CONFIG
+
+        project.brain
       }
 
       before do
@@ -218,7 +237,11 @@ RSpec.describe Lifer::Brain do
     end
 
     context "when the user has not included custom selections" do
-      let(:brain) { spec_lifer! root: "root_with_nothing", config: "" }
+      let(:brain) {
+        Support::LiferTestHelpers::TestProject
+          .new(files: {}, config: "")
+          .brain
+      }
 
       it "returns all collections and selections" do
         Thing = Lifer::Selection::AllMarkdown
@@ -302,6 +325,19 @@ RSpec.describe Lifer::Brain do
   describe "#require_user_provided_ruby_files!" do
     subject { brain.require_user_provided_ruby_files! }
 
+    let(:root) {
+      File.dirname temp_file("movie_reviews.rb", <<~RUBY)
+        class MovieReviews < Lifer::Selection
+          def entries
+            @entries ||=
+              Lifer::Entry::Markdown.all.select { |entry|
+                entry.frontmatter[:tags]&.include?("review")
+              }
+          end
+        end
+      RUBY
+    }
+
     # This is a bit of a hack. What I'm trying to do is ensure the `MovieReviews`
     # class is being loaded. But we also need to ensure the file is *unloaded*
     # between test runs. There may be a better way to do this, but... whatever?
@@ -314,7 +350,6 @@ RSpec.describe Lifer::Brain do
         Object.send :remove_const, :MovieReviews
       end
     end
-
 
     it "loads Ruby files within the Lifer root directory" do
       expect { subject }

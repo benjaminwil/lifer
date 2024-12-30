@@ -20,6 +20,11 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
     }
     let(:project) { Support::LiferTestHelpers::TestProject.new files:, config: }
     let(:files) {
+      entry_content_with_variables = File.read(
+        File.join Lifer.gem_root,
+          "spec/support/entries/layout_variables_test_entry.html.liquid"
+      )
+
       {
         "_layouts/layout.html.liquid" => <<~LIQUID,
           <title>Layout with Greeting</title>
@@ -31,10 +36,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
         LIQUID
         "subdirectory_one/entry.md" =>
           "This collection must exist for test to pass",
-        "entry.html.liquid" => File.read(
-          "#{Lifer.gem_root}/spec/support/root_with_entries/" \
-            "html_liquid_entry_with_layout_variables.html.liquid"
-        ),
+        "entry.html.liquid" => entry_content_with_variables,
         "entry-1.md" => <<~MARKDOWN,
           ---
           title: Entry Title 1

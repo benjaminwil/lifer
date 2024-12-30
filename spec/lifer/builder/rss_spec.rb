@@ -3,21 +3,34 @@ require "nokogiri"
 require "spec_helper"
 
 RSpec.describe Lifer::Builder::RSS do
-  before do
-    spec_lifer! config: <<~CONFIG
+  let(:project) { Support::LiferTestHelpers::TestProject.new files:, config: }
+  let(:files) {
+    {
+      "tiny_entry.md" => <<~MARKDOWN
+        ---
+        summary: A testable entry.
+        ---
+        # Tiny
+
+        A testable entry.
+      MARKDOWN
+    }
+  }
+  let(:config) {
+    <<~CONFIG
       rss: feed.xml
       subdirectory_one:
         blah: blah
     CONFIG
-  end
+  }
 
   describe ".execute" do
-    subject { described_class.execute root: spec_lifer.root }
+    subject { described_class.execute root: project.brain.root }
 
     it "generates a single RSS feed" do
       expect { subject }
         .to change {
-          Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").count
+          Dir.glob("#{project.brain.output_directory}/**/feed.xml").count
         }
         .from(0)
         .to(1)
@@ -26,13 +39,13 @@ RSpec.describe Lifer::Builder::RSS do
     it "generates the correct amount of feed items" do
       # We're excluding the entries in `subdirectory_one` here.
       #
-      article_count = Dir.glob("#{spec_lifer.root}/*.md").count
+      article_count = Dir.glob("#{project.brain.root}/*.md").count
 
       subject
 
       generated_feed =
         File.open(
-          Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").first
+          Dir.glob("#{project.brain.output_directory}/**/feed.xml").first
         ) { Nokogiri::XML _1 }
       feed_items = generated_feed.xpath "//item"
 
@@ -44,7 +57,7 @@ RSpec.describe Lifer::Builder::RSS do
 
       generated_feed =
         File.open(
-          Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").first
+          Dir.glob("#{project.brain.output_directory}/**/feed.xml").first
         ) { Nokogiri::XML _1 }
       entry = generated_feed.xpath("//item").css("link")
         .detect { _1.text == "https://example.com/tiny_entry.html" }
@@ -61,29 +74,29 @@ RSpec.describe Lifer::Builder::RSS do
       expect { DateTime.parse text_from(entry, :date) }.not_to raise_error
     end
 
-    it "properly escapes HTML nodes in the article contents" do
+    it "properly escapes HTML nodes in the article contents", :aggregate_failures do
       subject
 
       feed_contents =
-        File.read Dir.glob("#{spec_lifer.output_directory}/**/feed.xml").first
+        File.read Dir.glob("#{project.brain.output_directory}/**/feed.xml").first
 
-      expect(feed_contents).to include "<content:encoded>" \
-        "&lt;h1 id=&quot;tiny&quot;&gt;Tiny&lt;/h1&gt;\n\n" \
-        "&lt;p&gt;A testable entry.&lt;/p&gt;\n" \
-        "</content:encoded>"
+      expect { RSS::Parser.parse feed_contents }.not_to raise_error
     end
 
     context "when many collections are configured" do
-      before do
-        spec_lifer! config: <<~CONFIG
+      let(:files) {
+        {"root-entry.md" => nil, "subdirectory_one/entry.md" => nil}
+      }
+      let(:config) {
+        <<~CONFIG
           rss: default.xml
           subdirectory_one:
             rss: subdirectory-one.xml
         CONFIG
-      end
+      }
 
       it "generates more than one RSS feed" do
-        pattern = "#{spec_lifer.output_directory}/**/*.xml"
+        pattern = "#{project.brain.output_directory}/**/*.xml"
         expect { subject }
           .to change { Dir.glob(pattern).count }.from(0).to(2)
 

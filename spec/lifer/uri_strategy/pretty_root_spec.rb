@@ -1,8 +1,12 @@
 require "spec_helper"
 
 RSpec.describe Lifer::URIStrategy::PrettyRoot do
-  let(:root) { temp_root support_file("root_with_entries") }
-  let(:uri_strategy) { described_class.new root: root }
+  let(:root) {
+    temp_dir_with_files "entry.md" => nil,
+      "subdir/sub.md" => nil,
+      "index.html" => nil
+  }
+  let(:uri_strategy) { described_class.new root: }
 
   describe ".name" do
     subject { described_class.name }
@@ -13,9 +17,7 @@ RSpec.describe Lifer::URIStrategy::PrettyRoot do
   describe "#output_file" do
     subject { uri_strategy.output_file entry }
 
-    let(:entry) {
-      Lifer::Entry::Markdown.new file: file, collection: collection
-    }
+    let(:entry) { Lifer::Entry::Markdown.new file:, collection: }
 
     context "when the entry is an index file" do
       let(:collection) {
@@ -32,9 +34,9 @@ RSpec.describe Lifer::URIStrategy::PrettyRoot do
       let(:collection) {
         Lifer::Collection.generate name: :root, directory: File.dirname(file)
       }
-      let(:file) { Dir.glob("#{root}/**/tiny_entry.md").first }
+      let(:file) { Dir.glob("#{root}/**/entry.md").first }
 
-      it { is_expected.to eq Pathname("tiny_entry/index.html") }
+      it { is_expected.to eq Pathname("entry/index.html") }
     end
 
     context "when not in the root collection" do
@@ -43,11 +45,11 @@ RSpec.describe Lifer::URIStrategy::PrettyRoot do
           directory: File.dirname(file)
       }
       let(:file) {
-        Dir.glob("#{root}/**/subdirectory_one/entry_in_subdirectory.md").first
+        Dir.glob("#{root}/**/subdir/sub.md").first
       }
 
       it "still returns an output at the root" do
-        expect(subject).to eq Pathname("entry_in_subdirectory/index.html")
+        expect(subject).to eq Pathname("sub/index.html")
       end
     end
   end

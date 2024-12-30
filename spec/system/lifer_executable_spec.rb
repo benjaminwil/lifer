@@ -69,14 +69,14 @@ RSpec.describe "bin/lifer", type: :system do
     }
 
     let(:config_file) {
-      temp_config(<<~CONFIG)
+      temp_file("config.yaml", <<~CONFIG)
         global:
           build:
             - html
           output_directory: _custom-output-directory
       CONFIG
     }
-    let(:root) { temp_root }
+    let(:root) { temp_dir_with_files "entry.md" => nil }
 
     it "builds the project using the given config and root arguments" do
       expect { subject }

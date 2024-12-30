@@ -1,3 +1,0 @@
----
-summary: the summary
----

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Builder do
-  let(:root) { temp_root support_file("root_with_entries") }
+  let(:root) { temp_dir_with_files "entry.md" => nil }
 
   describe ".build!" do
     subject { described_class.build! *list_of_builders, root: root }

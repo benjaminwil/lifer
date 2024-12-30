@@ -1,3 +1,0 @@
-# Tiny
-
-A testable entry.

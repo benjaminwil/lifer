@@ -40,15 +40,18 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     subject { entry.full_text }
 
     let(:entry) { described_class.new file: file, collection: collection }
-    let(:file) { support_file "root_with_entries/tiny_entry.md" }
+    let(:file) {
+      temp_file "tiny.md", <<~MARKDOWN
+          # Tiny
+          A testable entry.
+        MARKDOWN
+    }
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
     }
 
     context "when the file exists" do
-      let(:file) { support_file "root_with_entries/tiny_entry.md" }
-
       it "returns the file text contents" do
         expect(subject)
           .to start_with("# Tiny")
@@ -61,7 +64,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     subject { entry.to_html }
 
     let(:entry) { described_class.new file: file, collection: collection }
-    let(:file) { support_file "root_with_entries/tiny_entry.md" }
+    let(:file) { temp_file "small.md", "<p>Hello world</p>" }
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
@@ -76,20 +79,18 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     subject { entry.path }
 
     let(:entry) { described_class.new file: file, collection: collection }
-    let(:file) { support_file "root_with_entries/tiny_entry.md" }
+    let(:file) { temp_file "tiny.#{described_class.output_extension}" }
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
     }
 
     before do
-      allow(Lifer)
-        .to receive(:root)
-        .and_return(support_file "root_with_entries")
+      allow(Lifer).to receive(:root).and_return(File.dirname(file))
     end
 
     it "responds with the path relative from root" do
-      expect(subject).to eq "/tiny_entry.#{described_class.output_extension}"
+      expect(subject).to eq "/tiny.#{described_class.output_extension}"
     end
   end
 
@@ -97,21 +98,19 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     subject { entry.permalink }
 
     let(:entry) { described_class.new file: file, collection: collection }
-    let(:file) { support_file "root_with_entries/tiny_entry.md" }
+    let(:file) { temp_file "test.#{described_class.output_extension}" }
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
     }
 
     before do
-      allow(Lifer)
-        .to receive(:root)
-        .and_return(support_file "root_with_entries")
+      allow(Lifer).to receive(:root).and_return(File.dirname(file))
     end
 
     it "responds with a well-formed URL" do
       with_stdout_silenced do
-        expect(subject).to eq "https://example.com/tiny_entry." \
+        expect(subject).to eq "https://example.com/test." \
           "#{described_class.output_extension}"
       end
     end

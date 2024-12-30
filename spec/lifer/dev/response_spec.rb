@@ -27,7 +27,7 @@ RSpec.describe Lifer::Dev::Response do
     end
 
     context "with an unsupported file type" do
-      let(:path) { temp_file("unsupported-file-type.zzz") }
+      let(:path) { "unsupported-file-type.zzz" }
 
       it "raises an error" do
         expect { subject }.to raise_error(NotImplementedError)
