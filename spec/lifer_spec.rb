@@ -30,7 +30,7 @@ RSpec.describe Lifer do
     }
 
     before do
-      spec_lifer!
+      Support::LiferTestHelpers::TestProject.new
     end
 
     context "by default" do

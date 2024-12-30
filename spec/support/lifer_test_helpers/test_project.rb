@@ -48,17 +48,20 @@ class Support::LiferTestHelpers::TestProject
   # @param config [String] The contents of Lifer configuration file.
   # @param files [Hash] A hash with keys referring to relative file paths and
   #   values referring to the contents of the file.
+  # @param use_default_config [boolean] Skip creating a configuration file,
+  #   opting to use Lifer's default configuration template instead.
   # @return [void]
   def initialize(
     config: DEFAULT_TEST_CONFIG,
-    files: DEFAULT_TEST_FILES
+    files: DEFAULT_TEST_FILES,
+    use_default_config: false
   )
     # Destroy existing persisted Lifer project.
     #
     Lifer.class_variable_set "@@brain", nil
 
     @root = set_up_root(files)
-    @config = set_up_config(config)
+    @config = set_up_config(config) unless use_default_config
 
     @@spec_lifer = Lifer.brain(root:, config_file: @config)
   end

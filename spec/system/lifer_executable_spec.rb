@@ -3,8 +3,18 @@ require "lifer/cli"
 
 RSpec.describe "bin/lifer", type: :system do
   before do
-    spec_lifer!
+    files = {
+      "test-entry.md" => <<~MARKDOWN
+        ---
+        date: Sun 29 Dec 2024 16:40:21 MST
+        ---
+        Content
+      MARKDOWN
+    }
+    Support::LiferTestHelpers::TestProject.new files:, use_default_config:
   end
+
+  let(:use_default_config) { true }
 
   around do |example|
     original_value = ENV["LIFER_ENV"]
@@ -37,10 +47,14 @@ RSpec.describe "bin/lifer", type: :system do
       end
     }
 
+    let(:use_default_config) { false }
+
     it "outputs the default configuration file and doesn't build anything" do
-      expect { subject }.to output(
-        /# This file provides the default configuration settings for Lifer./i
-      ).to_stdout_from_any_process
+      expect { subject }
+        .to output(
+          /# This file provides the default configuration settings for Lifer./i
+        )
+        .to_stdout_from_any_process
 
       expect { subject }
         .not_to change { Dir.glob("#{Lifer.output_directory}/*").size }

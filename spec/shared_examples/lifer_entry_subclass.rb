@@ -20,7 +20,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
 
     it "returns a list of all currently-existing entries" do
       expect {
-        spec_lifer!
+        Support::LiferTestHelpers::TestProject.new
 
         # This test sets up one entry of each supported type in order to work as
         # a shared example for any `Lifer::Entry` subclass.
