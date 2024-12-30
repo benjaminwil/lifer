@@ -7,6 +7,8 @@
 # to STDOUT.
 #
 class Lifer::Message
+  # ANSI colour codes for colours used by different messages.
+  #
   ANSI_COLOURS = {red: "31"}
 
   class << self
@@ -18,7 +20,7 @@ class Lifer::Message
     #   `I18n` library.
     # @param test_mode [boolean] Whether the message should be output as if the
     #   program were in test mode.
-    # @parms **args [Hash] A catch-all keyword arguments to be passed on to
+    # @param args [**Hash] A catch-all keyword arguments to be passed on to
     #   `I18n.t!`.
     # @return [void] The message is pushed to STDOUT.
     def error(translation_key, test_mode: test_mode?, **args)
@@ -36,7 +38,7 @@ class Lifer::Message
     #   `I18n` library.
     # @param test_mode [boolean] Whether the message should be output as if the
     #   program were in test mode.
-    # @parms **args [Hash] A catch-all keyword arguments to be passed on to
+    # @param args [**Hash] A catch-all keyword arguments to be passed on to
     #   `I18n.t!`.
     # @return [void] The message is pushed to STDOUT.
     def log(translation_key, test_mode: test_mode?, **args)

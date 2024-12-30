@@ -1,5 +1,18 @@
 require "digest/sha1"
 
+# An entry is a Lifer file that will be built into the output directory.
+# There are more than one subclass of entry: Markdown entries are the most
+# traditional, but HTML and text files are also very valid entries.
+#
+# This class provides a baseline of the functionality that all entry subclasses
+# should implement. It also provides the entry generator for *all* entry
+# subclasses.
+#
+# FIXME: Markdown entries are able to provide metadata via frontmatter, but
+#   other entry types do not currently support frontmatter. Should they? Or is
+#   there some nicer way to provide entry metadata for non-Markdown files in
+#   2024?
+#
 class Lifer::Entry
   class << self
     attr_accessor :include_in_feeds
@@ -15,8 +28,10 @@ class Lifer::Entry
   require_relative "entry/markdown"
   require_relative "entry/txt"
 
+  # We provide a default date for entries that have no date and entry types that
+  # otherwise could not have a date due to no real way of getting that metadata.
+  #
   DEFAULT_DATE = Time.new(1900, 01, 01, 0, 0, 0, "+00:00")
-  SUPPORTED_FILE_EXTENSIONS = subclasses.flat_map(&:input_extensions)
 
   attr_reader :file, :collection
 
@@ -50,14 +65,18 @@ class Lifer::Entry
     # file extension).
     #
     # @param filename [String] The absolute filename to an entry.
-    # @param supported_file_extensions [Array<String>] An array of file
-    #   extensions to check agaainst.
+    # @param file_extensions [Array<String>] An array of file extensions to
+    #   check against.
     # @return [Boolean]
-    def supported?(filename, supported_file_extensions = SUPPORTED_FILE_EXTENSIONS)
-      supported_file_extensions.any? { |ext| filename.end_with? ext }
+    def supported?(filename, file_extensions= supported_file_extensions)
+      file_extensions.any? { |ext| filename.end_with? ext }
     end
 
     private
+
+    def supported_file_extensions
+      @supported_file_extensions ||= subclasses.flat_map(&:input_extensions)
+    end
 
     # @private
     # Retrieve the entry subclass based on the current filename.

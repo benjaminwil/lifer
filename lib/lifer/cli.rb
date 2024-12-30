@@ -3,6 +3,8 @@ require "optparse"
 require "lifer/dev/server"
 
 module Lifer
+  # This class is the entrypoint for Lifer's commandline interface.
+  #
   class CLI
     # The core CLI help text lives in a template file.
     #
@@ -57,6 +59,9 @@ module Lifer
         end
     end
 
+    # Parses the user-provided CLI arguments and handles any requested commands.
+    #
+    # @return [void]
     def start!
       parser.parse! args
 

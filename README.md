@@ -1,17 +1,19 @@
 # Lifer
 
 Lifer is an extensible static site generator. Out of the box, it provides a
-classic static site generation experience, complete with RSS feed and ERB
-templating. Unlike other Ruby-based static site generators, Lifer encourages you
-to bring your own asset pipeline and configure it as a pre-build step.
+classic static site generation experience, complete with RSS feeds, ERB template
+rendering, and Liquid template rendering. Unlike other Ruby-based static site
+generators, Lifer encourages you to bring your own asset pipeline and configure
+it as a pre-build step.
 
 _Lifer is currently in pre-release. Features are incomplete. Your mileage may
 vary._
 
 **What's with the name?** Lifer aims to be easy to maintain for the lifetime of
 your static site by requiring few dependencies and being very extensible by the
-end user, without the need for gem plugins. The generator should also "breathe
-life" into your project because it's so easy to use.
+end user. There is no need for plugins in the form of separate Ruby gems. The
+generator should also "breathe life" into your project because it's so easy to
+use (🤞).
 
 ## Features
 

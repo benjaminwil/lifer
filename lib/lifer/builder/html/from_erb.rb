@@ -1,27 +1,28 @@
 require "erb"
 
-# If the HTML builder is given an ERB template, it uses this class to parse the
-# ERB into HTML. Lifer project metadata is provided as context. For example:
-#
-#     <html>
-#       <head>
-#         <title><%= my_collection.name %></title>
-#       </head>
-#
-#       <body>
-#         <h1><%= my_collection.name %></h1>
-#
-#         <% my_collection.entries.each do |entry| %>
-#           <section>
-#             <h2><%= entry.title %></h2>
-#             <p><%= entry.summary %></p>
-#             <a href="<%= entry.permalink %>">Read more</a>
-#           </section>
-#         <% end %>
-#       </body>
-#     </html>
-#
 class Lifer::Builder::HTML
+  # If the HTML builder is given an ERB template, it uses this class to parse
+  # the ERB into HTML. Lifer project metadata is provided as context. For
+  # example:
+  #
+  #     <html>
+  #       <head>
+  #         <title><%= my_collection.name %></title>
+  #       </head>
+  #
+  #       <body>
+  #         <h1><%= my_collection.name %></h1>
+  #
+  #         <% my_collection.entries.each do |entry| %>
+  #           <section>
+  #             <h2><%= entry.title %></h2>
+  #             <p><%= entry.summary %></p>
+  #             <a href="<%= entry.permalink %>">Read more</a>
+  #           </section>
+  #         <% end %>
+  #       </body>
+  #     </html>
+  #
   class FromERB
     class << self
       # Build and render an entry.

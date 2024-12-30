@@ -1,11 +1,26 @@
 module Lifer::Dev
+  # This class is responsible for building Rack-compatible responses for the
+  # `Lifer::Dev::Server`. This code would never be run in a production
+  # environment, where the Lifer builders are concerned.
+  #
   class Response
     attr_accessor :path
 
+    # Builds a single, Rack-compatible response object.
+    #
+    # @param path [String] A path URI.
+    # @return [void]
     def initialize(path)
       @path = path
     end
 
+    # The Rack-compatible response. That's an array with three items:
+    #
+    #   1. The HTTP status.
+    #   2. The HTTP headers.
+    #   3. The HTTP body response.
+    #
+    # @return [Array] A Rack-compatible response.
     def build
       [status, {"Content-Type": content_type}, contents]
     end

@@ -1,3 +1,7 @@
+# One may want to provide browser-readable text files without any layout or
+# metadata information. In those cases, here's a good entry subclass. Just make
+# sure the entry ends in `.txt`.
+#
 class Lifer::Entry::TXT < Lifer::Entry
   self.include_in_feeds = false
   self.input_extensions = ["txt"]
@@ -27,5 +31,11 @@ class Lifer::Entry::TXT < Lifer::Entry
     end
   end
 
+  # While we don't actually output text to HTML, we need to implement this
+  # method so that the RSS feed builder can add text files as feed entries.
+  #
+  # FIXME: Maybe the `#to_html` methods should be renamed, then?
+  #
+  # @return [String] The output HTML (not actually HTML).
   def to_html = full_text
 end

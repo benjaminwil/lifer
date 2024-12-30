@@ -8,6 +8,7 @@
 class Lifer::Selection::IncludedInFeeds < Lifer::Selection
   self.name = :included_in_feeds
 
+  # @!visibility private
   def entries
     Lifer::Entry.manifest.select { |entry| entry.class.include_in_feeds }
   end

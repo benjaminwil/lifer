@@ -1,9 +1,18 @@
 require "fileutils"
 
+# Builds a text file from a text file.
+#
+# Note that the collection's URI strategy is still in play here, so the output
+# path may be different than the input path.
+#
 class Lifer::Builder::TXT < Lifer::Builder
   self.name = :txt
 
   class << self
+    # Builds text files within the Lifer project's build directory.
+    #
+    # @param root [String] The Lifer root directory.
+    # @return [void]
     def execute(root:)
       Dir.chdir Lifer.output_directory do
         new(root:).execute
@@ -11,6 +20,10 @@ class Lifer::Builder::TXT < Lifer::Builder
     end
   end
 
+  # Builds each entry in each collection, including any requirements (like
+  # subdirectories) those entries have.
+  #
+  # @return [void]
   def execute
     Lifer.collections(without_selections: true).each do |collection|
       collection.entries.each do |entry|

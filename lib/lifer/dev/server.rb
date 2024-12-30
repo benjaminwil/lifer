@@ -5,8 +5,20 @@ require "rack"
 
 require_relative "router"
 
+# This module namespace contains development mode resources for Lifer. This
+# functionality is subject to immense change and generally is not safe to use in
+# production environment.
+#
 module Lifer::Dev
+  # This server is used in development and test modes to preview and serve a
+  # Lifer project. It's for convenience and is not super sophisticated. The
+  # server wraps a Puma process with some reasonable, default settings. It also
+  # listens for file changes and rebuilds the project on the next request made to
+  # the web server.
+  #
   class Server
+    # The default port to run the Puma server on.
+    #
     DEFAULT_PORT = 9292
 
     class << self

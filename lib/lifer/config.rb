@@ -22,16 +22,21 @@ class Lifer::Config
     {prebuild: CONFIG_ENVIRONMENTS}
   ]
 
-  # The Lifer Ruby gem provides default configuration and layout files in case
-  # the user does not supply their own.
+  # The Lifer Ruby gem provides a default configuration file as a template.
   #
   DEFAULT_CONFIG_FILE = "%s/lib/lifer/templates/config.yaml" % Lifer.gem_root
+
+  # The Lifer Ruby gem provides a default layout file (ERB) as a template.
+  #
   DEFAULT_LAYOUT_FILE = "%s/lib/lifer/templates/layout.html.erb" % Lifer.gem_root
 
-  # FIXME:
-  # I don't think this really belongs here. But in some cases we need to provide
-  # the implicit setting key and a default value when calling the `#setting`
-  # method. It would be nicer if the HTML builder handled this, somehow.
+  # Provides "implicit settings" that may not be set anywhere but really do
+  # require a value.
+  #
+  # FIXME: I don't think this really belongs here. But in some cases we need
+  #   to provide the implicit setting key and a default value when calling the
+  #   `#setting` method. It would be nicer if the HTML builder handled this,
+  #   somehow.
   #
   DEFAULT_IMPLICIT_SETTINGS = {
     layout_file: DEFAULT_LAYOUT_FILE
@@ -91,7 +96,7 @@ class Lifer::Config
   # This method allows user scripts and extensions to register arbitrary
   # settings in their configuration YAML files.
   #
-  # @param *settings [*Symbol, *Hash] A list of symbols and/or hashs to be added
+  # @param settings [*Symbol, *Hash] A list of symbols and/or hashs to be added
   #   to Lifer's registered settings.
   # @return [void]
   def register_settings(*settings)
@@ -125,6 +130,12 @@ class Lifer::Config
     candidates.detect &:itself
   end
 
+  # Provide a nice, readable, registered settings hash. If given a subset of
+  # settings (like a collection's settings), it will also provide a hash of
+  # registered settings within scope.
+  #
+  # @param settings_hash [Hash] A hash of settings.
+  # @return [Hash] A compact hash of registered settings.
   def settings(settings_hash = raw)
     settings_hash.select { |setting, value|
       value = settings(value) if value.is_a?(Hash)

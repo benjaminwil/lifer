@@ -1,11 +1,20 @@
 module Lifer::Builder::HTML::FromLiquid::Drops
+  # Markdown entries may contain YAML frontmatter. And if they do, we need a way
+  # for the Liquid templates to access that data.
+  #
+  # Example usage:
+  #
+  #     {{ entry.frontmatter.any_available_frontmatter_key }}
+  #
   class FrontmatterDrop < Liquid::Drop
     def initialize(entry)
       @frontmatter = Lifer::Utilities.stringify_keys(entry.frontmatter)
     end
 
-    def as_drop(hash) = self.class.new(hash)
-
+    # Ensure that the frontmatter can be output wholly into a rendered template
+    # if need be.
+    #
+    # @return [String]
     def to_s = frontmatter.to_json
 
     # Dynamically define Liquid accessors based on the Lifer settings object.
@@ -30,5 +39,7 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     private
 
     attr_reader :frontmatter
+
+    def as_drop(hash) = self.class.new(hash)
   end
 end

@@ -21,9 +21,7 @@ class Lifer::Builder
     # @param root [string] An absolute path to the Lifer project root directory.
     # @return [NotImplementedError] A builder subclass must implement this
     #   method.
-    def execute(root:)
-      raise NotImplementedError
-    end
+    def execute(root:) = (raise NotImplementedError)
 
     # Given a list of builder names, we execute every builder based on the
     # configured Lifer project root.
@@ -81,11 +79,15 @@ class Lifer::Builder
   #
   # @return [NotImplementedError] A builder subclass must implement this
   #   method.
-  def execute
-    raise NotImplementedError
-  end
+  def execute = (raise NotImplementedError)
 
+  # When any new builder instance is initialized, we need to ensure that any
+  # settings specific to the builder are registered. We can do this automatically
+  # by wrapping the `#initialize` method. This module provides the wrapper
+  # functionality--we just need to ensure that this module is included.
+  #
   module InitializeBuilder
+    # @!visibility private
     def initialize(...)
       Lifer.register_settings(*self.class.settings) if self.class.settings.any?
 

@@ -7,6 +7,8 @@ require_relative "config"
 # `Lifer` module methods.
 #
 class Lifer::Brain
+  # The default configuration file URI.
+  #
   DEFAULT_CONFIG_FILE_URI = ".config/lifer.yaml"
 
   attr_reader :root
@@ -66,22 +68,25 @@ class Lifer::Brain
     @collections ||= generate_collections + generate_selections
   end
 
-  def config
-    @config ||= Lifer::Config.build file: config_file_location
-  end
+  # Returns the Lifer project's configuration object.
+  #
+  # @return [Lifer::Config] The Lifer configuration object.
+  def config = (@config ||= Lifer::Config.build file: config_file_location)
 
   # Returns all entries that have been added to the manifest. If all is working
   # as intended, this should be every entry ever generated.
   #
   # @return [Set<Lifer::Entry>] All entries that currently exist.
-  def entry_manifest
-    @entry_manifest ||= Set.new
-  end
+  def entry_manifest = (@entry_manifest ||= Set.new)
 
-  def manifest
-    @manifest ||= Set.new
-  end
+  # A manifest of all Lifer project entries.
+  #
+  # @return [Set<Lifer::Entry>] A set of all entries.
+  def manifest = (@manifest ||= Set.new)
 
+  # Returns the build directory for the Lifer project's build output.
+  #
+  # @return [String] The Lifer build directory.
   def output_directory
     @output_directory ||=
       begin
@@ -100,7 +105,6 @@ class Lifer::Brain
   # Note that the user's Bundler path may be in scope, so we need to skip
   # those Ruby files.
   #
-  # @param [Lifer::Brain]
   # @return [void]
   def require_user_provided_ruby_files!
     return if root.include? Lifer.gem_root
@@ -117,6 +121,21 @@ class Lifer::Brain
     end
   end
 
+  # Given the tree of a setting name, and the setting scope, returns the setting
+  # value. If the in-scope collection does not have a configured setting, this
+  # method will return fallback settings (unless `:strict` is `true`).
+  #
+  # Example usage:
+  #
+  #     setting(:my, :great, :setting)
+  #
+  # @overload setting(path, ..., collection: nil, strict: false)
+  #   @param name [Symbol] A key in the tree to a setting value.
+  #   @param ... [Symbol] Any additional keys in the tree.
+  #   @param collection [Lifer::Collection] The collection to scope the result
+  #     to.
+  #   @param strict [boolean] If true, do not return fallback setting values.
+  #   @return [Array, String] The value of the requested setting.
   def setting(*name, collection: nil, strict: false)
     config.setting *name, collection_name: collection&.name, strict: strict
   end

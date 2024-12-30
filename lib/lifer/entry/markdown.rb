@@ -14,8 +14,18 @@ require_relative "../utilities"
 # it may make sense to pull some of these methods into a separate module.
 #
 class Lifer::Entry::Markdown < Lifer::Entry
+  # If a filename contains a date, we should expect it to be in the following
+  # format.
+  #
   FILENAME_DATE_FORMAT = /^(\d{4}-\d{1,2}-\d{1,2})-/
+
+  # We expect frontmatter to be provided in the following format.
+  #
   FRONTMATTER_REGEX = /^---\n(.*)---\n/m
+
+  # We truncate anything that needs to be truncated (summaries, meta
+  # descriptions) at the following character count.
+  #
   TRUNCATION_THRESHOLD = 120
 
   self.include_in_feeds = true

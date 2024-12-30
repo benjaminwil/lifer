@@ -24,6 +24,8 @@ class Lifer::Collection
       collection
     end
 
+    private
+
     def build_collection_entries!(collection, directory:)
       entry_glob = Dir.glob("#{directory}/**/*")
         .select { |candidate| File.file? candidate }
@@ -85,7 +87,7 @@ class Lifer::Collection
 
   # Gets a Lifer setting, scoped to the current collection.
   #
-  # @param *name [Array<Symbol>] A list of symbols that map to a nested Lifer
+  # @param name [*Symbol] A list of symbols that map to a nested Lifer
   #   setting (for the current collection).
   # @return [String, Nil] The setting as set in the Lifer project's
   #   configuration file.

@@ -1,10 +1,12 @@
-# This drop represents a Lifer entry and allows users to access entry metadata
-# and content in Liquid templates. Example:
-#
-#     <h1>{{ entry.title }}</h1>
-#     <small>Published on <datetime>{{ entry.date }}</datetime></small>
-#
 module Lifer::Builder::HTML::FromLiquid::Drops
+  # This drop represents a Lifer entry and allows users to access entry
+  # metadata and content in Liquid templates.
+  #
+  # Example usage:
+  #
+  #     <h1>{{ entry.title }}</h1>
+  #     <small>Published on <datetime>{{ entry.date }}</datetime></small>
+  #
   class EntryDrop < Liquid::Drop
     attr_accessor :lifer_entry, :collection
 
@@ -13,40 +15,49 @@ module Lifer::Builder::HTML::FromLiquid::Drops
       @collection = collection
     end
 
-    def author
-      authors
-    end
+    # The entry author (or authors).
+    #
+    # @return [String]
+    def author = authors
 
-    def authors
-      @authors ||= lifer_entry.authors.join(", ")
-    end
+    # The entry authors (or author).
+    #
+    # @return [String]
+    def authors = (@authors ||= lifer_entry.authors.join(", "))
 
-    def content
-      @content ||= lifer_entry.to_html
-    end
+    # The entry content.
+    #
+    # @return [String]
+    def content = (@content ||= lifer_entry.to_html)
 
-    def date
-      @date ||= lifer_entry.date
-    end
+    # The entry date (as a string).
+    #
+    # @return [String]
+    def date = (@date ||= lifer_entry.date)
 
-    def frontmatter
-      @frontmatter ||= FrontmatterDrop.new(lifer_entry)
-    end
+    # The entry frontmatter data.
+    #
+    # @return [FrontmatterDrop]
+    def frontmatter = (@frontmatter ||= FrontmatterDrop.new(lifer_entry))
 
-    def path
-      @path ||= lifer_entry.path
-    end
+    # The path to the entry.
+    #
+    # @return [String] The path to the entry.
+    def path = (@path ||= lifer_entry.path)
 
-    def permalink
-      @permalink ||= lifer_entry.permalink
-    end
+    # The entry permalink.
+    #
+    # @return [String] The entry permalink.
+    def permalink = (@permalink ||= lifer_entry.permalink)
 
-    def summary
-      @summary ||= lifer_entry.summary
-    end
+    # The summary of the entry.
+    #
+    # @return [String] The summary of the entry.
+    def summary = (@summary ||= lifer_entry.summary)
 
-    def title
-      @title ||= lifer_entry.title
-    end
+    # The entry title.
+    #
+    # @return [String] The entry title.
+    def title = (@title ||= lifer_entry.title)
   end
 end

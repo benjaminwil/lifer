@@ -9,6 +9,7 @@
 class Lifer::Selection::AllMarkdown < Lifer::Selection
   self.name = :all_markdown
 
+  # @!visibility private
   def entries
     Lifer::Entry::Markdown.manifest
   end

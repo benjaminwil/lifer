@@ -1,3 +1,7 @@
+# If the entry input is mainly HTML, then this subclass should track it and
+# define its functionality. That means HTML files, and any file that compiles
+# into an HTML file.
+#
 class Lifer::Entry::HTML < Lifer::Entry
   self.include_in_feeds = false
   self.input_extensions = ["html", "html.erb", "html.liquid"]

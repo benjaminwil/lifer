@@ -1,15 +1,25 @@
 # This module provides simple finder methods to classes that need to keep track
 # of their descendant classes.
 #
+# Example usage:
+#
+#     class MyClass
+#       included Lifer::Shared::FinderMethods
+#       # ...
+#     end
+#
 module Lifer::Shared::FinderMethods
+  # @!visibility private
   def self.included(klass)
     klass.extend ClassMethods
   end
 
+  # This module contains the class methods to be included in other classes.
+  #
   module ClassMethods
     # A simple finder.
     #
-    # @params name [string] The configured name of the builder you want to find.
+    # @param name [string] The configured name of the builder you want to find.
     # @return [Class] A builder class.
     def find(name)
       result = subclasses.detect { |klass| klass.name == name.to_sym }

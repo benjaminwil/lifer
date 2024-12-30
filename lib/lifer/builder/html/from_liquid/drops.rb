@@ -1,6 +1,11 @@
 class Lifer::Builder::HTML::FromLiquid
-  module Drops
-  end
+  # This module contains all of custom Liquid data drops used in order to render
+  # Lifer entries.
+  #
+  # For more information about drops, see the `liquid` gem source code. (The
+  # docs are awful.)
+  #
+  module Drops; end
 end
 
 require_relative "drops/collection_drop"

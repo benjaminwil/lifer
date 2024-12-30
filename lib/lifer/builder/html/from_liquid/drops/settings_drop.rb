@@ -1,16 +1,17 @@
-# This drop allows users to access the current Lifer project settings from
-# Liquid templates. Example:
-#
-#     {{ settings.my_collection.uri_strategy }}
-#
 module Lifer::Builder::HTML::FromLiquid::Drops
+  # This drop allows users to access the current Lifer project settings from
+  # Liquid templates. Example:
+  #
+  #     {{ settings.my_collection.uri_strategy }}
+  #
   class SettingsDrop < Liquid::Drop
     def initialize(settings = Lifer.settings)
       @settings = Lifer::Utilities.stringify_keys(settings)
     end
 
-    def as_drop(hash) = self.class.new(hash)
-
+    # Ensure the settings tree can be output to a rendered template if need be.
+    #
+    # @return [String]
     def to_s = settings.to_json
 
     # Dynamically define Liquid accessors based on the Lifer settings object.
@@ -35,5 +36,7 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     private
 
     attr_accessor :settings
+
+    def as_drop(hash) = self.class.new(hash)
   end
 end

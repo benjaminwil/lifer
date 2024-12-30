@@ -1,3 +1,6 @@
+# A module namespace for any weird utilities that are used pseudo-globally.
+# Ensure that these are actually useful globally, though. :-)
+#
 module Lifer::Utilities
   class << self
     # Output a string using bold escape sequences to the output TTY text.
@@ -60,7 +63,7 @@ module Lifer::Utilities
     #    Output: "hi-how-are-you"
     #
     # @param string [String] Any string.
-    # @return string [String] The kabab-cased output.
+    # @return [String] The kabab-cased output.
     def handleize(string) = parameterize(string, separator: "-")
 
     # Given a hash, take all of its keys (and sub-keys) and convert them into
