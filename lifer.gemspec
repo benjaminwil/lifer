@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-module Lifer
-  VERSION = "0.2.0"
-end
+require_relative "lib/lifer/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "lifer"

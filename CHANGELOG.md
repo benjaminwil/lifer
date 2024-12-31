@@ -1,4 +1,4 @@
-## Next
+## v0.3.0
 
 This version marks the first version of Lifer that is kind of usable. The README
 currently describes the big picture best. But I can add that, as of this version,

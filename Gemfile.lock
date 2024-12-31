@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lifer (0.2.0)
+    lifer (0.3.0)
       i18n (< 2)
       kramdown (~> 2.4)
       liquid (< 6)
@@ -15,6 +15,8 @@ GEM
   specs:
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    bigdecimal (3.1.9)
+    bump (0.10.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -29,17 +31,17 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     diff-lcs (1.5.1)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
-    i18n (1.14.5)
+    ffi (1.17.1-arm64-darwin)
+    ffi (1.17.1-x86_64-darwin)
+    ffi (1.17.1-x86_64-linux-gnu)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
     irb (1.14.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    kramdown (2.4.0)
-      rexml
+    kramdown (2.5.1)
+      rexml (>= 3.3.9)
     language_server-protocol (3.17.0.3)
     liquid (5.6.0)
       bigdecimal
@@ -64,7 +66,7 @@ GEM
     psych (5.1.2)
       stringio
     public_suffix (6.0.1)
-    puma (6.4.3)
+    puma (6.5.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.7)
@@ -81,7 +83,7 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.10)
       io-console (~> 0.5)
-    rexml (3.3.9)
+    rexml (3.4.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -104,6 +106,7 @@ GEM
       sorbet-runtime (>= 0.5.10782)
     sorbet-runtime (0.5.11558)
     stringio (3.1.1)
+    strscan (3.1.2)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.37)
@@ -115,6 +118,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bump
   capybara
   debug (>= 1.0.0)
   lifer!

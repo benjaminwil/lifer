@@ -4,6 +4,8 @@ source "https://rubygems.org"
 
 gemspec
 
+gem "bump"
+
 gem "capybara"
 
 gem "debug", ">= 1.0.0"
