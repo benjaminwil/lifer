@@ -28,9 +28,8 @@ class Lifer::Builder::HTML::FromLiquid
     ENDNAME = ("end%s" % NAME).to_sym
 
     def initialize(layout, path, options)
-      path = path.delete("\"").strip
+      @path = path.delete("\"").strip
       super
-      @layout = Liquid::Template.file_system.read_template_file(path)
     end
 
     # A layout tag wraps an entire document and outputs it inside of whatever
@@ -42,6 +41,9 @@ class Lifer::Builder::HTML::FromLiquid
     # @return [String] A rendered document.
     def render(context)
       document_context = context.environments.first
+      parse_options = document_context["parse_options"]
+      liquid_file_system = parse_options[:environment].file_system
+      render_options = document_context["render_options"]
 
       current_layout_file = File
         .read(document_context["entry"]["collection"]["layout_file"])
@@ -52,15 +54,14 @@ class Lifer::Builder::HTML::FromLiquid
         .render(document_context, render_options)
 
       Liquid::Template
-        .parse(@layout, error_mode: :strict)
+        .parse(
+          liquid_file_system.read_template_file(@path),
+          **parse_options
+        )
         .render(
           document_context.merge({"content" => content_with_layout}),
-          render_options
+          **render_options
         )
     end
-
-    private
-
-    def render_options = {strict_variables: true, strict_filters: true}
   end
 end

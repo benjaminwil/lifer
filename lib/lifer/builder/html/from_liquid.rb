@@ -4,9 +4,6 @@ require_relative "from_liquid/drops"
 require_relative "from_liquid/filters"
 require_relative "from_liquid/layout_tag"
 
-Liquid::Template.register_filter(Lifer::Builder::HTML::FromLiquid::Filters)
-Liquid::Template.register_tag(:layout, Lifer::Builder::HTML::FromLiquid::LayoutTag)
-
 class Lifer::Builder::HTML
   # If the HTML builder is given a Liquid template, it uses this class to parse
   # the Liquid into HTML. Lifer project metadata is provided as context. For
@@ -46,17 +43,14 @@ class Lifer::Builder::HTML
     #
     # @return [String] The rendered entry.
     def render
-      Liquid::Template.file_system =
-        Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
-
       document_context = context.merge!(
         "content" => Liquid::Template
-          .parse(entry.to_html, error_mode: :strict)
-          .render(context, render_options)
+          .parse(entry.to_html, **parse_options)
+          .render(context, **render_options)
       )
       Liquid::Template
-        .parse(layout, error_mode: :strict)
-        .render(document_context, render_options)
+        .parse(layout, **parse_options)
+        .render(document_context, **render_options)
     end
 
     private
@@ -75,6 +69,8 @@ class Lifer::Builder::HTML
       {
         "collections" => collections,
         "entry" => Drops::EntryDrop.new(entry, collection:),
+        "parse_options" => parse_options,
+        "render_options" => render_options,
         "settings" => Drops::SettingsDrop.new
       }
     end
@@ -90,6 +86,24 @@ class Lifer::Builder::HTML
       return contents unless contents.match?(/\{%\s*#{LayoutTag::NAME}.*%\}/)
 
       contents + "\n{% #{LayoutTag::ENDNAME} %}"
+    end
+
+    def liquid_environment
+      @liquid_environment ||= Liquid::Environment.build do |environment|
+        environment.file_system =
+          Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
+
+        environment.register_filter Lifer::Builder::HTML::FromLiquid::Filters
+        environment.register_tag "layout",
+          Lifer::Builder::HTML::FromLiquid::LayoutTag
+      end
+    end
+
+    def parse_options
+      {
+        environment: liquid_environment,
+        error_mode: :strict
+      }
     end
 
     def render_options
