@@ -87,6 +87,21 @@ suite can run on your machine:
     $ bundle install
     $ bundle exec rspec
 
+### Releases
+
+We use the Bump gem to manage releases. Before releasing a version of Lifer:
+
+1. Ensure unreleased changes have entries in the CHANGELOG file.
+2. Ensure all tests pass locally.
+
+Then use Bump to perform release chores and create a version tag:
+
+    $ bundle exec bump <minor|patch> --tag --changelog --edit-changelog
+    $ git push origin <new_version>
+
+(Where `new_version` is the version you intend to release. For example:
+`v1.2.3`.)
+
 ## Contributing
 
 I'm not currently accepting unsolicited contributions to Lifer. I'm still
