@@ -3,6 +3,8 @@ require "liquid"
 require_relative "from_liquid/drops"
 require_relative "from_liquid/filters"
 require_relative "from_liquid/layout_tag"
+require_relative "from_liquid/liquid_env"
+
 
 class Lifer::Builder::HTML
   # If the HTML builder is given a Liquid template, it uses this class to parse
@@ -88,16 +90,7 @@ class Lifer::Builder::HTML
       contents + "\n{% #{LayoutTag::ENDNAME} %}"
     end
 
-    def liquid_environment
-      @liquid_environment ||= Liquid::Environment.build do |environment|
-        environment.file_system =
-          Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
-
-        environment.register_filter Lifer::Builder::HTML::FromLiquid::Filters
-        environment.register_tag "layout",
-          Lifer::Builder::HTML::FromLiquid::LayoutTag
-      end
-    end
+    def liquid_environment = (@liquid_environment ||= LiquidEnv.global)
 
     def parse_options
       {

@@ -1,3 +1,11 @@
+## Next
+
+This release locks the `liquid` dependency to Liquid 5.6 or greater. Liquid 5.6
+added `Liquid::Environment` for managing document context that was previously
+stored in `Liquid::Template`, which was global and unsafe. This release ensures
+that Lifer supports the new `Liquid::Environment` way of handling Liquid's local
+filesystem for templates and partials.
+
 ## v0.3.0
 
 This version marks the first version of Lifer that is kind of usable. The README

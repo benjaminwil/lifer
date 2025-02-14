@@ -4,7 +4,7 @@ PATH
     lifer (0.3.0)
       i18n (< 2)
       kramdown (~> 2.4)
-      liquid (< 6)
+      liquid (~> 5.6, < 6)
       listen (< 4)
       puma (< 7)
       rack (< 4)
