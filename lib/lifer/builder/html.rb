@@ -54,12 +54,8 @@ class Lifer::Builder::HTML < Lifer::Builder
   # @return [void]
   def execute
     Lifer.collections(without_selections: true).each do |collection|
-      collection.entries.each do |entry|
-        next unless entry.class.output_extension == :html
-
-        generate_output_directories_for entry
-        generate_output_file_for entry
-      end
+      generate_output_directories_for collection
+      generate_output_entries_for collection
     end
   end
 
@@ -75,24 +71,38 @@ class Lifer::Builder::HTML < Lifer::Builder
   end
 
   # @private
-  # For the given entry, ensure all of the paths to the file exist so the file
-  # can be safely written to.
+  # For the given collection, ensure all required directories and
+  # subdirectories exist so the entry output can be safely written to.
   #
-  # @param entry [Lifer::Entry] An entry.
-  # @return [Array<String>] An array containing the directories that were just
-  #   created (or already existed).
-  def generate_output_directories_for(entry)
-    dirname = Pathname File.dirname(output_file entry)
-    FileUtils.mkdir_p dirname unless Dir.exist?(dirname)
+  # @param entry [Lifer::Collection] A collection.
+  # @return [void]
+  def generate_output_directories_for(collection)
+    directories = collection.entries
+      .map { |entry| File.dirname(output_file entry) }
+      .uniq
+    directories.each do |directory|
+      FileUtils.mkdir_p directory unless Dir.exist?(directory)
+    end
+  end
+
+  def generate_output_entries_for(collection)
+    collection.entries.each do |entry|
+      generate_output_file_for(entry)
+    end
   end
 
   # @private
   # For the given entry, generate the production entry.
   #
   # @param entry [Lifer::Entry] An entry.
-  # @return [Integer] The length of the written file. We should not care about
-  #   this return value.
+  # @raise [StandardError] If the file already exists, we kill the program. The
+  #   end user needs to ensure there are no entry conflicts.
+  # @return [Integer, NilClass] The length of the written file, or nil if the
+  #   entry cannot be output to HTML.  We should not care about this return
+  #   value.
   def generate_output_file_for(entry)
+    return unless entry.class.output_extension == :html
+
     relative_path = output_file entry
     absolute_path = File.join(Lifer.output_directory, relative_path)
 
