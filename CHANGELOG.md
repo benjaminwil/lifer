@@ -1,4 +1,4 @@
-## Next
+## v0.4.0
 
 This release locks the `liquid` dependency to Liquid 5.6 or greater. Liquid 5.6
 added `Liquid::Environment` for managing document context that was previously
