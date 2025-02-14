@@ -117,14 +117,21 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           "_layouts/parent_layout.html.liquid" => <<~LIQUID,
             <h1>Parent Layout</h1>
             {{ content }}
+            {% render "_layouts/parent_layout_footer" %}
           LIQUID
+          "_layouts/parent_layout_footer.html.liquid" =>
+            "<footer>Footer</footer>",
           "_layouts/child_layout.html.liquid" => <<~LIQUID,
             {% layout "_layouts/parent_layout" %}
 
             <article class="child">
               {{ content }}
             </article>
+
+            {% render "_layouts/child_layout_footer" %}
           LIQUID
+          "_layouts/child_layout_footer.html.liquid" =>
+             "<section>Article footer</section>",
           "subdirectory_one/entry.html.liquid" => "Entry content."
         }
       }
@@ -143,6 +150,8 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
             <h1 id="tiny">Tiny</h1>
             <p>A testable entry.</p>
           </article>
+          <section>Article footer</section>
+          <footer>Footer</footer>
         RESULT
       end
     end

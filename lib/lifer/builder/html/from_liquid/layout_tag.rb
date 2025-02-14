@@ -50,8 +50,8 @@ class Lifer::Builder::HTML::FromLiquid
         .gsub(/\{%\s*#{tag_name}.+%\}/, "")
 
       content_with_layout = Liquid::Template
-        .parse(current_layout_file, error_mode: :strict)
-        .render(document_context, render_options)
+        .parse(current_layout_file, **parse_options)
+        .render(document_context, **render_options)
 
       Liquid::Template
         .parse(
