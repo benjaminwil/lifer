@@ -1,3 +1,5 @@
+require "parallel"
+
 # A module namespace for any weird utilities that are used pseudo-globally.
 # Ensure that these are actually useful globally, though. :-)
 #
@@ -65,6 +67,29 @@ module Lifer::Utilities
     # @param string [String] Any string.
     # @return [String] The kabab-cased output.
     def handleize(string) = parameterize(string, separator: "-")
+
+    # Parallelize and fan out a collection of work in child processes. If any of
+    # the child processes results in an error, we raise it and halt the program.
+    #
+    # @param collection [Array] A collection to operate on.
+    # @yield [Object] A function to transform each collection item (in
+    #   parallel).
+    # @raise [Exception] Any exception thrown by a child process.
+    # @return [Array] The mapped results of the operation.
+    def parallelized(collection, &block)
+      results = Parallel.map(collection) do |collection_item|
+        begin
+          yield collection_item
+        rescue => error
+          error
+        end
+      end
+
+      first_error = results.detect { _1.is_a? Exception }
+      raise first_error if first_error
+
+      results
+    end
 
     # Given a hash, take all of its keys (and sub-keys) and convert them into
     # strings.

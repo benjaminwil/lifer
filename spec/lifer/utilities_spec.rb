@@ -70,6 +70,29 @@ RSpec.describe Lifer::Utilities do
     it { is_expected.to eq "hello-111-complex_string-with-many-things-in-it" }
   end
 
+  describe ".parallelized" do
+    subject {
+      described_class.parallelized collection do |x|
+        x * 2
+      end
+    }
+
+    context "when no errors should be raised" do
+      let(:collection) { [1, 2, 3] }
+
+      it { is_expected.to eq [2, 4, 6] }
+    end
+
+    context "when an error should be raised" do
+      let(:collection) { [1, 2, nil, 3] }
+
+      it "bubbles up the exception" do
+        expect { subject }.to raise_error NoMethodError,
+          "undefined method `*' for nil"
+      end
+    end
+  end
+
   describe ".stringify_keys" do
     subject { described_class.stringify_keys(hash) }
 
