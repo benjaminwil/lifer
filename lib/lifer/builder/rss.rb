@@ -27,7 +27,7 @@ class Lifer::Builder::RSS < Lifer::Builder
   #
   # @return [void]
   def execute
-    collections_with_feeds.each do |collection|
+    Lifer::Utilities.parallelized collections_with_feeds do |collection|
       next unless (filename = output_filename(collection))
 
       FileUtils.mkdir_p File.dirname(filename)
