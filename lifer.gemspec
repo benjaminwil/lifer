@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "kramdown", "~> 2.4"
   spec.add_dependency "liquid", ["~> 5.6", "< 6"]
   spec.add_dependency "listen", "< 4"
+  spec.add_dependency "parallel", ["~> 1.26", "< 2"]
   spec.add_dependency "puma", "< 7"
   spec.add_dependency "rack", "< 4"
   spec.add_dependency "rss"

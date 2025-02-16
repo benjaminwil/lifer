@@ -80,14 +80,15 @@ class Lifer::Builder::HTML < Lifer::Builder
     directories = collection.entries
       .map { |entry| File.dirname(output_file entry) }
       .uniq
-    directories.each do |directory|
+
+    Lifer::Utilities.parallelized(directories) do |directory|
       FileUtils.mkdir_p directory unless Dir.exist?(directory)
     end
   end
 
   def generate_output_entries_for(collection)
-    collection.entries.each do |entry|
-      generate_output_file_for(entry)
+    Lifer::Utilities.parallelized(collection.entries) do |entry|
+      generate_output_file_for entry
     end
   end
 

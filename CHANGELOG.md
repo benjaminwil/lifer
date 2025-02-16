@@ -1,5 +1,8 @@
 ## Next
 
+This release refactors HTML building so builds be done more quickly, using the
+`parallel` gem.
+
 ## v0.4.1
 
 Resolves a bug where Liquid templates using the `{% layout %}` tag were not able
