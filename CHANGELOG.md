@@ -1,5 +1,7 @@
 ## Next
 
+## v0.5.1
+
 Resolved warnings output by `gem build`.
 
 ## v0.5.0
