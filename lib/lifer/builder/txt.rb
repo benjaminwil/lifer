@@ -26,20 +26,8 @@ class Lifer::Builder::TXT < Lifer::Builder
   # @return [void]
   def execute
     Lifer.collections(without_selections: true).each do |collection|
-      collection.entries.each do |entry|
-        next unless entry.class.output_extension == :txt
-
-        relative_path = output_file entry
-        absolute_path = File.join(Lifer.output_directory, relative_path)
-
-        FileUtils.mkdir_p File.dirname(relative_path)
-
-        if File.exist?(absolute_path)
-          raise I18n.t("builder.file_conflict_error", path: absolute_path)
-        end
-
-        File.open(relative_path, "w") { |file| file.write entry.full_text }
-      end
+      generate_output_directories_for collection
+      generate_output_entries_for collection
     end
   end
 
@@ -49,6 +37,37 @@ class Lifer::Builder::TXT < Lifer::Builder
 
   def initialize(root:)
     @root = root
+  end
+
+  def generate_output_directories_for(collection)
+    directories = collection.entries
+      .map { |entry| File.dirname(output_file entry) }
+      .uniq
+
+    Lifer::Utilities.parallelized(directories) do |directory|
+      FileUtils.mkdir_p directory unless Dir.exist?(directory)
+    end
+  end
+
+  def generate_output_entries_for(collection)
+    Lifer::Utilities.parallelized(collection.entries) do |entry|
+      generate_output_file_for entry
+    end
+  end
+
+  def generate_output_file_for(entry)
+    return unless entry.class.output_extension == :txt
+
+    relative_path = output_file entry
+    absolute_path = File.join(Lifer.output_directory, relative_path)
+
+    FileUtils.mkdir_p File.dirname(relative_path)
+
+    if File.exist?(absolute_path)
+      raise I18n.t("builder.file_conflict_error", path: absolute_path)
+    end
+
+    File.open(relative_path, "w") { |file| file.write entry.full_text }
   end
 
   def output_file(entry)
