@@ -108,10 +108,11 @@ RSpec.describe Lifer::Builder::HTML do
       }
 
       it "exits the program" do
-        expect { subject }
-          .to output(/No builder for layout file/)
-          .to_stdout
-          .and raise_error SystemExit
+        expect { subject }.to raise_error(
+          RuntimeError,
+          "No builder for layout file `./layouts/unknown.zzz` " \
+            "with type `.zzz`. Aborting!"
+        )
       end
     end
 
