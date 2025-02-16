@@ -40,7 +40,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "puma", "< 7"
   spec.add_dependency "rack", "< 4"
   spec.add_dependency "rss"
-
-  spec.add_development_dependency "debug"
-  spec.add_development_dependency "nokogiri"
 end
