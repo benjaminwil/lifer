@@ -9,7 +9,7 @@ PATH
       parallel (~> 1.26, < 2)
       puma (< 7)
       rack (< 4)
-      rss
+      rss (< 1)
 
 GEM
   remote: https://rubygems.org/

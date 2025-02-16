@@ -7,6 +7,7 @@ Gem::Specification.new do |spec|
   spec.version       = Lifer::VERSION
   spec.authors       = ["benjamin wil"]
   spec.email         = ["benjamin@super.gd"]
+  spec.licenses      = ["MIT"]
 
   spec.summary       = "Minimal static weblog generator."
   spec.description   = "Minimal static weblog generator. Good RSS feeds."
@@ -15,8 +16,10 @@ Gem::Specification.new do |spec|
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
-  spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["homepage_uri"] =
+    "%s/blob/%s/README.md" % [spec.homepage, Lifer::VERSION]
+  spec.metadata["source_code_uri"] =
+    "%s/tree/%s" % [spec.homepage, Lifer::VERSION]
   spec.metadata["changelog_uri"] = "%s/blob/main/CHANGELOG.md" % spec.homepage
 
   # Specify which files should be added to the gem when it is released. The
@@ -40,5 +43,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "parallel", ["~> 1.26", "< 2"]
   spec.add_dependency "puma", "< 7"
   spec.add_dependency "rack", "< 4"
-  spec.add_dependency "rss"
+  spec.add_dependency "rss", "< 1"
 end

@@ -1,4 +1,7 @@
 ## Next
+
+Resolved warnings output by `gem build`.
+
 ## v0.5.0
 
 This release refactors all of our builders to use parallelization, meaning that
