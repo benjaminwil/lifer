@@ -1,7 +1,8 @@
 ## Next
 
-This release refactors HTML building so builds be done more quickly, using the
-`parallel` gem.
+This release refactors all of our builders to use parallelization, meaning that
+`lifer build` process should be faster. It should be much faster for larger
+projects. I'm using the `parallel` gem for parallelization at this time.
 
 ## v0.4.1
 
