@@ -1,4 +1,5 @@
 ## Next
+## v0.5.0
 
 This release refactors all of our builders to use parallelization, meaning that
 `lifer build` process should be faster. It should be much faster for larger
