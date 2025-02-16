@@ -98,6 +98,8 @@ Then use Bump to perform release chores and create a version tag:
 
     $ bundle exec bump <minor|patch> --tag --changelog --edit-changelog
     $ git push origin <new_version>
+    $ gem build
+    $ gem push lifer-<new_version_without_the_v_prefix>.gem
 
 (Where `new_version` is the version you intend to release. For example:
 `v1.2.3`.)
