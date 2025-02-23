@@ -18,7 +18,7 @@ RSpec.describe Lifer::Builder::RSS do
   }
   let(:config) {
     <<~CONFIG
-      rss: feed.xml
+      rss: my-feed.xml
       subdirectory_one:
         blah: blah
     CONFIG
@@ -30,23 +30,20 @@ RSpec.describe Lifer::Builder::RSS do
     it "generates a single RSS feed" do
       expect { subject }
         .to change {
-          Dir.glob("#{project.brain.output_directory}/**/feed.xml").count
+          Dir.glob("#{project.brain.output_directory}/**/my-feed.xml").count
         }
         .from(0)
         .to(1)
     end
 
-    it "generates the correct amount of feed items" do
-      # We're excluding the entries in `subdirectory_one` here.
+    it "generates all feed items" do
+      # We're excluding the collection `subdirectory_one` from our results, though.
       #
       article_count = Dir.glob("#{project.brain.root}/*.md").count
 
       subject
 
-      generated_feed =
-        File.open(
-          Dir.glob("#{project.brain.output_directory}/**/feed.xml").first
-        ) { Nokogiri::XML _1 }
+      generated_feed = generated_feed_document "my-feed.xml"
       feed_items = generated_feed.xpath "//item"
 
       expect(feed_items.count).to eq article_count
@@ -55,10 +52,7 @@ RSpec.describe Lifer::Builder::RSS do
     it "generates parseable article metadata correctly" do
       subject
 
-      generated_feed =
-        File.open(
-          Dir.glob("#{project.brain.output_directory}/**/feed.xml").first
-        ) { Nokogiri::XML _1 }
+      generated_feed = generated_feed_document "my-feed.xml"
       entry = generated_feed.xpath("//item").css("link")
         .detect { _1.text == "https://example.com/tiny_entry.html" }
         .parent
@@ -77,8 +71,9 @@ RSpec.describe Lifer::Builder::RSS do
     it "properly escapes HTML nodes in the article contents", :aggregate_failures do
       subject
 
-      feed_contents =
-        File.read Dir.glob("#{project.brain.output_directory}/**/feed.xml").first
+      feed_contents = File.read(
+        Dir.glob("#{project.brain.output_directory}/**/my-feed.xml").first
+      )
 
       expect { RSS::Parser.parse feed_contents }.not_to raise_error
     end
@@ -112,6 +107,17 @@ RSpec.describe Lifer::Builder::RSS do
     subject { described_class.name }
 
     it { is_expected.to eq :rss }
+  end
+
+  # Without arguments, this grabs the contents of the first found feed. With a
+  # filename argument, it grabs the first feed with the given name.
+  #
+  # @param filename [String] A feed filename, i.e. "my-feed.xml".
+  # @return [Nokogiri::XML::Document, NilClass] Either a document or nil.
+  def generated_feed_document(filename = "*.xml")
+    document =
+      Dir.glob("#{project.brain.output_directory}/**/#{filename}").first
+    Nokogiri::XML(File.read document) if document
   end
 
   def text_from(nokogiri_xml_element, node_name)
