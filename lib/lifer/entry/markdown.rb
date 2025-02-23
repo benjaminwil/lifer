@@ -119,6 +119,11 @@ class Lifer::Entry::Markdown < Lifer::Entry
 
   # The HTML representation of the Markdown entry as parsed by Kramdown.
   #
+  # FIXME: Before converting a Kramdown document to Markdown, we chould
+  #   convert any relative URLs to absolute ones. This makes it more flexible to
+  #   use HTML output where ever we want, especially in RSS feeds where feed
+  #   readers may "wtf" a relative URL.
+  #
   # @return [String] The HTML for the body of the entry.
   def to_html
     Kramdown::Document.new(body).to_html
