@@ -27,14 +27,26 @@ require "rss"
 #    - `count:` - The limit of RSS feed items that should be included in the
 #      output document. Leave unset or set to `0` to include all entries.
 #    - `managing_editor:` - the contents of the `<managingEditor>` node of the
-#      RSS document. When unset, Lifer uses the collection or root `author`
-#      value instead.
+#      RSS document. When unset, Lifer builds a valid `<managingEditor>` value
+#      using the collection or root `author` value and a null email address to
+#      ensure that RSS feed validators are satisfied.
 #    - `url:` -  the path to the filename of the output XML file.
 #
 # [1]: https://www.rssboard.org/rss-specification
 # [2]: https://www.rssboard.org/rss-profile
 #
 class Lifer::Builder::RSS < Lifer::Builder
+  # Because Lifer has no reason to have record of anyone's email address, we
+  # provide a non-email address so a <managingEditor> can be set and validated by
+  # RSS validators.
+  #
+  # Note that `.invalid` is a special-use TLD[1] that helps us indicate that the
+  # email address is definitely not real.
+  #
+  # [1]: https://datatracker.ietf.org/doc/html/rfc6761
+  #
+  DEFAULT_MANAGING_EDITOR_EMAIL = "editor@null.invalid"
+
   self.name = :rss
   self.settings = [
     rss: [
@@ -97,8 +109,11 @@ class Lifer::Builder::RSS < Lifer::Builder
   #
   # Unfortunately, Lifer has no reason to have record of the editor's email
   # address except for in RSS feeds, so if an `rss.managing_editor` is not
-  # configured we'll do our best to at least provide the managing editor's name
-  # from other site configuration that contains author names.
+  # configured we'll do our best to at provide information managing editor's
+  # that RSS feed validators are satisified with using other site configuration
+  # containing an author's name. Example output:
+  #
+  #     editor@null.invalid (Configured Author Name)
   #
   # @param collection [Lifer::Collection]
   # @return [String] The managing editor string for a `<managingEditor>` RSS
@@ -108,7 +123,10 @@ class Lifer::Builder::RSS < Lifer::Builder
 
     return editor if editor
 
-    Lifer.setting(:author, collection: collection)
+    "%s (%s)" % [
+      DEFAULT_MANAGING_EDITOR_EMAIL,
+      Lifer.setting(:author, collection: collection)
+    ]
   end
 
   # The amount of feed items to output to the RSS file. If set to 0, there is no

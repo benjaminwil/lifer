@@ -69,7 +69,10 @@ RSpec.describe Lifer::Builder::RSS do
         generated_feed = generated_feed_document "my-feed.xml"
 
         managing_editor = generated_feed.xpath "//managingEditor"
-        expect(managing_editor.text).to eq "Admin" # Default author.
+
+        # "Admin" being the default site author. "editor@null.invalid" being our
+        # provided default editor email address.
+        expect(managing_editor.text).to eq "editor@null.invalid (Admin)"
 
         entry = generated_feed.xpath("//item").css("link")
           .detect { _1.text == "https://example.com/tiny_entry.html" }
