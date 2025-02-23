@@ -194,6 +194,15 @@ RSpec.describe Lifer::Config do
           expect(subject).to eq "setting-value"
         end
 
+        it "returns nil if available settings stop short" do
+          raw_settings_hash
+            .merge! some: {double: "not-quite-nested-enough-setting"}
+
+          expect { subject }.not_to raise_error
+
+          expect(subject).to be_nil
+        end
+
         it "returns nil if unavailable" do
           expect(subject).to be_nil
         end

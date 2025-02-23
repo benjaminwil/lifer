@@ -118,14 +118,14 @@ class Lifer::Config
     name_in_collection = name.dup.unshift(collection_name) if collection_name
 
     return if strict && collection_name.nil?
-    return settings.dig(*name_in_collection) if (strict && collection_name)
+    return dig_from(settings, *name_in_collection) if (strict && collection_name)
 
     candidates = [
-      settings.dig(*name),
-      default_settings.dig(*name),
-      DEFAULT_IMPLICIT_SETTINGS.dig(*name)
+      dig_from(settings, *name),
+      dig_from(default_settings, *name),
+      dig_from(DEFAULT_IMPLICIT_SETTINGS, *name)
     ]
-    candidates.unshift settings.dig(*name_in_collection) if name_in_collection
+    candidates.unshift dig_from(settings, *name_in_collection) if name_in_collection
 
     candidates.detect &:itself
   end
@@ -171,6 +171,12 @@ class Lifer::Config
   def default_settings
     @default_settings ||=
       Lifer::Utilities.symbolize_keys(YAML.load_file DEFAULT_CONFIG_FILE).to_h
+  end
+
+  def dig_from(hash, *keys)
+    keys.reduce(hash) { |result, key|
+      result.is_a?(Hash) || result.is_a?(Array) ? result[key] : nil
+    }
   end
 
   def has_collection_settings?(settings_key)
