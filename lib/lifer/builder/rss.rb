@@ -1,14 +1,48 @@
 require "fileutils"
 require "rss"
 
-# Builds a simple RSS 2.0[1] feed using the Ruby standard library's RSS
+# Builds a simple, UTF-8, RSS 2.0[1] feed using the Ruby standard library's RSS
 # features.
 #
+# The features of the generated feed attempt to follow the recommendations for
+# RSS feeds specified by RSS Board[2].
+#
+# The RSS builder can be configured in a number of ways:
+#
+# 1. Boolean
+#
+#    Simply set `rss: true` or `rss: false` to enable or disable a feed for a
+#    collection. If `true`, an RSS feed will be built to `name-of-collection.xml`
+#
+# 2. Simple
+#
+#    Simply set `rss: name-of-output-file.xml` to specify the name of the
+#    output XML file.
+#
+# 3. Fine-grained
+#
+#    Provide an object under `rss:` for more fine-grained control over
+#    configuration. The following sub-settings are supported:
+#
+#    - `count:` - The limit of RSS feed items that should be included in the
+#      output document. Leave unset or set to `0` to include all entries.
+#    - `managing_editor:` - the contents of the `<managingEditor>` node of the
+#      RSS document. When unset, Lifer uses the collection or root `author`
+#      value instead.
+#    - `url:` -  the path to the filename of the output XML file.
+#
 # [1]: https://www.rssboard.org/rss-specification
+# [2]: https://www.rssboard.org/rss-profile
 #
 class Lifer::Builder::RSS < Lifer::Builder
   self.name = :rss
-  self.settings = [:rss]
+  self.settings = [
+    rss: [
+      :count,
+      :managing_editor,
+      :url
+    ]
+  ]
 
   class << self
     # Traverses and renders an RSS feed for each feedable collection in the
@@ -35,8 +69,10 @@ class Lifer::Builder::RSS < Lifer::Builder
       File.open filename, "w" do |file|
         file.puts(
           rss_feed_for(collection) do |current_feed|
+            max_index = max_feed_items(collection) - 1
+
             collection.entries
-              .select { |entry| entry.feedable? }
+              .select { |entry| entry.feedable? }[0..max_index]
               .each { |entry| rss_entry current_feed, entry }
           end.to_feed
         )
@@ -54,13 +90,44 @@ class Lifer::Builder::RSS < Lifer::Builder
     @root = root
   end
 
+  # According to the RSS Board, the recommended format for the
+  # `<managingEditor>` feed data is
+  #
+  #     editor@example.com (Editor Name)
+  #
+  # Unfortunately, Lifer has no reason to have record of the editor's email
+  # address except for in RSS feeds, so if an `rss.managing_editor` is not
+  # configured we'll do our best to at least provide the managing editor's name
+  # from other site configuration that contains author names.
+  #
+  # @param collection [Lifer::Collection]
+  # @return [String] The managing editor string for a `<managingEditor>` RSS
+  #   feed field.
+  def managing_editor(collection)
+    editor = collection.setting(:rss, :managing_editor)
+
+    return editor if editor
+
+    Lifer.setting(:author, collection: collection)
+  end
+
+  # The amount of feed items to output to the RSS file. If set to 0, there is no
+  # max limit of feed items.
+  #
+  # @param collection [Lifer::Collection]
+  # @return [Integer]
+  def max_feed_items(collection) = Lifer.setting(:rss, :count, collection:) || 0
+
   def output_filename(collection)
     strict = !collection.root?
 
     case collection.setting(:rss, strict:)
     when FalseClass, NilClass then nil
-    when TrueClass then File.join(Dir.pwd, "#{collection.name}.xml")
-    else
+    when TrueClass
+      File.join Dir.pwd, "#{collection.name}.xml"
+    when Hash
+      File.join Dir.pwd, collection.setting(:rss, :url, strict:)
+    when String
       File.join Dir.pwd, collection.setting(:rss, strict:)
     end
   end
@@ -96,11 +163,8 @@ class Lifer::Builder::RSS < Lifer::Builder
         Lifer.setting(:rss, collection: collection)
       ]
 
-      feed.channel.managingEditor =
-        Lifer.setting(:site_default_author, collection: collection)
-
+      feed.channel.managingEditor = managing_editor(collection)
       feed.channel.title = Lifer.setting(:title, collection: collection)
-
       feed.channel.webMaster =
         Lifer.setting(:site_default_author, collection: collection)
 
