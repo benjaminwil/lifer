@@ -55,13 +55,13 @@ class Lifer::Builder::RSS < Lifer::Builder
   end
 
   def output_filename(collection)
-    strict_mode = !collection.root?
+    strict = !collection.root?
 
-    case collection.setting(:rss, strict: strict_mode)
+    case collection.setting(:rss, strict:)
     when FalseClass, NilClass then nil
     when TrueClass then File.join(Dir.pwd, "#{collection.name}.xml")
     else
-      File.join Dir.pwd, collection.setting(:rss, strict: strict_mode)
+      File.join Dir.pwd, collection.setting(:rss, strict:)
     end
   end
 
