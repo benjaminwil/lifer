@@ -1,5 +1,7 @@
 ## Next
 
+## v0.6.0
+
 This release contains improvements to RSS feed generation:
 
 - Additonal settings per RSS feed (maximum feed item count and configurable
