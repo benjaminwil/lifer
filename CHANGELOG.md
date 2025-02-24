@@ -1,5 +1,15 @@
 ## Next
 
+This release contains improvements to RSS feed generation:
+
+- Additonal settings per RSS feed (maximum feed item count and configurable
+  managing editor metadata).
+- No more invalid `<managingEditor>` values. A default managing editor email is
+  now prefixed to the default collection author name for [W3C validated
+  feeds][w3c-feed-checker].
+
+[w3c-feed-checker]: https://validator.w3.org/feed/check.cgi
+
 ## v0.5.1
 
 Resolved warnings output by `gem build`.
