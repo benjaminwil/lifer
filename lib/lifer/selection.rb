@@ -48,12 +48,12 @@ class Lifer::Selection < Lifer::Collection
     raise NotImplementedError, I18n.t("selection.entries_not_implemented")
   end
 
-  # FIXME:
-  # Getting selection settings may actually need to be different than getting
-  # collection settings. But for now let's just inherit the superclass method.
-  #
   # A getter for selection settings. See `Lifer::Collection#setting` for more
   # information.
+  #
+  # @fixme Getting selection settings may actually need to be different than
+  #   getting collection settings. But for now let's just inherit the
+  #   superclass method.
   #
   # @return [String, Symbol, NilClass] The setting for the collection (or a
   #   fallback setting, or a default setting).

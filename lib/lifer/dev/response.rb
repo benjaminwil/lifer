@@ -33,9 +33,8 @@ module Lifer::Dev
       [File.read(path)]
     end
 
-    # FIXME:
-    # It would be very nice to not manually manage this list of content types.
-    # Is there a nice, dependency-free way to do this?
+    # @fixme  It would be very nice to not manually manage this list of
+    #   content types. Is there a nice, dependency-free way to do this?
     #
     def content_type
       case File.extname(path)

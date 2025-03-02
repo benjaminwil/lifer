@@ -1,7 +1,8 @@
 module Lifer::Builder::HTML::FromLiquid::Drops
   # This drop allows users to iterate over their Lifer collections in Liquid
-  # templates. Example:
+  # templates.
   #
+  # @example Usage
   #     {% for collection in collections %}
   #       {{ collection.name }}
   #     {% endfor %}
@@ -27,8 +28,9 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     def to_a = @collections
 
     # Dynamically define Liquid accessors based on the Lifer project's
-    # collection names. For example, to get the root collection's name:
+    # collection names.
     #
+    # @example Get the root collection's name.
     #    {{ collections.root.name }}
     #
     # @param arg [String] The name of a collection.

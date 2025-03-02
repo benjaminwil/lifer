@@ -1,8 +1,7 @@
 # This module provides Liquid filters to be used within Liquid templates.
 # In many cases these utilities exist to be pseudo-compatible with Jekyll.
 #
-# For example, a filter (in a Liquid template):
-#
+# @example A filter in a Liquid template.
 #     {{ entry.date | date_to_xmlschema }}
 #
 module Lifer::Builder::HTML::FromLiquid::Filters
@@ -17,10 +16,9 @@ module Lifer::Builder::HTML::FromLiquid::Filters
 
   # Transforms a string to kabab-case.
   #
-  # For example:
+  # @example Result
+  #     handleize("hello_there") #=> "hello-there"
   #
-  #     Before: hello_there
-  #     After: hello-there
   # @param input [String] A string.
   # @return [String] The transformed string.
   def handleize(input) = Util.handleize(input)

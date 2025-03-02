@@ -2,8 +2,7 @@ module Lifer::Builder::HTML::FromLiquid::Drops
   # Markdown entries may contain YAML frontmatter. And if they do, we need a way
   # for the Liquid templates to access that data.
   #
-  # Example usage:
-  #
+  # @example Usage
   #     {{ entry.frontmatter.any_available_frontmatter_key }}
   #
   class FrontmatterDrop < Liquid::Drop
@@ -18,8 +17,8 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     def to_s = frontmatter.to_json
 
     # Dynamically define Liquid accessors based on the Lifer settings object.
-    # For example, to get a collections URI strategy:
     #
+    # @example Get a collection's URI strategy.
     #    {{ settings.my_collection.uri_strategy }}
     #
     # @param arg [String] The name of a collection.

@@ -125,8 +125,7 @@ class Lifer::Brain
   # value. If the in-scope collection does not have a configured setting, this
   # method will return fallback settings (unless `:strict` is `true`).
   #
-  # Example usage:
-  #
+  # @example Usage:
   #     setting(:my, :great, :setting)
   #
   # @overload setting(path, ..., collection: nil, strict: false)
@@ -160,12 +159,6 @@ class Lifer::Brain
     path.start_with?("/") ? path : File.join(root, path)
   end
 
-  # FIXME:
-  # Do collections work with sub-subdirectories? For example, what if the
-  # configured collection maps to a directory:
-  #
-  #     subdirectory_one/sub_subdirectory_one
-  #
   # @return [Set<Lifer::Collection>]
   def generate_collections
     config.collectionables

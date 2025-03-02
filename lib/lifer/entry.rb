@@ -8,7 +8,7 @@ require "digest/sha1"
 # should implement. It also provides the entry generator for *all* entry
 # subclasses.
 #
-# FIXME: Markdown entries are able to provide metadata via frontmatter, but
+# @fixme Markdown entries are able to provide metadata via frontmatter, but
 #   other entry types do not currently support frontmatter. Should they? Or is
 #   there some nicer way to provide entry metadata for non-Markdown files in
 #   2024?

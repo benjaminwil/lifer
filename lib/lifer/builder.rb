@@ -18,7 +18,8 @@ class Lifer::Builder
     # Every builder class must have execute method. This is the entrypoint for
     # instantiating *and* executing any builder.
     #
-    # @param root [string] An absolute path to the Lifer project root directory.
+    # @param root [string] An absolute path to the Lifer project root
+    #   directory.
     # @return [NotImplementedError] A builder subclass must implement this
     #   method.
     def execute(root:) = (raise NotImplementedError)

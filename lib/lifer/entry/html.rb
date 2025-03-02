@@ -7,9 +7,9 @@ class Lifer::Entry::HTML < Lifer::Entry
   self.input_extensions = ["html", "html.erb", "html.liquid"]
   self.output_extension = :html
 
-  # FIXME: This could probably get more sophisticated, but at the moment HTML
-  # entries don't have any way to provide metadata about themselves. So let's
-  # just give them a default date to start.
+  # @fixme This could probably get more sophisticated, but at the moment HTML
+  #   entries don't have any way to provide metadata about themselves. So let's
+  #   just give them a default date to start.
   #
   # @return [Time] The publication date of the HTML entry.
   def date = Lifer::Entry::DEFAULT_DATE

@@ -2,8 +2,7 @@ module Lifer::Builder::HTML::FromLiquid::Drops
   # This drop represents a Lifer entry and allows users to access entry
   # metadata and content in Liquid templates.
   #
-  # Example usage:
-  #
+  # @example Usage
   #     <h1>{{ entry.title }}</h1>
   #     <small>Published on <datetime>{{ entry.date }}</datetime></small>
   #

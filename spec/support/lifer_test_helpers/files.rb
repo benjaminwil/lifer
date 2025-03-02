@@ -9,8 +9,7 @@ module Support::LiferTestHelpers::Files
   # A helper that provides the path to a temporary directory with the given
   # files in it.
   #
-  # Example usage:
-  #
+  # @example Usage
   #    temp_dir_with_files "relative/path/to/file.md" => "contents of file",
   #      "another/file.html" => <<~HTML,
   #        <p>Hello world.</p>

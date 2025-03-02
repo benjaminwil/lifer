@@ -9,8 +9,7 @@ require "lifer"
 # list of files and their contents, as well as the contents of a Lifer
 # configuration file, to be created.
 #
-# Example usage:
-#
+# @example Usage
 #    let(:project) {
 #      Support::LiferTestHelpers::TestProject.new(files:, config:)
 #    }

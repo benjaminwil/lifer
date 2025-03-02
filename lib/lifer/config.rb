@@ -33,7 +33,7 @@ class Lifer::Config
   # Provides "implicit settings" that may not be set anywhere but really do
   # require a value.
   #
-  # FIXME: I don't think this really belongs here. But in some cases we need
+  # @fixme I don't think this really belongs here. But in some cases we need
   #   to provide the implicit setting key and a default value when calling the
   #   `#setting` method. It would be nicer if the HTML builder handled this,
   #   somehow.

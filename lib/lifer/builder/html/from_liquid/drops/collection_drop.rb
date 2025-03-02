@@ -1,9 +1,9 @@
 module Lifer::Builder::HTML::FromLiquid::Drops
   # This drop allows users to access Lifer collection information from within
-  # Liquid templates. Example:
+  # Liquid templates.
   #
+  # @example Usage
   #     {{ collection.name }}
-  #
   #     {% for entries in collection.entries %}
   #       {{ entry.title }}
   #     {% endfor %}

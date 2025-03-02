@@ -130,9 +130,7 @@ RSpec.describe "bin/lifer", type: :system do
       end
     }
 
-    # FIXME:
-    # `#to_stdout_from_any_process` is slow.
-    #
+    # FIXME: `#to_stdout_from_any_process` is slow.
     it "displays help text" do
       expect { subject }
         .to output(/Lifer, the static site generator/)
@@ -147,9 +145,7 @@ RSpec.describe "bin/lifer", type: :system do
       end
     }
 
-    # FIXME:
-    # `#to_stdout_from_any_process` is slow.
-    #
+    # FIXME: `#to_stdout_from_any_process` is slow.
     it "displays help text" do
       expect { subject }
         .to output(/Lifer, the static site generator/)
@@ -160,9 +156,7 @@ RSpec.describe "bin/lifer", type: :system do
   describe "bin/lifer serve", :ci_only do
     subject {
       Dir.chdir(Lifer.root) do
-        # FIXME:
-        # Obviously, this is slow.
-        #
+        # FIXME: Obviously, this is slow.
         process_id = fork { exec "lifer serve" }
         sleep 3
         Process.kill "SIGTERM", process_id

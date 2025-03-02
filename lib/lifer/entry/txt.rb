@@ -7,9 +7,9 @@ class Lifer::Entry::TXT < Lifer::Entry
   self.input_extensions = ["txt"]
   self.output_extension = :txt
 
-  # FIXME: This could probably get more sophisticated, but at the moment HTML
-  # entries don't have any way to provide metadata about themselves. So let's
-  # just give them a default date to start.
+  # @fixme This could probably get more sophisticated, but at the moment HTML
+  #   entries don't have any way to provide metadata about themselves. So let's
+  #   just give them a default date to start.
   #
   # @return [Time] The publication date of the HTML entry.
   def date = Lifer::Entry::DEFAULT_DATE
@@ -34,7 +34,7 @@ class Lifer::Entry::TXT < Lifer::Entry
   # While we don't actually output text to HTML, we need to implement this
   # method so that the RSS feed builder can add text files as feed entries.
   #
-  # FIXME: Maybe the `#to_html` methods should be renamed, then?
+  # @fixme Maybe the `#to_html` methods should be renamed, then?
   #
   # @return [String] The output HTML (not actually HTML).
   def to_html = full_text

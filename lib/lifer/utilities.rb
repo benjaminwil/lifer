@@ -14,16 +14,15 @@ module Lifer::Utilities
     end
 
     # Given a string path, classify it into a namespaced Ruby constant. If the
-    # constant does not exist, we raise a helpful error. For example:
+    # constant does not exist, we raise a helpful error.
     #
-    #    Given:  my/class_name/that_exists
-    #    Result: My::ClassName::ThatExists
+    # @example Result
+    #    classify("my/class_name/that_exists") #=> My::ClassName::ThatExists
     #
-    # FIXME:
-    # Note that this method is currently a bit naive. It cannot politely
-    # transform classes with many caps in them (i.e. `URIStrategy`) without
-    # being given an exact match (`URIStrategy`) or a broken-looking one
-    # (`u_r_i_strategy`).
+    # @fixme Note that this method is currently a bit naive. It cannot politely
+    #   transform classes with many caps in them (i.e. `URIStrategy`) without
+    #   being given an exact match (`URIStrategy`) or a broken-looking one
+    #   (`u_r_i_strategy`).
     #
     # @param string_constant [String] A string that maps to a Ruby constant.
     # @return [Class, Module]

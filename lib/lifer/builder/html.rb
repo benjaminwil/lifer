@@ -74,7 +74,7 @@ class Lifer::Builder::HTML < Lifer::Builder
   # For the given collection, ensure all required directories and
   # subdirectories exist so the entry output can be safely written to.
   #
-  # @param entry [Lifer::Collection] A collection.
+  # @param collection [Lifer::Collection] A collection.
   # @return [void]
   def generate_output_directories_for(collection)
     directories = collection.entries

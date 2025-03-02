@@ -2,6 +2,7 @@ module Lifer::Builder::HTML::FromLiquid::Drops
   # This drop allows users to access the current Lifer project settings from
   # Liquid templates. Example:
   #
+  # @example Usage
   #     {{ settings.my_collection.uri_strategy }}
   #
   class SettingsDrop < Liquid::Drop
@@ -15,8 +16,8 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     def to_s = settings.to_json
 
     # Dynamically define Liquid accessors based on the Lifer settings object.
-    # For example, to get a collections URI strategy:
     #
+    # @example Get a collections URI strategy:
     #    {{ settings.my_collection.uri_strategy }}
     #
     # @param arg [String] The name of a collection.

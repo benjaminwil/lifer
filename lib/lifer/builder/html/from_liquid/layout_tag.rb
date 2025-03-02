@@ -11,8 +11,7 @@ class Lifer::Builder::HTML::FromLiquid
   # frontmatter when we didn't need to. Maybe in the long run this was a bad
   # call? I don't know.
   #
-  # Example usage (from a Liquid template):
-  #
+  # @example Usage from a Liquid template.
   #     {% layout "path/to/my_liquid_layout_template" %}
   #
   # (The required `endlayout` tag will be appended to the end of the file

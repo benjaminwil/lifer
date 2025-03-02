@@ -71,8 +71,8 @@ module Lifer::Dev
       # @private
       # On reload, we rebuild the Lifer project.
       #
-      # FIXME:
-      # Partial rebuilds would be a nice enhancement for performance reasons.
+      # @fixme Partial rebuilds would be a nice enhancement for performance
+      #   reasons.
       #
       def reload!
         if @changes
@@ -84,7 +84,6 @@ module Lifer::Dev
 
       # @private
       # @return [Lifer::Dev::Router] Our dev server router.
-      #
       def router
         return @router if @router && !test_mode?
 

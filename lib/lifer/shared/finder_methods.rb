@@ -1,8 +1,7 @@
 # This module provides simple finder methods to classes that need to keep track
 # of their descendant classes.
 #
-# Example usage:
-#
+# @example Usage
 #     class MyClass
 #       included Lifer::Shared::FinderMethods
 #       # ...

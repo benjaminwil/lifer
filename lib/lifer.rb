@@ -63,7 +63,7 @@ module Lifer
 
     # A set of all entries currently in the project.
     #
-    # FIXME: Do we need this as well as `Lifer.manifest`?
+    # @fixme Do we need this as well as `Lifer.manifest`?
     #
     # @return [Set] All entries.
     def entry_manifest = brain.entry_manifest
@@ -85,7 +85,7 @@ module Lifer
 
     # A set of all entries currently in the project.
     #
-    # FIXME: Do we need this as well as `Lifer.manifest`?
+    # @fixme Do we need this as well as `Lifer.manifest`?
     #
     # @return [Set] All entries.
     def manifest = brain.manifest
@@ -99,8 +99,7 @@ module Lifer
     # Register new settings so that they are "safe" and can be read from a Lifer
     # configuration file. Unregistered settings are ignored.
     #
-    # Example usage:
-    #
+    # @example Usage
     #    register_settings(
     #      :hidden,
     #      :birthday,
