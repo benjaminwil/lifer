@@ -1,5 +1,11 @@
 ## Next
 
+## v0.6.1
+
+This release just fixes a mistake I made, where I built and pushed a tag from a
+non-`main` branch, causing the RubyGems release to technically be for the wrong
+SHA.
+
 ## v0.6.0
 
 This release contains improvements to RSS feed generation:
