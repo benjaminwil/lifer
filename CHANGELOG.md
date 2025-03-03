@@ -1,5 +1,7 @@
 ## Next
 
+## v0.7.0
+
 This release adds Atom feed support to the RSS builder. In your configuration
 file, you can configure feed formats to `rss` (the default) or `atom` now:
 

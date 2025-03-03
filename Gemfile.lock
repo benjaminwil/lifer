@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lifer (0.6.1)
+    lifer (0.7.0)
       i18n (< 2)
       kramdown (~> 2.4)
       liquid (~> 5.6, < 6)
