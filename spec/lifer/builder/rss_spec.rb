@@ -160,6 +160,29 @@ RSpec.describe Lifer::Builder::RSS do
         expect(managing_editor.text).to eq "custom@example.com (Custom Editor)"
       end
     end
+
+    context "when a single collection is configured with a custom format" do
+      let(:config) {
+        <<~CONFIG
+          rss:
+            format: atom
+            url: custom.xml
+        CONFIG
+      }
+
+      it "is a valid Atom feed" do
+        subject
+
+        feed_contents = File.read(
+          Dir.glob("#{project.brain.output_directory}/**/custom.xml").first
+        )
+
+        document = RSS::Parser.parse(feed_contents)
+
+        expect(document.feed_type).to eq "atom"
+        expect(document.feed_version).to eq "1.0"
+      end
+    end
   end
 
   describe ".name" do
