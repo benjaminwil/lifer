@@ -1,5 +1,13 @@
 ## Next
 
+This release adds Atom feed support to the RSS builder. In your configuration
+file, you can configure feed formats to `rss` (the default) or `atom` now:
+
+    my_collection:
+      rss:
+        format: atom
+        url: haha.xml
+
 ## v0.6.1
 
 This release just fixes a mistake I made, where I built and pushed a tag from a
