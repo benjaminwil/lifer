@@ -32,6 +32,13 @@ uri_strategy: simple
 ###   uri_strategy: pretty
 ###
 ###   layout_file: path/to/my_other_layout.html.erb
+###
+### my_with_fine_grained_rss_settings:
+###   rss
+###     count: 99
+###     format: rss
+###     managing_editor: editor@example.com (Managing Editor)
+###     url: custom.xml
 
 # Selections
 #
