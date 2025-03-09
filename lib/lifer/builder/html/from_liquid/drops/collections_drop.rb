@@ -18,7 +18,6 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     #
     # @yield [CollectionDrop] All available collection drops.
     def each(&block)
-
       collections.each(&block)
     end
 

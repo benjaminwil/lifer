@@ -8,6 +8,14 @@
 
 <%= collections.map { |collection| collection.name }.join(", ") %>
 
+<h2>All tag names</h2>
+
+<%= tags.map(&:name).join(", ") %>
+
+<h2>Entries for tag1</h2>
+
+<%= tags.tag1.entries.map { |entry| entry.title }.first(2).join(", ") %>
+
 <h2>This project's settings</h2>
 
 <%= settings %>

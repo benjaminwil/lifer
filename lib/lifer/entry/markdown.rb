@@ -23,6 +23,11 @@ class Lifer::Entry::Markdown < Lifer::Entry
   #
   FRONTMATTER_REGEX = /^---\n(.*)---\n/m
 
+  # If tags are represented in YAML frontmatter as a string, they're split on
+  # commas and/or spaces.
+  #
+  TAG_DELIMITER_REGEX = /[,\s]+/
+
   # We truncate anything that needs to be truncated (summaries, meta
   # descriptions) at the following character count.
   #
@@ -109,6 +114,14 @@ class Lifer::Entry::Markdown < Lifer::Entry
     end
   end
 
+  # Locates and returns all tags defined in the entry.
+  #
+  # @return [Array<Lifer::Tag>] The entry's tags.
+  def tags
+    @tags ||= candidate_tag_names
+      .map { Lifer::Tag.build_or_update(name: _1, entries: [self]) }
+  end
+
   # The title or a default title.
   #
   # @return [String] The title of the entry.
@@ -129,6 +142,19 @@ class Lifer::Entry::Markdown < Lifer::Entry
   end
 
   private
+
+  # It is conventional for users to use spaces or commas to delimit tags in
+  # other systems, so let's support that. But let's also support YAML-style
+  # arrays.
+  #
+  # @return [Array<String>] An array of candidate tag names.
+  def candidate_tag_names
+    case frontmatter[:tags]
+    when Array then frontmatter[:tags].map(&:to_s)
+    when String then frontmatter[:tags].split(TAG_DELIMITER_REGEX)
+    else []
+    end.uniq
+  end
 
   # @private
   def filename_date

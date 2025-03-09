@@ -1,5 +1,24 @@
 ## Next
 
+### Tags
+
+Entries now support tag frontmatter. This introduces a new way of making
+associations between entries. Tags can encoded in entries as YAML arrays or as a
+string (with comma and/or space delimiters):
+
+    ---
+    title: My Entry
+    tags: beautifulTag, lovelyTag
+    ---
+
+    Blah blah blah.
+
+Then, in your ERB or Liquid templates you can get entries via tag:
+
+    <% tags.beautifulTag.entries.each do |entry| %>
+      <li><%= entry.title %></li>
+    <% end %>
+
 ## v0.7.0
 
 This release adds Atom feed support to the RSS builder. In your configuration

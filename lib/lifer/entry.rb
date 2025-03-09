@@ -47,7 +47,14 @@ class Lifer::Entry
 
       if (new_entry = subclass_for(file)&.new(file:, collection:))
         Lifer.entry_manifest << new_entry
+
+        # FIXME: Tags currently depend on frontmatter, so we should only
+        #   generate them for frontmatter supporting files (Markdown files). I
+        #   think the way forward is to parse every entry type for potential
+        #   frontmatter. Is that weird?
+        new_entry.tags if new_entry.is_a?(Lifer::Entry::Markdown)
       end
+
       new_entry
     end
 
@@ -154,6 +161,14 @@ class Lifer::Entry
   #
   # @return [String] The absolute URI path to the entry.
   def path = permalink(host: "/")
+
+  # Currently, this method does nothing because not all entry types support
+  # tags. This method is only implemented to help other parts of the system
+  # iterate over tags where ever necessary.
+  #
+  # @fixme We need to support frontmatter to get tags.
+  # @return [Array<Lifer::Tag>]
+  def tags = []
 
   def title
     raise NotImplementedError, I18n.t("shared.not_implemented_method")

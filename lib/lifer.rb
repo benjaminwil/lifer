@@ -141,6 +141,17 @@ module Lifer
     #
     # @return [Hash] The `Lifer::Config#settings`.
     def settings = brain.config.settings
+
+    # All of the tags represented in Lifer entries for the current project.
+    #
+    # @return [Array<Lifer::Tag>] The complete list of tags.
+    def tags = brain.tags
+
+    # A set of all tags added to the project. Prefer using the `#tags` method
+    # for tag queries.
+    #
+    # @return [Set<Lifer::Tag>] The complete set of tags.
+    def tag_manifest = brain.tag_manifest
   end
 end
 
@@ -158,4 +169,5 @@ require_relative "lifer/builder"
 require_relative "lifer/collection"
 require_relative "lifer/entry"
 require_relative "lifer/message"
+require_relative "lifer/tag"
 require_relative "lifer/uri_strategy"
