@@ -5,7 +5,6 @@ require_relative "from_liquid/filters"
 require_relative "from_liquid/layout_tag"
 require_relative "from_liquid/liquid_env"
 
-
 class Lifer::Builder::HTML
   # If the HTML builder is given a Liquid template, it uses this class to parse
   # the Liquid into HTML. Lifer project metadata is provided as context. For
@@ -64,13 +63,16 @@ class Lifer::Builder::HTML
 
     def context
       collections = Drops::CollectionsDrop.new
+      tags = Drops::TagsDrop.new
       collection = collections
         .to_a
         .detect { _1.name.to_sym == entry.collection.name }
+      entry_tags = tags.to_a.select { entry.tags.include? _1 }
 
       {
         "collections" => collections,
-        "entry" => Drops::EntryDrop.new(entry, collection:),
+        "tags" => tags,
+        "entry" => Drops::EntryDrop.new(entry, collection:, tags: entry_tags),
         "parse_options" => parse_options,
         "render_options" => render_options,
         "settings" => Drops::SettingsDrop.new

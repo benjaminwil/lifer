@@ -210,4 +210,18 @@ RSpec.describe Lifer do
       expect(config).to have_received(:settings).once
     end
   end
+
+  describe ".tag_manifest" do
+    subject { described_class.tag_manifest }
+
+    let(:brain) { instance_double Lifer::Brain, tag_manifest: [] }
+
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+
+      subject
+
+      expect(brain).to have_received(:tag_manifest).once
+    end
+  end
 end

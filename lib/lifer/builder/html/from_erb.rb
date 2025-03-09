@@ -56,10 +56,16 @@ class Lifer::Builder::HTML
     end
 
     # @private
-    # Each collection name is provided as a local variable. This allows you to
-    # make ERB files that contain loops like:
+    # Each collection and tag name is provided as a local variable. This allows
+    # you to make ERB files that contain loops like:
     #
-    #     <% my_collection_name.entries.each do |entry| %>
+    #     <% collections.my_collection_name.entries.each do |entry| %>
+    #       <%= entry.title %>
+    #     <% end %>
+    #
+    # or:
+    #
+    #     <% tags.my_tag_name.entries.each do |entry| %>
     #       <%= entry.title %>
     #     <% end %>
     #
@@ -75,18 +81,31 @@ class Lifer::Builder::HTML
           end
         end
 
+        Lifer.tags.each do |tag|
+          binding.local_variable_set tag.name, tag
+
+          tag_context_class.define_method(tag.name) do
+            tag
+          end
+        end
+
         collections = collection_context_class.new Lifer.collections.to_a
+        tags = tag_context_class.new Lifer.tags
 
         binding.local_variable_set :collections, collections
         binding.local_variable_set :settings, Lifer.settings
+        binding.local_variable_set :tags, tags
         binding.local_variable_set :content,
           ERB.new(entry.to_html).result(binding)
       }
     end
 
-    # @private
     def collection_context_class
       @collection_context_class ||= Class.new(Array) do end
+    end
+
+    def tag_context_class
+      @tag_context_class ||= Class.new(Array) do end
     end
   end
 end

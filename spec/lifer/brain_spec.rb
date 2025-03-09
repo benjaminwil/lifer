@@ -2,7 +2,13 @@ require "spec_helper"
 
 RSpec.describe Lifer::Brain do
   let(:brain) { described_class.init root: root }
-  let(:root) { temp_dir_with_files "entry.md" => nil }
+  let(:root) {
+    temp_dir_with_files "entry.md" => <<~MARKDOWN
+      ---
+      tags: one, two, thre
+      ---
+    MARKDOWN
+  }
 
   describe ".init" do
     subject { described_class.init root: root, config_file: "path/to/file" }
@@ -252,6 +258,31 @@ RSpec.describe Lifer::Brain do
           an_instance_of(Lifer::Selection::AllMarkdown),
           an_instance_of(Lifer::Selection::IncludedInFeeds)
         )
+      end
+    end
+  end
+
+  describe "#tag_manifest" do
+    subject { brain.tag_manifest }
+
+    context "when fresh" do
+      it { is_expected.to be_an_instance_of Set }
+    end
+
+    context "after a build" do
+      before do
+        allow(Lifer).to receive(:brain).and_return(brain)
+
+        with_stdout_silenced do
+          brain.build!
+        end
+      end
+
+      it { is_expected.to be_an_instance_of Set }
+
+      it "has generated all entry tags", :aggregate_failures do
+        expect(subject.count).to eq 3
+        expect(subject.all? { _1.is_a? Lifer::Tag }).to eq true
       end
     end
   end

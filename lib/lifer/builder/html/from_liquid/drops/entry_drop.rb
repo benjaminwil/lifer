@@ -9,9 +9,10 @@ module Lifer::Builder::HTML::FromLiquid::Drops
   class EntryDrop < Liquid::Drop
     attr_accessor :lifer_entry, :collection
 
-    def initialize(lifer_entry, collection:)
+    def initialize(lifer_entry, collection:, tags:)
       @lifer_entry = lifer_entry
       @collection = collection
+      @tags = tags
     end
 
     # The entry author (or authors).

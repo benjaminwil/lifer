@@ -20,7 +20,18 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
     {
       "_layouts/layout.html.erb" => "Layout was loaded!\n\n<%= content %>",
       "entry-with-variables.html.erb" => entry_content_with_variables,
-      "another-entry.md" => "---\ntitle: Another Entry\n---\n",
+      "another-entry.md" => <<~TEXT,
+        ---
+        title: Another Entry
+        tags: tag1, tag2, tag3
+        ---
+      TEXT
+      "another-another-entry.md" => <<~TEXT,
+        ---
+        title: Another Another Entry
+        tags: tag1
+        ---
+      TEXT
       "subdirectory_one/tiny_entry.md" => "Entry content."
     }
   }
@@ -55,6 +66,10 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
              entry-with-variables, Another Entry
              <h2>All collection names</h2>
              subdirectory_one, root, all_markdown, included_in_feeds
+             <h2>All tag names</h2>
+             tag1, tag2, tag3
+             <h2>Entries for tag1</h2>
+             Another Another Entry, Another Entry
              <h2>This project's settings</h2>
              {:uri_strategy=>"simple", :subdirectory_one=>{:uri_strategy=>"pretty"}}
            </body>

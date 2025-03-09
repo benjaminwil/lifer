@@ -7,7 +7,7 @@
     {{ entry.title | append: ", " }}
   {%- else -%}
     {{ entry.title }}
-  {%- endif%}
+  {%- endif %}
 {%- endfor %}
 
 <h2>All collection names</h2>
@@ -17,6 +17,26 @@
     {{ collection.name }}
   {%- else -%}
     {{ collection.name | append: ", " }}
+  {%- endif %}
+{%- endfor %}
+
+<h2>All tag names</h2>
+
+{% for tag in tags -%}
+  {% if forloop.last -%}
+    {{ tag.name }}
+  {%- else -%}
+    {{ tag.name | append: ", " }}
+  {%- endif %}
+{%- endfor %}
+
+<h2>Entries for tag1</h2>
+
+{% for entry in tags.tag1.entries -%}
+  {% if forloop.last -%}
+    {{ entry.title }}
+  {%- else -%}
+    {{ entry.title | append: ", " }}
   {%- endif %}
 {%- endfor %}
 

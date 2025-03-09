@@ -28,7 +28,7 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     # @return [Array<EntryDrop>]
     def entries
       @entries ||= lifer_collection.entries.map {
-        EntryDrop.new _1, collection: self
+        EntryDrop.new _1, collection: self, tags: _1.tags
       }
     end
 

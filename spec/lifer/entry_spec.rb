@@ -66,6 +66,24 @@ RSpec.describe Lifer::Entry do
           .to([instance_of(Lifer::Entry::Markdown)])
       end
     end
+
+    context "when the file includes tags in its fronmatter" do
+      let(:file) {
+        temp_file "markdown.md", <<~MARKDOWN
+          ---
+          tags:
+            - tag1
+            - tag2
+          ---
+        MARKDOWN
+      }
+
+      it "generates the tags", :aggregate_failures do
+        expect { subject }.to change { Lifer.tag_manifest.count }.by(2)
+
+        expect(subject.tags.map(&:name)).to eq ["tag1", "tag2"]
+      end
+    end
   end
 
   describe ".manifest" do

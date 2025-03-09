@@ -139,6 +139,19 @@ class Lifer::Brain
     config.setting *name, collection_name: collection&.name, strict: strict
   end
 
+  # Given the tag manifest, this returns an array of all tags for the current
+  # project. This method is preferrable for accessing and querying for tags.
+  #
+  # @return [Array<Lifer::Tag>]
+  def tags = tag_manifest.to_a
+
+  # The tag manifest tracks the unique tags added to the project as they're added.
+  # The writer method for this instance variable is used internally by Lifer when
+  # adding new tags.
+  #
+  # @return [Set<Lifer::Tag>]
+  def tag_manifest = (@tag_manifest ||= Set.new)
+
   private
 
   attr_reader :config_file_location
