@@ -17,9 +17,9 @@ Gem::Specification.new do |spec|
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] =
-    "%s/blob/%s/README.md" % [spec.homepage, Lifer::VERSION]
+    "%s/blob/%s/README.md" % [spec.homepage, "v#{Lifer::VERSION}"]
   spec.metadata["source_code_uri"] =
-    "%s/tree/%s" % [spec.homepage, Lifer::VERSION]
+    "%s/tree/%s" % [spec.homepage, "v#{Lifer::VERSION}"]
   spec.metadata["changelog_uri"] = "%s/blob/main/CHANGELOG.md" % spec.homepage
 
   # Specify which files should be added to the gem when it is released. The
