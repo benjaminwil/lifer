@@ -89,7 +89,7 @@ class Lifer::Builder::HTML
           end
         end
 
-        collections = collection_context_class.new Lifer.collections.to_a
+        collections = collection_context_class.new Lifer.collections
         tags = tag_context_class.new Lifer.tags
 
         binding.local_variable_set :collections, collections

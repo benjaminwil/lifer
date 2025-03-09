@@ -65,7 +65,7 @@ class Lifer::Brain
   # @return [Array<Lifer::Collection>] All the collections for the current Lifer
   #   project.
   def collections
-    @collections ||= generate_collections + generate_selections
+    @collections ||= (generate_collections + generate_selections).to_a
   end
 
   # Returns the Lifer project's configuration object.
