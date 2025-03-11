@@ -41,7 +41,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
 
     let(:entry) { described_class.new file: file, collection: collection }
     let(:file) {
-      temp_file "tiny.md", <<~MARKDOWN
+      temp_entry_subclass "tiny", <<~MARKDOWN
           # Tiny
           A testable entry.
         MARKDOWN
@@ -64,7 +64,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     subject { entry.to_html }
 
     let(:entry) { described_class.new file: file, collection: collection }
-    let(:file) { temp_file "small.md", "<p>Hello world</p>" }
+    let(:file) { temp_entry_subclass "small", "<p>Hello world</p>" }
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
@@ -79,7 +79,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     subject { entry.path }
 
     let(:entry) { described_class.new file: file, collection: collection }
-    let(:file) { temp_file "tiny.#{described_class.output_extension}" }
+    let(:file) { temp_entry_subclass "entry" }
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
@@ -90,7 +90,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
 
     it "responds with the path relative from root" do
-      expect(subject).to eq "/tiny.#{described_class.output_extension}"
+      expect(subject).to eq "/entry.#{described_class.output_extension}"
     end
   end
 
@@ -98,7 +98,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     subject { entry.permalink }
 
     let(:entry) { described_class.new file: file, collection: collection }
-    let(:file) { temp_file "test.#{described_class.output_extension}" }
+    let(:file) { temp_entry_subclass "test" }
     let(:collection) {
       Lifer::Collection.generate name: "Collection",
         directory: File.dirname(file)
@@ -114,5 +114,19 @@ RSpec.shared_examples "Lifer::Entry subclass" do
           "#{described_class.output_extension}"
       end
     end
+  end
+
+  # Wraps our `#temp_file` test helper so that these shared examples easily work
+  # with any entry subclass.
+  #
+  # For more information see `Support::LiferTestHelpers::Files#temp_file`.
+  #
+  # @param filename [String] The name (sans file extension) to the temp file.
+  # @param contents [String] The contents of the temp file.
+  # @return [String] The absolute path to the temp file.
+  def temp_entry_subclass(name, contents = "Contents...")
+    extension = described_class.input_extensions.first
+    filename = "%s.%s" % [name, extension]
+    temp_file filename, contents
   end
 end
