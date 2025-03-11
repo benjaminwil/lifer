@@ -1,5 +1,7 @@
 ## Next
 
+## v0.8.0
+
 ### Tags
 
 Entries now support tag frontmatter. This introduces a new way of making
