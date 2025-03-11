@@ -19,6 +19,13 @@ Then, in your ERB or Liquid templates you can get entries via tag:
       <li><%= entry.title %></li>
     <% end %>
 
+### Frontmatter support across all entry types
+
+Before this release, frontmatter was only supported by Markdown files. This
+started to be annoying, because of features I wanted like tags. I figured it
+couldn't hurt to just check any entry file for frontmatter, so that's how it
+works now.
+
 ## v0.7.0
 
 This release adds Atom feed support to the RSS builder. In your configuration

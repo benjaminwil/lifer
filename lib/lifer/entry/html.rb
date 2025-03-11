@@ -7,21 +7,18 @@ class Lifer::Entry::HTML < Lifer::Entry
   self.input_extensions = ["html", "html.erb", "html.liquid"]
   self.output_extension = :html
 
-  # @fixme This could probably get more sophisticated, but at the moment HTML
-  #   entries don't have any way to provide metadata about themselves. So let's
-  #   just give them a default date to start.
+  # If there is no available metadata in the HTML file, we can extract a
+  # makeshift title from the permalink.
   #
-  # @return [Time] The publication date of the HTML entry.
-  def date = Lifer::Entry::DEFAULT_DATE
-
-  # Since HTML entries cannot provide metadata about themselves, we must extract
-  # a title from the permalink. Depending on the filename and URI strategy being
-  # used for the collection, it's possible that the extracted title would be
-  # "index", which is not very descriptive. If that's the case, we attempt to go
-  # up a directory to find a "non-index" title.
+  # Depending on the filename and URI strategy being used for the collection,
+  # it's possible that the extracted title would be "index", which is not very
+  # descriptive. If that's the case, we attempt to go up a directory to find a
+  # non-"index" title.
   #
-  # @return [String] The extracted title of the entry.
+  # @return [String] The given or extracted title of the entry.
   def title
+    return frontmatter[:title] if frontmatter[:title]
+
     candidate = File.basename(permalink, ".html")
 
     if candidate.include?("index") && !file.to_s.include?("index")
@@ -35,5 +32,5 @@ class Lifer::Entry::HTML < Lifer::Entry
   # doesn't do much here.
   #
   # @return [String]
-  def to_html = full_text
+  def to_html = body
 end
