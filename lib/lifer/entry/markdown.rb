@@ -14,82 +14,9 @@ require_relative "../utilities"
 # it may make sense to pull some of these methods into a separate module.
 #
 class Lifer::Entry::Markdown < Lifer::Entry
-  # If a filename contains a date, we should expect it to be in the following
-  # format.
-  #
-  FILENAME_DATE_FORMAT = /^(\d{4}-\d{1,2}-\d{1,2})-/
-
-  # We expect frontmatter to be provided in the following format.
-  #
-  FRONTMATTER_REGEX = /^---\n(.*)---\n/m
-
-  # If tags are represented in YAML frontmatter as a string, they're split on
-  # commas and/or spaces.
-  #
-  TAG_DELIMITER_REGEX = /[,\s]+/
-
-  # We truncate anything that needs to be truncated (summaries, meta
-  # descriptions) at the following character count.
-  #
-  TRUNCATION_THRESHOLD = 120
-
   self.include_in_feeds = true
   self.input_extensions = ["md"]
   self.output_extension = :html
-
-  # Given the entry's frontmatter, we should be able to get a list of authors.
-  # We always prefer authors (as opposed to a singular author) because it makes
-  # handling both cases easier in the long run.
-  #
-  # The return value here is likely an author's name. Whether that's a full
-  # name, a first name, or a handle is up to the end user.
-  #
-  # @return [Array<String>] An array of authors's names.
-  def authors
-    Array(frontmatter[:author] || frontmatter[:authors]).compact
-  end
-
-  # This method returns the full text of the entry, only removing the
-  # frontmatter. It should not parse anything other than frontmatter.
-  #
-  # @return [String] The body of the entry.
-  def body
-    return full_text.strip unless frontmatter?
-
-    full_text.gsub(FRONTMATTER_REGEX, "").strip
-  end
-
-  # Since Markdown files would only store dates as simple strings, it's nice to
-  # attempt to convert those into Ruby date or datetime objects.
-  #
-  # @return [Time] A Ruby representation of the date and time provided by the
-  #   entry frontmatter or filename.
-  def date
-    date_data = frontmatter[:date] || filename_date
-
-    case date_data
-    when Time then date_data
-    when String then DateTime.parse(date_data).to_time
-    else
-      Lifer::Message.log("entry.markdown.no_date_metadata", filename: file)
-      Lifer::Entry::DEFAULT_DATE
-    end
-  rescue ArgumentError => error
-    Lifer::Message.error("entry.markdown.date_error", filename: file, error:)
-    Lifer::Entry::DEFAULT_DATE
-  end
-
-  # Frontmatter is a widely supported YAML metadata block found at the top of
-  # Markdown files. We should attempt to parse Markdown entries for it.
-  #
-  # @return [Hash] A hash representation of the entry frontmatter.
-  def frontmatter
-    return {} unless frontmatter?
-
-    Lifer::Utilities.symbolize_keys(
-      YAML.load(full_text[FRONTMATTER_REGEX, 1], permitted_classes: [Time])
-    )
-  end
 
   # If given a summary in the frontmatter of the entry, we can use this to
   # provide a summary. Otherwise, we can truncate the first paragraph and use
@@ -101,7 +28,7 @@ class Lifer::Entry::Markdown < Lifer::Entry
   #
   # @return [String] A summary of the entry.
   def summary
-    return frontmatter[:summary] if frontmatter[:summary]
+    return super if super
 
     return if first_paragraph.nil?
     return first_paragraph if first_paragraph.length <= TRUNCATION_THRESHOLD
@@ -112,14 +39,6 @@ class Lifer::Entry::Markdown < Lifer::Entry
     else
       "%s..." % truncated_paragraph
     end
-  end
-
-  # Locates and returns all tags defined in the entry.
-  #
-  # @return [Array<Lifer::Tag>] The entry's tags.
-  def tags
-    @tags ||= candidate_tag_names
-      .map { Lifer::Tag.build_or_update(name: _1, entries: [self]) }
   end
 
   # The title or a default title.
@@ -156,13 +75,6 @@ class Lifer::Entry::Markdown < Lifer::Entry
     end.uniq
   end
 
-  # @private
-  def filename_date
-    return unless file && File.basename(file).match?(FILENAME_DATE_FORMAT)
-
-    File.basename(file).match(FILENAME_DATE_FORMAT)[1]
-  end
-
   # Using Kramdown we can detect the first paragraph of the entry.
   #
   # @private
@@ -173,11 +85,6 @@ class Lifer::Entry::Markdown < Lifer::Entry
           .children
           .detect { |child| child.type == :p }
       )
-  end
-
-  # @private
-  def frontmatter?
-    full_text && full_text.match?(FRONTMATTER_REGEX)
   end
 
   # @private

@@ -30,11 +30,10 @@ en:
       content_type_not_implemented: no content type defined for files like %{path} yet
       four_oh_four: 404 Not Found
   entry:
+    date_error: "[%{filename}]: %{error}"
     feedable_error: >
       please set `%{entry_class}.include_in_feeds` to true or false
-    markdown:
-      date_error: "[%{filename}]: %{error}"
-      no_date_metadata: "[%{filename}]: no date metadata"
+    no_date_metadata: "[%{filename}]: no date metadata"
     not_found: >
       file "%{file}" does not exist
   config:
