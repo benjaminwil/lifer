@@ -4,7 +4,9 @@ module Lifer::Builder::HTML::FromLiquid::Drops
   #
   # @example Usage
   #     <h1>{{ entry.title }}</h1>
-  #     <small>Published on <datetime>{{ entry.date }}</datetime></small>
+  #     <small>
+  #       Published on <datetime>{{ entry.published_at }}</datetime>
+  #     </small>
   #
   class EntryDrop < Liquid::Drop
     attr_accessor :lifer_entry, :collection
@@ -30,11 +32,6 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     # @return [String]
     def content = (@content ||= lifer_entry.to_html)
 
-    # The entry date (as a string).
-    #
-    # @return [String]
-    def date = (@date ||= lifer_entry.date)
-
     # The entry frontmatter data.
     #
     # @return [FrontmatterDrop]
@@ -49,6 +46,11 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     #
     # @return [String] The entry permalink.
     def permalink = (@permalink ||= lifer_entry.permalink)
+
+    # The entry date (as a string).
+    #
+    # @return [String]
+    def published_at = (@published_at ||= lifer_entry.published_at)
 
     # The summary of the entry.
     #

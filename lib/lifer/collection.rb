@@ -57,9 +57,9 @@ class Lifer::Collection
         cached_entries_variable,
         case order
         when :latest
-          @entries_collection.sort_by { |entry| entry.date }.reverse
+          @entries_collection.sort_by { |entry| entry.published_at }.reverse
         when :oldest
-          @entries_collection.sort_by { |entry| entry.date }
+          @entries_collection.sort_by { |entry| entry.published_at }
         end
       )
   end

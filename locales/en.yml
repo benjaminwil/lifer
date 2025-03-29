@@ -33,7 +33,7 @@ en:
     date_error: "[%{filename}]: %{error}"
     feedable_error: >
       please set `%{entry_class}.include_in_feeds` to true or false
-    no_date_metadata: "[%{filename}]: no date metadata"
+    no_published_at_metadata: "[%{filename}]: no `published_at` metadata"
     not_found: >
       file "%{file}" does not exist
   config:
