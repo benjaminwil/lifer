@@ -77,18 +77,45 @@ RSpec.describe Lifer::Utilities do
       end
     }
 
-    context "when no errors should be raised" do
-      let(:collection) { [1, 2, 3] }
+    context "by default (parallelism enabled)" do
+      context "when no errors should be raised" do
+        let(:collection) { [1, 2, 3] }
 
-      it { is_expected.to eq [2, 4, 6] }
+        it { is_expected.to eq [2, 4, 6] }
+      end
+
+      context "when an error should be raised" do
+        let(:collection) { [1, 2, nil, 3] }
+
+        it "bubbles up the exception" do
+          expect { subject }.to raise_error NoMethodError,
+            "undefined method `*' for nil"
+        end
+      end
     end
 
-    context "when an error should be raised" do
-      let(:collection) { [1, 2, nil, 3] }
+    context "when parallelism is disabled" do
+      around do |example|
+        original_value = ENV["LIFER_UNPARALLELIZED"]
+        ENV["LIFER_UNPARALLELIZED"] = "truthy"
+        example.run
+      ensure
+        ENV["LIFER_UNPARALLELIZED"] = original_value
+      end
 
-      it "bubbles up the exception" do
-        expect { subject }.to raise_error NoMethodError,
-          "undefined method `*' for nil"
+      context "when no errors should be raised" do
+        let(:collection) { [1, 2, 3] }
+
+        it { is_expected.to eq [2, 4, 6] }
+      end
+
+      context "when an error should be raised" do
+        let(:collection) { [1, 2, nil, 3] }
+
+        it "bubbles up the exception" do
+          expect { subject }.to raise_error NoMethodError,
+            "undefined method `*' for nil"
+        end
       end
     end
   end
