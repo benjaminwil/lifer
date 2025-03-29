@@ -136,6 +136,25 @@ RSpec.describe Lifer do
     end
   end
 
+  describe ".parallelism_disabled?" do
+    subject { described_class.parallelism_disabled? }
+
+    context "by default" do
+      it { is_expected.to eq false }
+    end
+
+    context "when parallelism has been disabled by the user" do
+      it "returns true" do
+        original_value = ENV["LIFER_UNPARALLELIZED"]
+        ENV["LIFER_UNPARALLELIZED"] = "truthy"
+
+        expect(subject).to eq true
+      ensure
+        ENV["LIFER_UNPARALLELIZED"] = original_value
+      end
+    end
+  end
+
   describe ".register_settings" do
     subject { described_class.register_settings *settings }
 

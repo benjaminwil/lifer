@@ -76,7 +76,10 @@ module Lifer::Utilities
     # @raise [Exception] Any exception thrown by a child process.
     # @return [Array] The mapped results of the operation.
     def parallelized(collection, &block)
-      results = Parallel.map(collection) do |collection_item|
+      options = {}
+      options[:in_threads] = 0 if Lifer.parallelism_disabled?
+
+      results = Parallel.map(collection, **options) do |collection_item|
         begin
           yield collection_item
         rescue => error

@@ -96,6 +96,16 @@ module Lifer
     #   project would be built to.
     def output_directory = brain.output_directory
 
+    # Returns false if the Lifer project will be built with parallelism. This
+    # should return false almost always--unless you've explicitly set the
+    # `LIFER_UNPARALLELIZED` environment variable before running the program.
+    #
+    # This method is used internally by Lifer to determine whether features that
+    # would normally run in parallel should *not* run in parallel for some reason.
+    #
+    # @return [boolean] Returns whether parallelism is disabled.
+    def parallelism_disabled? = ENV["LIFER_UNPARALLELIZED"].is_a?(String)
+
     # Register new settings so that they are "safe" and can be read from a Lifer
     # configuration file. Unregistered settings are ignored.
     #
