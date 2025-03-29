@@ -212,7 +212,13 @@ module Lifer
     # @return [String] The absolute URI path to the entry.
     def path = permalink(host: "/")
 
-    # The entry's publication date.
+    # The entry's publication date. The published date can be inferred in a few
+    # ways. The priority is:
+    #
+    #    1. the frontmatter's `published_at` field
+    #    2. the frontmatter's `published` field
+    #    3. the frontamtter's `date` field
+    #    4. The date in the filename.
     #
     # Since text files would only store dates as simple strings, it's nice to
     # attempt to convert those into Ruby date or datetime objects.
@@ -220,7 +226,9 @@ module Lifer
     # @return [Time] A Ruby representation of the date and time provided by the
     #   entry frontmatter or filename.
     def published_at
-      date_for frontmatter[:date],
+      date_for frontmatter[:published_at],
+        frontmatter[:published],
+        frontmatter[:date],
         filename_date,
         missing_metadata_translation_key: "entry.no_published_at_metadata"
     end
