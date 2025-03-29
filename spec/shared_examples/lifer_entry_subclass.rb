@@ -124,100 +124,6 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
   end
 
-  describe "#date" do
-    subject { entry.date }
-
-    let(:entry) { described_class.new file:, collection: }
-    let(:collection) {
-      Lifer::Collection.generate name: "Collection",
-        directory: File.dirname(file)
-    }
-
-    context "when in Jekyll date format" do
-      let(:file) {
-        temp_entry_subclass "jekyll-date-format", <<~CONTENT
-          ---
-          date: 2010-12-31 09:31:59 -0700
-          ---
-         CONTENT
-      }
-
-      it { is_expected.to eq Time.new(2010, 12, 31, 9, 31, 59, "-07:00") }
-    end
-
-    context "when in Unix date format" do
-      let(:file) {
-        temp_entry_subclass "unix-date-format", <<~CONTENT
-            ---
-            date: Tue  6 Sep 2022 11:39:15 MDT
-            ---
-          CONTENT
-      }
-
-      it { is_expected.to eq Time.new(2022, 9, 6, 11, 39, 15, "-06:00") }
-    end
-
-    context "when the date frontmatter is invalid" do
-      let!(:file) {
-        temp_entry_subclass "invalid-date-format", <<~CONTENT
-            ---
-            date: invalid-date
-            ---
-          CONTENT
-      }
-
-      it "returns a default date" do
-        expect(subject).to be_a Time
-      end
-
-      it "prints an error to STDOUT" do
-        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
-
-        expect { subject }
-          .to output("\e[31mERR: [#{file}]: invalid date\e[0m\n")
-          .to_stdout
-      end
-    end
-
-    context "when there's no date metadata" do
-      let!(:file) { temp_entry_subclass "no-date" }
-
-      it "returns a default date" do
-        expect(subject).to be_a Time
-      end
-
-      it "prints an error STDOUT" do
-        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
-
-        expect { subject }
-          .to output("[#{file}]: no date metadata\n").to_stdout
-      end
-    end
-
-    context "when date is in filename" do
-      context "and it's invalid" do
-        let!(:file) { temp_entry_subclass "2012-999-01-entry-title" }
-
-        it "returns a default date" do
-          expect(subject).to be_a Time
-        end
-
-        it "prints an error to STDOUT" do
-          allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
-
-          expect { subject }
-            .to output("[#{file}]: no date metadata\n").to_stdout
-        end
-      end
-
-      context "and it's valid" do
-        let(:file) { temp_entry_subclass "2012-03-25-entry-title" }
-
-        it { is_expected.to eq Time.new(2012, 3, 25, 0, 0, 0, "+00:00") }
-      end
-    end
-  end
-
   describe "#frontmatter" do
     subject { entry.frontmatter }
 
@@ -328,6 +234,100 @@ RSpec.shared_examples "Lifer::Entry subclass" do
       with_stdout_silenced do
         expect(subject).to eq "https://example.com/test." \
           "#{described_class.output_extension}"
+      end
+    end
+  end
+
+  describe "#published_at" do
+    subject { entry.published_at }
+
+    let(:entry) { described_class.new file:, collection: }
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+
+    context "when in Jekyll date format" do
+      let(:file) {
+        temp_entry_subclass "jekyll-date-format", <<~CONTENT
+          ---
+          date: 2010-12-31 09:31:59 -0700
+          ---
+         CONTENT
+      }
+
+      it { is_expected.to eq Time.new(2010, 12, 31, 9, 31, 59, "-07:00") }
+    end
+
+    context "when in Unix date format" do
+      let(:file) {
+        temp_entry_subclass "unix-date-format", <<~CONTENT
+            ---
+            date: Tue  6 Sep 2022 11:39:15 MDT
+            ---
+          CONTENT
+      }
+
+      it { is_expected.to eq Time.new(2022, 9, 6, 11, 39, 15, "-06:00") }
+    end
+
+    context "when the date frontmatter is invalid" do
+      let!(:file) {
+        temp_entry_subclass "invalid-date-format", <<~CONTENT
+            ---
+            date: invalid-date
+            ---
+          CONTENT
+      }
+
+      it "returns a default date" do
+        expect(subject).to be_a Time
+      end
+
+      it "prints an error to STDOUT" do
+        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
+        expect { subject }
+          .to output("\e[31mERR: [#{file}]: invalid date\e[0m\n")
+          .to_stdout
+      end
+    end
+
+    context "when there's no `published_at` metadata" do
+      let!(:file) { temp_entry_subclass "no-date" }
+
+      it "returns a default date" do
+        expect(subject).to be_a Time
+      end
+
+      it "prints an error STDOUT" do
+        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
+        expect { subject }
+          .to output("[#{file}]: no `published_at` metadata\n").to_stdout
+      end
+    end
+
+    context "when date is in filename" do
+      context "and it's invalid" do
+        let!(:file) { temp_entry_subclass "2012-999-01-entry-title" }
+
+        it "returns a default date" do
+          expect(subject).to be_a Time
+        end
+
+        it "prints an error to STDOUT" do
+          allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
+          expect { subject }
+            .to output("[#{file}]: no `published_at` metadata\n").to_stdout
+        end
+      end
+
+      context "and it's valid" do
+        let(:file) { temp_entry_subclass "2012-03-25-entry-title" }
+
+        it { is_expected.to eq Time.new(2012, 3, 25, 0, 0, 0, "+00:00") }
       end
     end
   end

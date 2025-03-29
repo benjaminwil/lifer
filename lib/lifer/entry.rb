@@ -150,26 +150,6 @@ module Lifer
       full_text.gsub(FRONTMATTER_REGEX, "").strip
     end
 
-    # Since text files would only store dates as simple strings, it's nice to
-    # attempt to convert those into Ruby date or datetime objects.
-    #
-    # @return [Time] A Ruby representation of the date and time provided by the
-    #   entry frontmatter or filename.
-    def date
-      date_data = frontmatter[:date] || filename_date
-
-      case date_data
-      when Time then date_data
-      when String then DateTime.parse(date_data).to_time
-      else
-        Lifer::Message.log("entry.no_date_metadata", filename: file)
-        Lifer::Entry::DEFAULT_DATE
-      end
-    rescue ArgumentError => error
-      Lifer::Message.error("entry.date_error", filename: file, error:)
-      Lifer::Entry::DEFAULT_DATE
-    end
-
     def feedable?
       if (setting = self.class.include_in_feeds).nil?
         raise NotImplementedError,
@@ -232,6 +212,19 @@ module Lifer
     # @return [String] The absolute URI path to the entry.
     def path = permalink(host: "/")
 
+    # The entry's publication date.
+    #
+    # Since text files would only store dates as simple strings, it's nice to
+    # attempt to convert those into Ruby date or datetime objects.
+    #
+    # @return [Time] A Ruby representation of the date and time provided by the
+    #   entry frontmatter or filename.
+    def published_at
+      date_for frontmatter[:date],
+        filename_date,
+        missing_metadata_translation_key: "entry.no_published_at_metadata"
+    end
+
     # If given a summary in the frontmatter of the entry, we can use this to
     # provide a summary.
     #
@@ -276,6 +269,21 @@ module Lifer
       when String then frontmatter[:tags].split(TAG_DELIMITER_REGEX)
       else []
       end.uniq
+    end
+
+    def date_for(*candidate_date_fields, missing_metadata_translation_key:)
+      date_data = candidate_date_fields.detect(&:itself)
+
+      case date_data
+      when Time then date_data
+      when String then DateTime.parse(date_data).to_time
+      else
+        Lifer::Message.log(missing_metadata_translation_key, filename: file)
+        Lifer::Entry::DEFAULT_DATE
+      end
+    rescue ArgumentError => error
+      Lifer::Message.error("entry.date_error", filename: file, error:)
+      Lifer::Entry::DEFAULT_DATE
     end
 
     def filename_date

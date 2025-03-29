@@ -64,7 +64,7 @@ RSpec.feature "dev server", type: :system do
       LIQUID
       "_layouts/parent_partial.html.liquid" => <<~LIQUID,
         <p>Parent partial content</p>
-        <p>Date: {{ entry.date | date_to_xmlschema }}
+        <p>Date: {{ entry.published_at | date_to_xmlschema }}
         {% render "_layouts/child_partial" with entry: entry %}
       LIQUID
       "_layouts/child_partial.html.liquid" => <<~LIQUID,

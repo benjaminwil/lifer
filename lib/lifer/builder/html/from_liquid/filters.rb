@@ -2,7 +2,7 @@
 # In many cases these utilities exist to be pseudo-compatible with Jekyll.
 #
 # @example A filter in a Liquid template.
-#     {{ entry.date | date_to_xmlschema }}
+#     {{ entry.published_at | date_to_xmlschema }}
 #
 module Lifer::Builder::HTML::FromLiquid::Filters
   # @!visibility private
