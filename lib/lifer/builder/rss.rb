@@ -67,7 +67,6 @@ class Lifer::Builder::RSS < Lifer::Builder
   #
   DEFAULT_MAKER_FORMAT_NAME = FORMATS[:rss]
 
-
   self.name = :rss
   self.settings = [
     rss: [
@@ -220,8 +219,21 @@ class Lifer::Builder::RSS < Lifer::Builder
       rss_feed_item.link = lifer_entry.permalink
       rss_feed_item.title = lifer_entry.title
       rss_feed_item.summary = lifer_entry.summary
-      rss_feed_item.updated = Time.now.to_s
-      rss_feed_item.content_encoded = lifer_entry.to_html
+
+      if feed_format(lifer_entry.collection) == "atom"
+        rss_feed_item.content.content = lifer_entry.to_html
+        rss_feed_item.published = lifer_entry.published_at
+
+        # Note: RSS does not provide a standard way to share last updated
+        # timestamps at all, while Atom does. This is the reason there is no
+        # equivalent call in the condition for RSS feeds.
+        #
+        rss_feed_item.updated =
+          lifer_entry.updated_at(fallback: lifer_entry.published_at)
+      else
+        rss_feed_item.content_encoded = lifer_entry.to_html
+        rss_feed_item.pubDate = lifer_entry.published_at.to_time.rfc2822
+      end
     end
   end
 

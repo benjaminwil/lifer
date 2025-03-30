@@ -9,6 +9,8 @@ RSpec.describe Lifer::Builder::RSS do
       "tiny_entry.md" => <<~MARKDOWN
         ---
         summary: A testable entry.
+        date: Sun 01 Mar 2025 11:11:11 PDT
+        updated: Sun 30 Mar 2025 14:14:14 PDT
         ---
         # Tiny
 
@@ -84,9 +86,13 @@ RSpec.describe Lifer::Builder::RSS do
           <p>A testable entry.</p>
         CONTENT
 
-        expect { DateTime.parse text_from(entry, :pubDate) }.not_to raise_error
-        expect { DateTime.parse text_from(entry, :date) }.not_to raise_error
-      end
+        expect(text_from entry, :pubDate).to eq "Sat, 01 Mar 2025 11:11:11 -0700"
+        expect(text_from entry, :date).to eq "2025-03-01T11:11:11-07:00"
+
+        # In RSS, there is no standard field for providing timestamps for when
+        # an article was last updated.
+        expect(text_from entry, :updated).to be_nil
+     end
 
       it "properly escapes HTML nodes in the article contents" do
         subject
@@ -181,6 +187,27 @@ RSpec.describe Lifer::Builder::RSS do
 
         expect(document.feed_type).to eq "atom"
         expect(document.feed_version).to eq "1.0"
+      end
+
+      it "generates parseable article metadata correctly" do
+        subject
+
+        feed = RSS::Parser.parse(
+          File.read Dir.glob("#{project.brain.output_directory}/**/custom.xml")
+            .first
+        )
+        entry = feed.entries.first
+
+        expect(entry.id.content).to eq "https://example.com/tiny_entry.html"
+        expect(entry.title.content).to eq "Untitled Entry"
+        expect(entry.summary.content).to eq "A testable entry."
+        expect(entry.content.content).to fuzzy_match <<~CONTENT
+          <h1 id="tiny">Tiny</h1>
+          <p>A testable entry.</p>
+        CONTENT
+
+        expect(entry.published.content.to_s).to eq "2025-03-01T11:11:11-07:00"
+        expect(entry.updated.content.to_s).to eq "2025-03-30T14:14:14-07:00"
       end
     end
   end
