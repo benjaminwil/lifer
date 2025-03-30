@@ -2,7 +2,9 @@
 
 <h2>Some root collection entry titles</h2>
 
-<%= collections.root.entries.map { |entry| entry.title }.first(2).join(", ") %>
+<% collections.root.entries.first(3).each.with_index do |entry, index|  %>
+  <%= entry.title %> (published: <%= entry.published_at %>, updated: <%= entry.updated_at %>)
+<% end %>
 
 <h2>All collection names</h2>
 

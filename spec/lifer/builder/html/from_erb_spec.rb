@@ -30,6 +30,7 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
         ---
         title: Another Another Entry
         tags: tag1
+        updated_at: 2000-01-01 00:00:01 +0000
         ---
       TEXT
       "subdirectory_one/tiny_entry.md" => "Entry content."
@@ -63,7 +64,9 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
            <body>
              <h1>HTML entry with layout variables</h1>
              <h2>Some root collection entry titles</h2>
-             entry-with-variables, Another Entry
+             entry-with-variables (published: 1900-01-01 00:00:00 +0000, updated: )
+             Another Entry (published: 1900-01-01 00:00:00 +0000, updated: )
+             Another Another Entry (published: 1900-01-01 00:00:00 +0000, updated: 2000-01-01 00:00:01 +0000)
              <h2>All collection names</h2>
              subdirectory_one, root, all_markdown, included_in_feeds
              <h2>All tag names</h2>

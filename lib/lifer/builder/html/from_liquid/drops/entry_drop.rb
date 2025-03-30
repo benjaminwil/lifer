@@ -47,7 +47,7 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     # @return [String] The entry permalink.
     def permalink = (@permalink ||= lifer_entry.permalink)
 
-    # The entry date (as a string).
+    # The entry publication date (as a string).
     #
     # @return [String]
     def published_at = (@published_at ||= lifer_entry.published_at)
@@ -61,5 +61,10 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     #
     # @return [String] The entry title.
     def title = (@title ||= lifer_entry.title)
+
+    # The entry's last updated date (as a string).
+    #
+    # @return [String]
+    def updated_at = (@updated_at ||= lifer_entry.updated_at)
   end
 end

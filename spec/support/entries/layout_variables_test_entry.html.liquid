@@ -4,10 +4,12 @@
 
 {% for entry in collections.root.entries limit: 2 -%}
   {% if forloop.first -%}
-    {{ entry.title | append: ", " }}
+    {{ entry.title }} (published: {{ entry.published_at }}; updated: {{ entry.updated_at }}),
+    <br/>
   {%- else -%}
-    {{ entry.title }}
+    {{ entry.title }} (published: {{ entry.published_at }}; updated: {{ entry.updated_at }})
   {%- endif %}
+
 {%- endfor %}
 
 <h2>All collection names</h2>

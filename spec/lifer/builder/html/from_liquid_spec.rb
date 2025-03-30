@@ -40,7 +40,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
         "entry-1.md" => <<~MARKDOWN,
           ---
           title: Entry Title 1
-          date: Sun 29 Dec 2024 18:00:19 MST
+          published: Sun 29 Dec 2024 18:00:19 MST
           tags: tag1, tag2, tag3
           ---
         MARKDOWN
@@ -48,6 +48,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           ---
           title: Entry Title 2
           date: Sun 29 Dec 2024 18:01:25 MST
+          updated: Sun 30 Dec 2025 18:00:19 PDT
           tags: tag1
           ---
         MARKDOWN
@@ -85,7 +86,8 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           <header>Header From Partial for "entry"</header>
           <h1>HTML entry with layout variables</h1>
           <h2>Some root collection entry titles</h2>
-          Entry Title 2, Entry Title 1
+          Entry Title 2 (published: 2024-12-29 18:01:25 -0700; updated: 2025-12-30 18:00:19 -0700),
+          <br/>Entry Title 1 (published: 2024-12-29 18:00:19 -0700; updated: )
           <h2>All collection names</h2>
           subdirectory_one, root, all_markdown, included_in_feeds
           <h2>All tag names</h2>
