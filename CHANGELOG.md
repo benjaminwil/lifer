@@ -1,5 +1,7 @@
 ## Next
 
+## v0.9.0
+
 Atom feeds now support entries with both `#published_at` and `#updated_at`
 timestamp. There is no standard equivalent way to provide this functonality for
 RSS-format feeds, unfortunately. As part of this change, we removed all
