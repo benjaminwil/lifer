@@ -1,5 +1,18 @@
 ## Next
 
+Atom feeds now support entries with both `#published_at` and `#updated_at`
+timestamp. There is no standard equivalent way to provide this functonality for
+RSS-format feeds, unfortunately. As part of this change, we removed all
+`Entry#date` methods in favour of `Entry#published_at` onces. In Atom feeds, if
+an article has no last updated date, the publication date is used instead.
+
+Additionally, this release includes a new environment variable:
+`LIFER_UNPARALLELIZED`. You can use this environment variable to run `lifer
+build` or `lifer serve` without any parallelization turned on. This could be
+useful for reproducing bugs and so on. Example usage:
+
+    LIFER_UNPARALLELIZED=1 lifer build
+
 ## v0.8.0
 
 ### Tags
