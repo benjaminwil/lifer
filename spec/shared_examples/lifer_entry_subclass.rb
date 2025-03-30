@@ -251,7 +251,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
       let(:file) {
         temp_entry_subclass "jekyll-date-format", <<~CONTENT
           ---
-          date: 2010-12-31 09:31:59 -0700
+          published_at: 2010-12-31 09:31:59 -0700
           ---
          CONTENT
       }
@@ -263,7 +263,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
       let(:file) {
         temp_entry_subclass "unix-date-format", <<~CONTENT
             ---
-            date: Tue  6 Sep 2022 11:39:15 MDT
+            published: Tue  6 Sep 2022 11:39:15 MDT
             ---
           CONTENT
       }
@@ -428,6 +428,110 @@ RSpec.shared_examples "Lifer::Entry subclass" do
       expect(subject).not_to start_with "---\ntitle: Some frontmatter\n---"
     end
   end
+
+  describe "#updated_at" do
+    subject { entry.updated_at fallback: }
+
+    let(:entry) { described_class.new file:, collection: }
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+    let(:fallback) { nil }
+
+    context "when in Jekyll date format" do
+      let(:file) {
+        temp_entry_subclass "jekyll-date-format", <<~CONTENT
+          ---
+          updated_at: 2010-12-31 09:31:59 -0700
+          ---
+         CONTENT
+      }
+
+      it { is_expected.to eq Time.new(2010, 12, 31, 9, 31, 59, "-07:00") }
+    end
+
+    context "when in Unix date format" do
+      let(:file) {
+        temp_entry_subclass "unix-date-format", <<~CONTENT
+            ---
+            updated: Tue  6 Sep 2022 11:39:15 MDT
+            ---
+          CONTENT
+      }
+
+      it { is_expected.to eq Time.new(2022, 9, 6, 11, 39, 15, "-06:00") }
+    end
+
+    context "when the date frontmatter is invalid" do
+      let!(:file) {
+        temp_entry_subclass "invalid-date-format", <<~CONTENT
+            ---
+            updated_at: invalid-date
+            ---
+          CONTENT
+      }
+
+      it "returns a null value" do
+        expect(subject).to be_nil
+      end
+
+      it "prints an error to STDOUT" do
+        allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
+        expect { subject }
+          .to output("\e[31mERR: [#{file}]: invalid date\e[0m\n")
+          .to_stdout
+      end
+    end
+
+    context "when there's no `updated_at` metadata and a fallback value is set to `published_at`" do
+      let(:fallback) { entry.published_at }
+
+      context "when a `published_at` date is set" do
+        let!(:file) {
+          temp_entry_subclass "no-updated-at", <<~CONTENT
+            ---
+            published_at: 1919-11-31 11:00:00 -0000
+            ---
+          CONTENT
+        }
+
+        it "returns the `published_at` date" do
+          expect(subject.to_s).to eq "1919-12-01 11:00:00 +0000"
+        end
+      end
+
+      context "when the `published_at` date is not set" do
+        let!(:file) { temp_entry_subclass "no-updated-at" }
+
+        it "returns a default date" do
+          expect(subject.to_s).to eq "1900-01-01 00:00:00 +0000"
+        end
+
+        it "prints an error STDOUT" do
+          allow(ENV).to receive(:[]).with("LIFER_ENV").and_return("not-test")
+
+          expect { subject }
+            .to output("[#{file}]: no `published_at` metadata\n").to_stdout
+        end
+      end
+    end
+
+    context "when there's no `updated_at` metadata and a fallback value is not set" do
+      let(:fallback) { nil }
+      let!(:file) {
+        temp_entry_subclass "no-updated-at", <<~CONTENT
+          ---
+          published_at: 1919-11-31 11:00:00 -0000
+          ---
+        CONTENT
+      }
+
+      it { is_expected.to be_nil }
+    end
+  end
+
 
   # Wraps our `#temp_file` test helper so that these shared examples easily work
   # with any entry subclass.

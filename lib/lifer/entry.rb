@@ -264,6 +264,26 @@ module Lifer
       raise NotImplementedError, I18n.t("shared.not_implemented_method")
     end
 
+    # The entry's last updated date. In the frontmatter, the last updated date
+    # can be specified using one of two fields. In priority order:
+    #
+    #    1. the `updated_at` field
+    #    2. the `updated` field
+    #
+    # The developer could set a fallback value as a fallback. For example, when
+    # building RSS feeds one might want the value of `#published_at` if there is
+    # no last updated date.
+    #
+    # @param fallback [Time, String, NilClass] Provide datetime data, a string
+    #   that parses to a datetime object, or nil.
+    # @return [Time] A Ruby representation of the date and time provided by the
+    #   entry frontmatter.
+    def updated_at(fallback: nil)
+      date_for frontmatter[:updated_at],
+        frontmatter[:updated],
+        default_date: fallback
+    end
+
     private
 
     # It is conventional for users to use spaces or commas to delimit tags in
@@ -279,19 +299,25 @@ module Lifer
       end.uniq
     end
 
-    def date_for(*candidate_date_fields, missing_metadata_translation_key:)
+    def date_for(
+      *candidate_date_fields,
+      default_date: Lifer::Entry::DEFAULT_DATE,
+      missing_metadata_translation_key: nil
+    )
       date_data = candidate_date_fields.detect(&:itself)
 
       case date_data
       when Time then date_data
       when String then DateTime.parse(date_data).to_time
       else
-        Lifer::Message.log(missing_metadata_translation_key, filename: file)
-        Lifer::Entry::DEFAULT_DATE
+        if (translation_string = missing_metadata_translation_key)
+          Lifer::Message.log(translation_string, filename: file)
+        end
+        default_date
       end
     rescue ArgumentError => error
       Lifer::Message.error("entry.date_error", filename: file, error:)
-      Lifer::Entry::DEFAULT_DATE
+      default_date
     end
 
     def filename_date
