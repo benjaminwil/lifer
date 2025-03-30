@@ -65,7 +65,7 @@ class Lifer::Builder::RSS < Lifer::Builder
   # The name of the format type, as needed by `RSS::Maker`, used by default by
   # this feed builder.
   #
-  DEFAULT_MAkER_FORMAT_NAME = FORMATS[:rss]
+  DEFAULT_MAKER_FORMAT_NAME = FORMATS[:rss]
 
 
   self.name = :rss
@@ -96,7 +96,7 @@ class Lifer::Builder::RSS < Lifer::Builder
 
     return FORMATS[format] if FORMATS.keys.include? format
 
-    DEFAULT_MAkER_FORMAT_NAME
+    DEFAULT_MAKER_FORMAT_NAME
   end
 
   # Traverses and renders an RSS feed for feedable collection.
