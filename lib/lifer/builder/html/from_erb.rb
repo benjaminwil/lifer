@@ -39,7 +39,15 @@ class Lifer::Builder::HTML
     #
     # @return [String] The rendered entry.
     def render
-      ERB.new(File.read layout_file).result context
+      document = ERB.new(layout_file_contents).result context
+
+      return document unless (relative_layout_path = frontmatter[:layout])
+
+      document_binding = binding.tap { |binding|
+        binding.local_variable_set :content, document
+      }
+      layout_path = "%s/%s" % [Lifer.root, relative_layout_path]
+      ERB.new(File.read layout_path).result(document_binding)
     end
 
     private
@@ -98,6 +106,37 @@ class Lifer::Builder::HTML
         binding.local_variable_set :content,
           ERB.new(entry.to_html).result(binding)
       }
+    end
+
+    def frontmatter
+      return {} unless frontmatter?
+
+      Lifer::Utilities.symbolize_keys(
+        YAML.load layout_file_contents(raw: true)[Lifer::FRONTMATTER_REGEX, 1],
+          permitted_classes: [Time]
+      )
+    end
+
+    def frontmatter?
+      @frontmatter ||=
+        layout_file_contents(raw: true).match?(Lifer::FRONTMATTER_REGEX)
+    end
+
+    def layout_file_contents(raw: false)
+      cache_variable = "@layout_file_contents_#{raw}"
+      cached_value = instance_variable_get cache_variable
+
+      return cached_value if cached_value
+
+      contents =
+        if raw
+          File.read(layout_file)
+        else
+          File.read(layout_file).gsub(Lifer::FRONTMATTER_REGEX, "")
+        end
+      contents
+      instance_variable_set cache_variable, contents
+      contents
     end
 
     def collection_context_class

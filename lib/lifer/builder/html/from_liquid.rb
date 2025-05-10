@@ -2,7 +2,6 @@ require "liquid"
 
 require_relative "from_liquid/drops"
 require_relative "from_liquid/filters"
-require_relative "from_liquid/layout_tag"
 require_relative "from_liquid/liquid_env"
 
 class Lifer::Builder::HTML
@@ -49,8 +48,16 @@ class Lifer::Builder::HTML
           .parse(entry.to_html, **parse_options)
           .render(context, **render_options)
       )
+      document = Liquid::Template
+        .parse(layout_file_contents, **parse_options)
+        .render(document_context, **render_options)
+
+      return document unless (relative_layout_path = frontmatter[:layout])
+
+      layout_path = "%s/%s" % [Lifer.root, relative_layout_path]
+      document_context = context.merge! "content" => document
       Liquid::Template
-        .parse(layout, **parse_options)
+        .parse(File.read layout_path, **parse_options)
         .render(document_context, **render_options)
     end
 
@@ -79,17 +86,35 @@ class Lifer::Builder::HTML
       }
     end
 
-    # @private
-    # It's possible for the provided layout to request a parent layout, which
-    # makes this method a bit complicated.
-    #
-    # @return [String] A Liquid layout document, ready for parsing.
-    def layout
-      contents = File.read layout_file
+    def frontmatter
+      return {} unless frontmatter?
 
-      return contents unless contents.match?(/\{%\s*#{LayoutTag::NAME}.*%\}/)
+      Lifer::Utilities.symbolize_keys(
+        YAML.load layout_file_contents(raw: true)[Lifer::FRONTMATTER_REGEX, 1],
+          permitted_classes: [Time]
+      )
+    end
 
-      contents + "\n{% #{LayoutTag::ENDNAME} %}"
+    def frontmatter?
+      @frontmatter ||=
+        layout_file_contents(raw: true).match?(Lifer::FRONTMATTER_REGEX)
+    end
+
+    def layout_file_contents(raw: false)
+      cache_variable = "@layout_file_contents_#{raw}"
+      cached_value = instance_variable_get cache_variable
+
+      return cached_value if cached_value
+
+      contents =
+        if raw
+          File.read(layout_file)
+        else
+          File.read(layout_file).gsub(Lifer::FRONTMATTER_REGEX, "")
+        end
+      contents
+      instance_variable_set cache_variable, contents
+      contents
     end
 
     def liquid_environment = (@liquid_environment ||= LiquidEnv.global)
@@ -103,6 +128,7 @@ class Lifer::Builder::HTML
 
     def render_options
       {
+        registers: {file_system: liquid_environment.file_system},
         strict_variables: true,
         strict_filters: true
       }
