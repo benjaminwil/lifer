@@ -33,6 +33,7 @@ require "fileutils"
 class Lifer::Builder::HTML < Lifer::Builder
   self.name = :html
 
+  require_relative "html/from_any"
   require_relative "html/from_erb"
   require_relative "html/from_liquid"
 
