@@ -130,7 +130,9 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           "_layouts/parent_layout_footer.html.liquid" =>
             "<footer>Footer</footer>",
           "_layouts/child_layout.html.liquid" => <<~LIQUID,
-            {% layout "_layouts/parent_layout" %}
+            ---
+            layout: _layouts/parent_layout.html.liquid
+            ---
 
             <article class="child">
               {{ content }}

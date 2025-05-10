@@ -24,6 +24,10 @@ module Lifer
     "(\\/\\.)+"   # Contains a dot directory.
   ] | IGNORE_DIRECTORIES.map { |d| "^(#{d})" }
 
+  # We expect frontmatter in any file to be provided in the following format.
+  #
+  FRONTMATTER_REGEX = /^---\n(.*)---\n/m
+
   class << self
     # The first time `Lifer.brain` is referenced, we build a new `Lifer::Brain`
     # object that is used and reused until the current process has ended.

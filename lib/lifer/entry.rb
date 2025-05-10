@@ -39,10 +39,6 @@ module Lifer
     #
     FILENAME_DATE_FORMAT = /^(\d{4}-\d{1,2}-\d{1,2})-/
 
-    # We expect frontmatter to be provided in the following format.
-    #
-    FRONTMATTER_REGEX = /^---\n(.*)---\n/m
-
     # If tags are represented in YAML frontmatter as a string, they're split on
     # commas and/or spaces.
     #
@@ -147,7 +143,7 @@ module Lifer
     def body
       return full_text.strip unless frontmatter?
 
-      full_text.gsub(FRONTMATTER_REGEX, "").strip
+      full_text.gsub(Lifer::FRONTMATTER_REGEX, "").strip
     end
 
     def feedable?
@@ -168,7 +164,8 @@ module Lifer
       return {} unless frontmatter?
 
       Lifer::Utilities.symbolize_keys(
-        YAML.load(full_text[FRONTMATTER_REGEX, 1], permitted_classes: [Time])
+        YAML.load full_text[Lifer::FRONTMATTER_REGEX, 1],
+          permitted_classes: [Time]
       )
     end
 
@@ -326,6 +323,6 @@ module Lifer
       File.basename(file).match(FILENAME_DATE_FORMAT)[1]
     end
 
-    def frontmatter? = (full_text && full_text.match?(FRONTMATTER_REGEX))
+    def frontmatter? = (full_text && full_text.match?(Lifer::FRONTMATTER_REGEX))
   end
 end

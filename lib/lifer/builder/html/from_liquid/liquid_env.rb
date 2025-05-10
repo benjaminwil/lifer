@@ -22,8 +22,6 @@ class Lifer::Builder::HTML::FromLiquid
           Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")
 
         environment.register_filter Lifer::Builder::HTML::FromLiquid::Filters
-        environment.register_tag "layout",
-          Lifer::Builder::HTML::FromLiquid::LayoutTag
       end
     end
   end

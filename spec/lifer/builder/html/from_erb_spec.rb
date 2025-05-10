@@ -18,13 +18,28 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
     )
 
     {
+      "_layouts/root.html.erb" => <<~TEXT,
+        <html>
+          <body>
+            <%= content %>
+          </body>
+        </html>
+      TEXT
       "_layouts/layout.html.erb" => "Layout was loaded!\n\n<%= content %>",
+      "_layouts/layout_referencing_root.html.erb" => <<~TEXT,
+        ---
+        layout: _layouts/root.html.erb
+        ---
+        <main><%= content %></main>
+      TEXT
       "entry-with-variables.html.erb" => entry_content_with_variables,
       "another-entry.md" => <<~TEXT,
         ---
         title: Another Entry
         tags: tag1, tag2, tag3
         ---
+
+        Another entry
       TEXT
       "another-another-entry.md" => <<~TEXT,
         ---
@@ -50,6 +65,7 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
       Lifer::Collection.generate name: "subdirectory_one",
         directory: "#{project.root}/subdirectory_one"
     }
+
     context "when using layout-provided variables" do
       let(:entry) {
         Lifer::Entry::HTML.new collection: collection,
@@ -78,6 +94,31 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
            </body>
          </html>
        RESULT
+      end
+    end
+
+    context "when referencing a root layout in the frontmatter" do
+      let(:config) {
+        <<~CONFIG
+          layout_file: ../_layouts/layout_referencing_root.html.erb
+        CONFIG
+      }
+      let(:entry) {
+        Lifer::Entry::Markdown.new(
+          file: "#{project.root}/another-entry.md",
+          collection: collection
+        )
+      }
+
+      it "renders the document with the root and collection layouts" do
+        expect(subject).to fuzzy_match <<~RESULT
+          <html>
+            <body>
+              <main><p>Another entry</p>
+              </main>
+            </body>
+          </html>
+        RESULT
       end
     end
 
