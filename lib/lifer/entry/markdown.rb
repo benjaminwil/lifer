@@ -35,12 +35,12 @@ class Lifer::Entry::Markdown < Lifer::Entry
     text = raw_first_paragraph_text
     return text if text.length <= TRUNCATION_THRESHOLD
 
-    truncated_text = text[0..TRUNCATION_THRESHOLD]
-    if (index_of_final_fullstop = text.rindex ". ")
-      truncated_text[0..index_of_final_fullstop]
-    else
-      "%s..." % truncated_text
-    end
+    text = text[0..TRUNCATION_THRESHOLD]
+
+    # Index of the fullstop from the last complete sentence in the truncated
+    # text.
+    last_fullstop_index = text.rindex /(\.) /
+    last_fullstop_index ? text[0..last_fullstop_index] : "%s..." % text
   end
 
   # The title or a default title.

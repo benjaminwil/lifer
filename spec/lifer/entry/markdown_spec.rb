@@ -26,7 +26,7 @@ RSpec.describe Lifer::Entry::Markdown do
       it { is_expected.to eq "Short body text." }
     end
 
-    context "when the summary is present and the body is long and contains elements" do
+    context "when no summary is present and the body is long and contains elements" do
       let(:file) {
         temp_file "long.md", <<~MARKDOWN
           In the "realm" where dreams dance upon [ethereal](#) melodies and
@@ -40,6 +40,22 @@ RSpec.describe Lifer::Entry::Markdown do
           .to eq <<~TEXT.strip
             In the “realm” where dreams dance upon ethereal melodies and time surrenders to whispers of serenity, there lies a tapest...
          TEXT
+      }
+    end
+
+    context "when no summary is present and there is a good place to truncate" do
+      let(:file) {
+        temp_file "long.md", <<~MARKDOWN
+          Obvious truncation point is after this sentence ends. In the "realm"
+          where dreams dance upon [ethereal](#) melodies and time surrenders
+          to whispers of serenity, there lies a tapestry of old that looks
+          like total shit.
+        MARKDOWN
+      }
+
+      it {
+        is_expected
+          .to eq "Obvious truncation point is after this sentence ends."
       }
     end
 
