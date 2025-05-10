@@ -44,7 +44,7 @@ GEM
     kramdown (2.5.1)
       rexml (>= 3.3.9)
     language_server-protocol (3.17.0.3)
-    liquid (5.8.2)
+    liquid (5.8.6)
       bigdecimal
       strscan (>= 3.1.1)
     listen (3.9.0)
@@ -107,7 +107,7 @@ GEM
       sorbet-runtime (>= 0.5.10782)
     sorbet-runtime (0.5.11558)
     stringio (3.1.1)
-    strscan (3.1.2)
+    strscan (3.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.37)
