@@ -23,17 +23,7 @@ class Lifer::Builder::HTML
   #       </body>
   #     </html>
   #
-  class FromERB
-    class << self
-      # Build and render an entry.
-      #
-      # @param entry [Lifer::Entry] The entry to be rendered.
-      # @return [String] The rendered entry.
-      def build(entry:)
-        new(entry: entry).render
-      end
-    end
-
+  class FromERB < FromAny
     # Reads the entry as ERB, given our renderer context (see the documentation
     # for `#build_binding_context`) and renders the production-ready entry.
     #
@@ -106,37 +96,6 @@ class Lifer::Builder::HTML
         binding.local_variable_set :content,
           ERB.new(entry.to_html).result(binding)
       }
-    end
-
-    def frontmatter
-      return {} unless frontmatter?
-
-      Lifer::Utilities.symbolize_keys(
-        YAML.load layout_file_contents(raw: true)[Lifer::FRONTMATTER_REGEX, 1],
-          permitted_classes: [Time]
-      )
-    end
-
-    def frontmatter?
-      @frontmatter ||=
-        layout_file_contents(raw: true).match?(Lifer::FRONTMATTER_REGEX)
-    end
-
-    def layout_file_contents(raw: false)
-      cache_variable = "@layout_file_contents_#{raw}"
-      cached_value = instance_variable_get cache_variable
-
-      return cached_value if cached_value
-
-      contents =
-        if raw
-          File.read(layout_file)
-        else
-          File.read(layout_file).gsub(Lifer::FRONTMATTER_REGEX, "")
-        end
-      contents
-      instance_variable_set cache_variable, contents
-      contents
     end
 
     def collection_context_class

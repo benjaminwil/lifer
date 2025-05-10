@@ -1,9 +1,5 @@
 require "liquid"
 
-require_relative "from_liquid/drops"
-require_relative "from_liquid/filters"
-require_relative "from_liquid/liquid_env"
-
 class Lifer::Builder::HTML
   # If the HTML builder is given a Liquid template, it uses this class to parse
   # the Liquid into HTML. Lifer project metadata is provided as context. For
@@ -27,16 +23,10 @@ class Lifer::Builder::HTML
   #       </body>
   #     </html>
   #
-  class FromLiquid
-    class << self
-      # Render and build a Lifer entry.
-      #
-      # @param entry [Lifer::Entry] The entry to render.
-      # @return [String] The rendered entry, ready for output.
-      def build(entry:) = new(entry:).render
-    end
-
-    attr_accessor :entry, :layout_file
+  class FromLiquid < FromAny
+    require_relative "from_liquid/drops"
+    require_relative "from_liquid/filters"
+    require_relative "from_liquid/liquid_env"
 
     # Reads the entry as Liquid, given our document context, and renders
     # an entry.
@@ -63,6 +53,8 @@ class Lifer::Builder::HTML
 
     private
 
+    attr_accessor :entry, :layout_file
+
     def initialize(entry:)
       @entry = entry
       @layout_file = entry.collection.layout_file
@@ -84,37 +76,6 @@ class Lifer::Builder::HTML
         "render_options" => render_options,
         "settings" => Drops::SettingsDrop.new
       }
-    end
-
-    def frontmatter
-      return {} unless frontmatter?
-
-      Lifer::Utilities.symbolize_keys(
-        YAML.load layout_file_contents(raw: true)[Lifer::FRONTMATTER_REGEX, 1],
-          permitted_classes: [Time]
-      )
-    end
-
-    def frontmatter?
-      @frontmatter ||=
-        layout_file_contents(raw: true).match?(Lifer::FRONTMATTER_REGEX)
-    end
-
-    def layout_file_contents(raw: false)
-      cache_variable = "@layout_file_contents_#{raw}"
-      cached_value = instance_variable_get cache_variable
-
-      return cached_value if cached_value
-
-      contents =
-        if raw
-          File.read(layout_file)
-        else
-          File.read(layout_file).gsub(Lifer::FRONTMATTER_REGEX, "")
-        end
-      contents
-      instance_variable_set cache_variable, contents
-      contents
     end
 
     def liquid_environment = (@liquid_environment ||= LiquidEnv.global)
