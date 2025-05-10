@@ -107,6 +107,10 @@ Then, build and push the gem to RubyGems:
     $ gem build
     $ gem push lifer-<new_version_without_the_v_prefix>.gem
 
+And ensure that the release commit(s) are on the `main` branch:
+
+    $ git push origin main
+
 ## Contributing
 
 I'm not currently accepting unsolicited contributions to Lifer. I'm still
