@@ -1,5 +1,27 @@
 ## Next
 
+## v0.10.0
+
+These commits collect work to let all layout files (either Liquid or ERB files)
+provide a reference to parent, or "root", layout files that should wrap the via
+frontmatter.
+
+Previously, we did this for Liquid layouts using the custom `layout` tag. But
+because there was no equivalent tag for ERB files, I realized it would be less
+work to just provide the value via frontmatter. The same way for every type of
+layout file.
+
+End users (just me?) must update their Lifer project Liquid layouts accordingly:
+
+```diff
+- {% layout "layouts/root_layout.html.liquid" %}
++ ---
++ layout: layouts/root_layout.html.liquid
++ ---
+
+  Layout content.
+```
+
 ## v0.9.0
 
 Atom feeds now support entries with both `#published_at` and `#updated_at`
