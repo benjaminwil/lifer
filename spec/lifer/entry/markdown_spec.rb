@@ -26,10 +26,10 @@ RSpec.describe Lifer::Entry::Markdown do
       it { is_expected.to eq "Short body text." }
     end
 
-    context "when the summary is present and the body is long" do
+    context "when the summary is present and the body is long and contains elements" do
       let(:file) {
         temp_file "long.md", <<~MARKDOWN
-          In the realm where dreams dance upon ethereal melodies and
+          In the "realm" where dreams dance upon [ethereal](#) melodies and
           time surrenders to whispers of serenity, there lies a tapestry
           of old that looks like total shit.
         MARKDOWN
@@ -37,8 +37,9 @@ RSpec.describe Lifer::Entry::Markdown do
 
       it {
         is_expected
- 	        .to eq "In the realm where dreams dance upon ethereal melodies and " \
-	          "time surrenders to whispers of serenity, there lies a tapestry..."
+          .to eq <<~TEXT.strip
+            In the “realm” where dreams dance upon ethereal melodies and time surrenders to whispers of serenity, there lies a tapest...
+         TEXT
       }
     end
 
