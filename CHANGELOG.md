@@ -1,9 +1,25 @@
 ## Next
 
+## v0.10.1
+
+This release resolves a bug with `Entry#summary`. When I originally implemented
+summaries as first paragraphs, I didn't realize that using the Kramdown
+representation of the document would result in special characters being
+transformed badly:
+
+    In the ldquorealmrdquo where dreams dance
+
+This change ensures that we don't end up with trash like that, or other HTML
+trash.
+
+The summary is meant to be ideal for things like `<meta>` description tags,
+which should only contain plain text.
+
+
 ## v0.10.0
 
-These commits collect work to let all layout files (either Liquid or ERB files)
-provide a reference to parent, or "root", layout files that should wrap the via
+This release lets all layout files (either Liquid or ERB files) provide a
+reference to parent, or "root", layout files that should wrap the via
 frontmatter.
 
 Previously, we did this for Liquid layouts using the custom `layout` tag. But
