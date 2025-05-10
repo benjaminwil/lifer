@@ -1,5 +1,11 @@
 ## Next
 
+## v0.10.2
+
+This release resolves another bug in `Entry#summary` causing entries without
+full-stops within the truncation threshold to not be truncated with a "..."
+properly.
+
 ## v0.10.1
 
 This release resolves a bug with `Entry#summary`. When I originally implemented
