@@ -30,14 +30,16 @@ class Lifer::Entry::Markdown < Lifer::Entry
   def summary
     return super if super
 
-    return if first_paragraph.nil?
-    return first_paragraph if first_paragraph.length <= TRUNCATION_THRESHOLD
+    return if raw_first_paragraph_text.nil?
 
-    truncated_paragraph = first_paragraph[0..TRUNCATION_THRESHOLD]
-    if (index_of_final_fullstop = truncated_paragraph.rindex ". ")
-      truncated_paragraph[0..index_of_final_fullstop]
+    text = raw_first_paragraph_text
+    return text if text.length <= TRUNCATION_THRESHOLD
+
+    truncated_text = text[0..TRUNCATION_THRESHOLD]
+    if (index_of_final_fullstop = text.rindex ". ")
+      truncated_text[0..index_of_final_fullstop]
     else
-      "%s..." % truncated_paragraph
+      "%s..." % truncated_text
     end
   end
 
@@ -57,7 +59,7 @@ class Lifer::Entry::Markdown < Lifer::Entry
   #
   # @return [String] The HTML for the body of the entry.
   def to_html
-    Kramdown::Document.new(body).to_html
+    @to_html ||= Kramdown::Document.new(body).to_html
   end
 
   private
@@ -75,25 +77,20 @@ class Lifer::Entry::Markdown < Lifer::Entry
     end.uniq
   end
 
-  # Using Kramdown we can detect the first paragraph of the entry.
+  # Detects the raw paragraph text from the entry.
   #
+  # @fixme It would be easier and less error prone to do this with Nokogiri. But
+  #   we currently don't need the dependency for any other reason, so let's
+  #   defer adding it until then.
   # @private
-  def first_paragraph
-    @first_paragraph ||=
-      kramdown_paragraph_text(
-        Kramdown::Document.new(body).root
-          .children
-          .detect { |child| child.type == :p }
-      )
-  end
+  def raw_first_paragraph_text
+    paragraphs = to_html.match %r{<p[^>]*>(.*?)</p>}im
+    paragraph = paragraphs ? paragraphs[1].strip : nil
 
-  # @private
-  def kramdown_paragraph_text(kramdown_element)
-    return if kramdown_element.nil?
+    return unless paragraph
 
-    kramdown_element.children
-      .flat_map { |child| child.value || kramdown_paragraph_text(child) }
-      .join
-      .gsub(/\n/, " ")
+    paragraph = paragraph.gsub /<\/?[^>]*>/, ""
+    paragraph = CGI.unescapeHTML paragraph
+    paragraph.gsub(/[\s\n\t]+/, " ").strip
   end
 end
