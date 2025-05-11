@@ -36,4 +36,26 @@ RSpec.describe Lifer::URIStrategy::Pretty do
       end
     end
   end
+
+  describe "#permalink" do
+    subject { uri_strategy.permalink entry }
+
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+    let(:entry) { Lifer::Entry::Markdown.new file:, collection: }
+
+    context "in the root directory" do
+      let(:file) { Dir.glob("#{root}/**/entry.md").first }
+
+      it { is_expected.to eq "entry" }
+    end
+
+    context "in a subdirectory" do
+      let(:file) { Dir.glob("#{root}/**/sub_entry.md").first }
+
+      it { is_expected.to eq "subdir/subsubdir/sub_entry" }
+    end
+  end
 end

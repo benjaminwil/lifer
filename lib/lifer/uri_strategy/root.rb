@@ -13,5 +13,8 @@ class Lifer::URIStrategy
 
       "#{basename}.#{file_extension(entry)}"
     end
+
+    # @see Lifer::UriStrategy#permalink
+    def permalink(entry) = output_file(entry)
   end
 end

@@ -59,10 +59,10 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
       let(:config) {
        <<~CONFIG
           layout_file: ../_layouts/layout.html.liquid
-          uri_strategy: pretty
+          uri_strategy: simple
 
           subdirectory_one:
-            uri_strategy: simple
+            uri_strategy: pretty
 
           test_setting:
             - number: 123
@@ -95,10 +95,12 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           <h2>Entries for tag1</h2>
           Entry Title 1, Entry Title 2
           <h2>This project's settings</h2>
-          all settings: {"layout_file":"../_layouts/layout.html.liquid","uri_strategy":"pretty","subdirectory_one":{"uri_strategy":"simple"},"test_setting":[{"number":123,"description":"To tests arrays of objects."}]}
+          all settings: {"layout_file":"../_layouts/layout.html.liquid","uri_strategy":"simple","subdirectory_one":{"uri_strategy":"pretty"},"test_setting":[{"number":123,"description":"To tests arrays of objects."}]}
           root layout file: ../_layouts/layout.html.liquid
-          root URI strategy: pretty
-          subdirectory one URI strategy: simple
+          root URI strategy: simple
+          subdirectory one URI strategy: pretty
+          <h2>Permalinks do not include index.html because of the pretty URI strategy</h2>
+          https://example.com/entry
        RESULT
       end
     end
