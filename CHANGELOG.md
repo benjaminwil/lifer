@@ -1,5 +1,20 @@
 ## Next
 
+## v0.11.0
+
+This release adds new functionality to our URI strategies, adding
+`URIStrategy#permalink`, to make support for pretty URI strategies (i.e. where
+entries all end in `/index.ext`) better and more compatible with web servers
+where `foo` is the "same thing" as `foo/index.html`.
+
+Example output filename:
+
+    /my/filename/index.html
+
+Expected permalink for this file using a pretty URI strategy:
+
+    /my/filename
+
 ## v0.10.2
 
 This release resolves another bug in `Entry#summary` causing entries without
