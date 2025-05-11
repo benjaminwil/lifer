@@ -14,4 +14,7 @@ class Lifer::URIStrategy::Simple < Lifer::URIStrategy
       .gsub(/#{root}[\/]{0,1}/, "")
       .gsub(/#{basename}(\..+)/, "#{basename}.#{file_extension(entry)}")
   end
+
+  # @see Lifer::UriStrategy#permalink
+  def permalink(entry) = output_file(entry)
 end

@@ -18,6 +18,15 @@ class Lifer::URIStrategy
       end
     end
 
+    # @see Lifer::UriStrategy#permalink
+    def permalink(entry)
+      if basename(entry) == "index"
+        "/"
+      else
+        output_file(entry).gsub pretty_part(entry), ""
+      end
+    end
+
     private
 
     def basename(entry)

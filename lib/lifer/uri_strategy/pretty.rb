@@ -19,6 +19,9 @@ class Lifer::URIStrategy::Pretty < Lifer::URIStrategy
       .gsub(/#{basename}(\..+)/, "#{basename}#{pretty_part entry}")
   end
 
+  # @see Lifer::UriStrategy#permalink
+  def permalink(entry) = output_file(entry).gsub pretty_part(entry), ""
+
   private
 
   def pretty_part(entry) = "/index.#{file_extension(entry)}"

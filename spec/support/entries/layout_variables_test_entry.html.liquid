@@ -48,3 +48,6 @@ all settings: {{ settings }}
 root layout file: {{ settings.layout_file }}
 root URI strategy: {{ settings.uri_strategy }}
 subdirectory one URI strategy: {{ settings.subdirectory_one.uri_strategy }}
+
+<h2>Permalinks do not include index.html because of the pretty URI strategy</h2>
+{{ entry.permalink }}

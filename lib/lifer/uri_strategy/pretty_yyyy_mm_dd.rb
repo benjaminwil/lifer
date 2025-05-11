@@ -30,6 +30,9 @@
       .gsub(DATE_REGEXP, "")
   end
 
+  # @see Lifer::UriStrategy#permalink
+  def permalink(entry) = output_file(entry).gsub pretty_part(entry), ""
+
   private
 
   def pretty_part(entry) = "/index.#{file_extension(entry)}"

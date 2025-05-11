@@ -194,9 +194,10 @@ module Lifer
           cached_permalink_variable,
           File.join(
             host,
-            Lifer::URIStrategy.find(collection.setting :uri_strategy)
+            Lifer::URIStrategy
+              .find(collection.setting :uri_strategy)
               .new(root: Lifer.root)
-              .output_file(self)
+              .permalink(self)
           )
         )
     end

@@ -39,6 +39,24 @@ class Lifer::URIStrategy
     raise NotImplementedError, I18n.t("shared.not_implemented_method")
   end
 
+  # This method should sometimes return the path to the file in the format
+  # specified by the current URI strategy. Of course, this depends on what the URI
+  # stategy is. For "pretty" strategies, the permalink may differ from the output
+  # filename. For example, the output file may point to
+  #
+  #    entry-name/index.html
+  #
+  # While the permalink like points to:
+  #
+  #    entry-name
+  #
+  # @raise [NotImplementedError] This method must be implemented on each
+  #   subclass.
+  # @return [String] The permalink to the built output file.
+  def permalink(entry)
+    raise NotImplementedError, I18n.t("shared.not_implemented_error")
+  end
+
   private
 
   def file_extension(entry) = entry.class.output_extension
