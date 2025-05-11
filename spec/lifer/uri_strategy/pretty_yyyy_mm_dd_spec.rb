@@ -28,15 +28,14 @@ RSpec.describe Lifer::URIStrategy::PrettyYYYYMMDD do
     context "in the root directory" do
       let(:file) { Dir.glob("#{root}/**/entry.md").first }
 
-      it { is_expected.to eq Pathname("entry/index.html") }
+      it { is_expected.to eq "entry/index.html" }
     end
 
     context "in a subdirectory" do
       let(:file) { Dir.glob("#{root}/**/sub_entry.md").first }
 
       it "returns the output file path" do
-        expect(subject)
-          .to eq Pathname("subdir/subsubdir/sub_entry/index.html")
+        expect(subject).to eq "subdir/subsubdir/sub_entry/index.html"
       end
     end
 
@@ -44,7 +43,7 @@ RSpec.describe Lifer::URIStrategy::PrettyYYYYMMDD do
       let(:file) { Dir.glob("#{root}/**/2012-03-25_with_date.md").first }
 
       it "returns the output file path without the date" do
-        expect(subject).to eq Pathname("with_date/index.html")
+        expect(subject).to eq "with_date/index.html"
       end
     end
   end

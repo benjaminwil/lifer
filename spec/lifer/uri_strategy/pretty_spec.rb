@@ -25,14 +25,14 @@ RSpec.describe Lifer::URIStrategy::Pretty do
     context "in the root directory" do
       let(:file) { Dir.glob("#{root}/**/entry.md").first }
 
-      it { is_expected.to eq Pathname("entry/index.html") }
+      it { is_expected.to eq "entry/index.html" }
     end
 
     context "in a subdirectory" do
       let(:file) { Dir.glob("#{root}/**/sub_entry.md").first }
 
       it "returns the output file path" do
-        expect(subject).to eq Pathname("subdir/subsubdir/sub_entry/index.html")
+        expect(subject).to eq "subdir/subsubdir/sub_entry/index.html"
       end
     end
   end

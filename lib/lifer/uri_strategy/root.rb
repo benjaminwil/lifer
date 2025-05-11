@@ -11,7 +11,7 @@ class Lifer::URIStrategy
       basename = File.basename entry.file,
         Lifer::Utilities.file_extension(entry.file)
 
-      Pathname "#{basename}.#{file_extension(entry)}"
+      "#{basename}.#{file_extension(entry)}"
     end
   end
 end

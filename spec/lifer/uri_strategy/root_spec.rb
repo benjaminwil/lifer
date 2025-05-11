@@ -21,7 +21,7 @@ RSpec.describe Lifer::URIStrategy::Root do
       }
       let(:file) { Dir.glob("#{root}/**/entry.md").first }
 
-      it { is_expected.to eq Pathname("entry.html") }
+      it { is_expected.to eq "entry.html" }
     end
 
     context "when not in the root collection" do
@@ -32,7 +32,7 @@ RSpec.describe Lifer::URIStrategy::Root do
       let(:file) { Dir.glob("#{root}/**/subdir/sub.md").first }
 
       it "still returns an output at the root" do
-        expect(subject).to eq Pathname("sub.html")
+        expect(subject).to eq "sub.html"
       end
     end
   end

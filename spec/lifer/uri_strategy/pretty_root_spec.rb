@@ -26,7 +26,7 @@ RSpec.describe Lifer::URIStrategy::PrettyRoot do
       let(:file) { Dir.glob("#{root}/**/index.html").first }
 
       it "takes an `index.html` URI instead of `index/index.html`" do
-        expect(subject).to eq Pathname("index.html")
+        expect(subject).to eq "index.html"
       end
     end
 
@@ -36,7 +36,7 @@ RSpec.describe Lifer::URIStrategy::PrettyRoot do
       }
       let(:file) { Dir.glob("#{root}/**/entry.md").first }
 
-      it { is_expected.to eq Pathname("entry/index.html") }
+      it { is_expected.to eq "entry/index.html" }
     end
 
     context "when not in the root collection" do
@@ -49,7 +49,7 @@ RSpec.describe Lifer::URIStrategy::PrettyRoot do
       }
 
       it "still returns an output at the root" do
-        expect(subject).to eq Pathname("sub/index.html")
+        expect(subject).to eq "sub/index.html"
       end
     end
   end
