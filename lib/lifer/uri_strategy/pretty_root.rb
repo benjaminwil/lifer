@@ -11,14 +11,19 @@ class Lifer::URIStrategy
 
     # @see Lifer::URIStrategy#output_file
     def output_file(entry)
-      basename = File.basename entry.file,
-        Lifer::Utilities.file_extension(entry.file)
-
-      if basename == "index"
-        Pathname "index.html"
+      if basename(entry) == "index"
+        "index.html"
       else
-        Pathname "#{basename}/index.#{file_extension(entry)}"
+        "#{basename entry}#{pretty_part entry}"
       end
     end
+
+    private
+
+    def basename(entry)
+      File.basename entry.file, Lifer::Utilities.file_extension(entry.file)
+    end
+
+    def pretty_part(entry) = "/index.#{file_extension(entry)}"
   end
 end

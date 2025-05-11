@@ -24,9 +24,13 @@
     basename = File.basename entry.file,
       Lifer::Utilities.file_extension(entry.file)
 
-    Pathname entry.file.to_s
+    entry.file.to_s
       .gsub(/#{root}[\/]{0,1}/, "")
-      .gsub(/#{basename}(\..+)/, "#{basename}/index.#{file_extension(entry)}")
+      .gsub(/#{basename}(\..+)/, "#{basename}#{pretty_part entry}")
       .gsub(DATE_REGEXP, "")
   end
+
+  private
+
+  def pretty_part(entry) = "/index.#{file_extension(entry)}"
 end
