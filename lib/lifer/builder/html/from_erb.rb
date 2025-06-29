@@ -34,8 +34,15 @@ class Lifer::Builder::HTML
       return document unless (relative_layout_path = frontmatter[:layout])
 
       document_binding = binding.tap { |binding|
+        context.local_variables.each do |variable|
+          next if variable == :content
+
+          binding.local_variable_set variable,
+            context.local_variable_get(variable)
+        end
         binding.local_variable_set :content, document
       }
+
       layout_path = "%s/%s" % [Lifer.root, relative_layout_path]
       ERB.new(File.read layout_path).result(document_binding)
     end

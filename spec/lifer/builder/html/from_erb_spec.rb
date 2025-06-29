@@ -21,6 +21,9 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
       "_layouts/root.html.erb" => <<~TEXT,
         <html>
           <body>
+            <header>
+              This project contains <%= collections.count %> collections
+            </header>
             <%= content %>
           </body>
         </html>
@@ -116,6 +119,9 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
         expect(subject).to fuzzy_match <<~RESULT
           <html>
             <body>
+              <header>
+                This project contains 3 collections
+              </header>
               <main><p>Another entry</p>
               </main>
             </body>
