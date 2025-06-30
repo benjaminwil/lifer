@@ -25,10 +25,10 @@ class Lifer::Builder::HTML
   #
   class FromERB < FromAny
     # Reads the entry as ERB, given our renderer context (see the documentation
-    # for `#build_binding_context`) and renders the production-ready entry.
+    # for `#build_binding_context`) and builds the production-ready entry.
     #
-    # @return [String] The rendered entry.
-    def render
+    # @return [String] The resulting HTML entry.
+    def build
       document = ERB.new(layout_file_contents).result context
 
       return document unless (relative_layout_path = frontmatter[:layout])

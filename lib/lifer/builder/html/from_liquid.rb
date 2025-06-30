@@ -28,11 +28,11 @@ class Lifer::Builder::HTML
     require_relative "from_liquid/filters"
     require_relative "from_liquid/liquid_env"
 
-    # Reads the entry as Liquid, given our document context, and renders
-    # an entry.
+    # Reads the Liquid entry, given our document context, and builds an HTML
+    # document.
     #
-    # @return [String] The rendered entry.
-    def render
+    # @return [String] The resulting HTML entry.
+    def build
       document_context = context.merge!(
         "content" => Liquid::Template
           .parse(entry.to_html, **parse_options)
