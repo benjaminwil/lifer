@@ -10,7 +10,7 @@ class Lifer::Builder
         # @param entry [Lifer::Entry] The entry to be rendered.
         # @return [String] The rendered entry.
         def build(entry:)
-          new(entry: entry).render
+          new(entry: entry).build
         end
       end
 
