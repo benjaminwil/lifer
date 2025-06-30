@@ -1,5 +1,15 @@
 ## Next
 
+This release adds a new `#render` method that can be used in any ERB files being
+built into HTML documents. It matches the functionality of Liquid's builtiin
+`render` functionality. So:
+
+    {% render "my_partial.html.liquid" with local_variable: "some-value" %}
+
+is equivalent to:
+
+    <%= render "my_partial.html.erb", local_variable: "some-value" %>
+
 ## v0.11.0
 
 This release adds new functionality to our URI strategies, adding
@@ -35,7 +45,6 @@ trash.
 
 The summary is meant to be ideal for things like `<meta>` description tags,
 which should only contain plain text.
-
 
 ## v0.10.0
 

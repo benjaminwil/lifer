@@ -11,6 +11,8 @@ class Lifer::Builder::HTML
   #       </head>
   #
   #       <body>
+  #         <%= partial "_layouts/header.html.erb" %>
+  #
   #         <h1><%= my_collection.name %></h1>
   #
   #         <% my_collection.entries.each do |entry| %>
@@ -20,6 +22,8 @@ class Lifer::Builder::HTML
   #             <a href="<%= entry.permalink %>">Read more</a>
   #           </section>
   #         <% end %>
+  #
+  #         <%= partial "_layouts/footer.html.erb" %>
   #       </body>
   #     </html>
   #
@@ -102,6 +106,11 @@ class Lifer::Builder::HTML
         binding.local_variable_set :tags, tags
         binding.local_variable_set :content,
           ERB.new(entry.to_html).result(binding)
+
+        define_singleton_method :render,
+          -> (relative_path_to_template, locals = {}) {
+            partial_render_method relative_path_to_template, locals
+          }
       }
     end
 
@@ -111,6 +120,39 @@ class Lifer::Builder::HTML
 
     def tag_context_class
       @tag_context_class ||= Class.new(Array) do end
+    end
+
+    # @private
+    # If the end user should want to render a partial from an entry or a layout
+    # file, this method provides the functionality for the `#partial` method
+    # provided to the ERB template context, complete with all of the information
+    # one might want want about the entry, project collections, and so on, that's
+    # available from entry and layout templates.
+    #
+    # @example Usage
+    #    <%= partial "_layouts/my_partial.html.erb", id: "123" %>
+    # @param relative_path_to_template [String] The path, from the Lifer root,
+    #   to the partial layout file.
+    # @param locals [Hash] Additional data that should be passed along for
+    #   rendering the partial.
+    # @return [String] The rendered partial document.
+    def partial_render_method(relative_path_to_template, locals)
+      template_path = File.join(Lifer.root, relative_path_to_template)
+
+      partial_binding = binding.tap { |binding|
+        context.local_variables.each do |variable|
+          next if variable == :content
+
+          binding.local_variable_set variable,
+            context.local_variable_get(variable)
+        end
+
+        locals.each do |key, value|
+          binding.local_variable_set key.to_sym, value
+        end
+      }
+
+      ERB.new(File.read template_path).result(partial_binding)
     end
   end
 end

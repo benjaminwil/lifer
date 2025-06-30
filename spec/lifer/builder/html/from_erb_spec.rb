@@ -18,12 +18,15 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
     )
 
     {
+      "_layouts/partials/header.html.erb" => <<~TEXT,
+        <header id="<%= id %>">
+          This project contains <%= collections.count %> collections
+        </header>
+      TEXT
       "_layouts/root.html.erb" => <<~TEXT,
         <html>
           <body>
-            <header>
-              This project contains <%= collections.count %> collections
-            </header>
+            <%= render "_layouts/partials/header.html.erb", id: "header-123" %>
             <%= content %>
           </body>
         </html>
@@ -119,7 +122,7 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
         expect(subject).to fuzzy_match <<~RESULT
           <html>
             <body>
-              <header>
+              <header id="header-123">
                 This project contains 3 collections
               </header>
               <main><p>Another entry</p>

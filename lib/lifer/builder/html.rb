@@ -7,9 +7,22 @@ require "fileutils"
 # ERB[1] or Liquid[2] template files. The layout file yields entry contents
 # via a `content` call that is parsed by ERB or Liquid.
 #
-# Layout files can also include other contextual information about the current
-# Lifer project to provide "normal website features" like navigation links,
-# indexes, and so on. Context is provided via:
+# It is normal to have templates that render other templates. So normal, in
+# fact, that Liquid provides a built-in `render` function that allows us to render
+# partials from other Liquid files:
+#
+#     {% render "path/to/my/partial.html.liquid" with local_variable: "value" %}
+#
+# And we've ensured a similar `render` function exists for our ERB HTML builder:
+#
+#     <%= render "path/to/my/partial.html.erb", local_variable: "value" %>
+#
+# The entry being built will include contextual data about the current project,
+# so that the user can build out normal website features like navigation links,
+# indexes, and so on. Note that with the current Liquid implementation, you may
+# need to explicitly pass context from layouts to the partials that require it via
+# `with`. Meanwhile, the ERB implementation provides a bunch of context globally.
+# Context includes:
 #
 #  - `my_collection_name`: Or, any collection by name.
 #
