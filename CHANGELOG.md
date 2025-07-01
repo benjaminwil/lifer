@@ -1,5 +1,7 @@
 ## Next
 
+## v0.12.0
+
 This release adds a new `#render` method that can be used in any ERB files being
 built into HTML documents. It matches the functionality of Liquid's builtiin
 `render` functionality. So:
