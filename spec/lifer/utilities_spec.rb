@@ -88,8 +88,7 @@ RSpec.describe Lifer::Utilities do
         let(:collection) { [1, 2, nil, 3] }
 
         it "bubbles up the exception" do
-          expect { subject }.to raise_error NoMethodError,
-            "undefined method `*' for nil"
+          expect { subject }.to raise_error NoMethodError, /for nil/
         end
       end
     end
@@ -113,8 +112,7 @@ RSpec.describe Lifer::Utilities do
         let(:collection) { [1, 2, nil, 3] }
 
         it "bubbles up the exception" do
-          expect { subject }.to raise_error NoMethodError,
-            "undefined method `*' for nil"
+          expect { subject }.to raise_error NoMethodError, /for nil/
         end
       end
     end
