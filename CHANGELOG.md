@@ -1,5 +1,10 @@
 ## Next
 
+## v0.12.2
+
+This release makes minor improvements to the development server by adding
+additional servable MIME types. That's all.
+
 ## v0.12.1
 
 This patch release resolves a couple of issues that may affect users:
