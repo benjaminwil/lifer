@@ -45,6 +45,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "puma", "< 7"
   spec.add_dependency "rack", "< 4"
   spec.add_dependency "rss", "< 1"
-
-  spec.platform = Gem::Platform.local
 end
