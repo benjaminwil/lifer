@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lifer (0.12.2-x86_64-linux)
+    lifer (0.12.2)
       base64
       i18n (< 2)
       kramdown (~> 2.4)
@@ -36,8 +36,7 @@ GEM
       reline (>= 0.3.8)
     diff-lcs (1.6.2)
     erb (6.0.1)
-    ffi (1.17.3-x86_64-linux-gnu)
-    ffi (1.17.3-x86_64-linux-musl)
+    ffi (1.17.3)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     io-console (0.8.2)
@@ -58,10 +57,10 @@ GEM
     logger (1.7.0)
     matrix (0.4.3)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     nio4r (2.7.5)
-    nokogiri (1.19.0-x86_64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.19.0-x86_64-linux-musl)
+    nokogiri (1.19.0)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     parallel (1.27.0)
     parallel_tests (5.5.0)
@@ -122,9 +121,7 @@ GEM
     yard (0.9.38)
 
 PLATFORMS
-  x86_64-linux
-  x86_64-linux-gnu
-  x86_64-linux-musl
+  ruby
 
 DEPENDENCIES
   bump
