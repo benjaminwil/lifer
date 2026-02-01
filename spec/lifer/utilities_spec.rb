@@ -121,47 +121,75 @@ RSpec.describe Lifer::Utilities do
   describe ".stringify_keys" do
     subject { described_class.stringify_keys(hash) }
 
-    let(:hash) {
-      {
-        "string": "value",
-        symbol: "value",
-        sub_hash: {"string": "value", symbol: :value}
-      }
-    }
+    context "when the given hash is actually nil" do
+      let(:hash) { nil }
 
-    it "stringifies keys" do
-      expect(subject).to eq(
+      it { is_expected.to eq({}) }
+    end
+
+    context "when the given hash is empty" do
+      let(:hash) { {} }
+
+      it { is_expected.to eq({}) }
+    end
+
+    context "when the given hash contains data" do
+      let(:hash) {
         {
-          "string" => "value",
-          "symbol" => "value",
-          "sub_hash" => {
-            "string" => "value",
-            "symbol" => :value
-          }
+          "string": "value",
+          symbol: "value",
+          sub_hash: {"string": "value", symbol: :value}
         }
-      )
+      }
+
+      it "stringifies keys" do
+        expect(subject).to eq(
+          {
+            "string" => "value",
+            "symbol" => "value",
+            "sub_hash" => {
+              "string" => "value",
+              "symbol" => :value
+            }
+          }
+        )
+      end
     end
   end
 
   describe ".symbolize_keys" do
     subject { described_class.symbolize_keys(hash) }
 
-    let(:hash) {
-      {
-        "string": "value",
-        symbol: "value",
-        sub_hash: {"string": "value"}
-      }
-    }
+    context "when the given hash is actually nil" do
+      let(:hash) { nil }
 
-    it "symbolizes string keys" do
-      expect(subject).to eq(
+      it { is_expected.to eq({}) }
+    end
+
+    context "when the given hash is empty" do
+      let(:hash) { {} }
+
+      it { is_expected.to eq({}) }
+    end
+
+    context "when the given hash contains data" do
+      let(:hash) {
         {
-          string: "value",
+          "string": "value",
           symbol: "value",
-          sub_hash: {string: "value"}
+          sub_hash: {"string": "value"}
         }
-      )
+      }
+
+      it "symbolizes string keys" do
+        expect(subject).to eq(
+          {
+            string: "value",
+            symbol: "value",
+            sub_hash: {string: "value"}
+          }
+        )
+      end
     end
   end
 end

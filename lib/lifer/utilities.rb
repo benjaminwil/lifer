@@ -101,7 +101,7 @@ module Lifer::Utilities
     def stringify_keys(hash)
       stringified_hash = {}
 
-      hash.each do |key, value|
+      hash&.each do |key, value|
         stringified_hash[(key.to_s rescue key) || key] =
           value.is_a?(Hash) ? stringify_keys(value) : value
 
@@ -119,7 +119,7 @@ module Lifer::Utilities
     def symbolize_keys(hash)
       symbolized_hash = {}
 
-      hash.each do |key, value|
+      hash&.each do |key, value|
         symbolized_hash[(key.to_sym rescue key) || key] =
           value.is_a?(Hash) ? symbolize_keys(value) : value
 
