@@ -1,7 +1,14 @@
+GIT
+  remote: https://github.com/gregorym/bump
+  revision: a099d944b9d9c5ad824acb2cd9a9cdfdefc08da1
+  tag: v0.10.1
+  specs:
+    bump (0.10.1)
+
 PATH
   remote: .
   specs:
-    lifer (0.12.0)
+    lifer (0.12.1)
       base64
       i18n (< 2)
       kramdown (~> 2.4)
@@ -18,8 +25,7 @@ GEM
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     base64 (0.3.0)
-    bigdecimal (3.2.2)
-    bump (0.10.0)
+    bigdecimal (4.0.1)
     capybara (3.40.0)
       addressable
       matrix
@@ -29,33 +35,34 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    concurrent-ruby (1.3.5)
+    concurrent-ruby (1.3.6)
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
     diff-lcs (1.5.1)
-    ffi (1.17.2-arm64-darwin)
-    ffi (1.17.2-x86_64-darwin)
-    ffi (1.17.2-x86_64-linux-gnu)
-    i18n (1.14.7)
+    ffi (1.17.3-arm64-darwin)
+    ffi (1.17.3-x86_64-darwin)
+    ffi (1.17.3-x86_64-linux-gnu)
+    i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
     irb (1.14.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    kramdown (2.5.1)
-      rexml (>= 3.3.9)
+    kramdown (2.5.2)
+      rexml (>= 3.4.4)
     language_server-protocol (3.17.0.5)
-    liquid (5.8.7)
+    liquid (5.11.0)
       bigdecimal
       strscan (>= 3.1.1)
-    listen (3.9.0)
+    listen (3.10.0)
+      logger
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     logger (1.7.0)
     matrix (0.4.2)
     mini_mime (1.1.5)
-    nio4r (2.7.4)
+    nio4r (2.7.5)
     nokogiri (1.19.0-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.19.0-x86_64-darwin)
@@ -69,7 +76,7 @@ GEM
     psych (5.1.2)
       stringio
     public_suffix (6.0.1)
-    puma (6.6.0)
+    puma (6.6.1)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.7)
@@ -87,7 +94,7 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.10)
       io-console (~> 0.5)
-    rexml (3.4.1)
+    rexml (3.4.4)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -101,14 +108,14 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.1)
-    rss (0.3.1)
+    rss (0.3.2)
       rexml
     ruby-lsp (0.26.5)
       language_server-protocol (~> 3.17.0)
       prism (>= 1.2, < 2.0)
       rbs (>= 3, < 5)
     stringio (3.1.1)
-    strscan (3.1.5)
+    strscan (3.1.7)
     tsort (0.2.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -121,7 +128,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bump
+  bump!
   capybara
   debug (>= 1.0.0)
   lifer!

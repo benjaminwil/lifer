@@ -1,5 +1,15 @@
 ## Next
 
+## v0.12.1
+
+This patch release resolves a couple of issues that may affect users:
+
+- This release makes the implicit dependency on `base64` explicit. This
+  is necessary because as of Ruby 3.4, `base64` is no longer part of Ruby's
+  standard library.
+- Resolves errors when `Lifer::Utilities#stringify_keys` or `#symbolize_keys`
+  are passed `nil` or an empty hash.
+
 ## v0.12.0
 
 This release adds a new `#render` method that can be used in any ERB files being
