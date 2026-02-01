@@ -96,7 +96,7 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
              <h2>Entries for tag1</h2>
              Another Another Entry, Another Entry
              <h2>This project's settings</h2>
-             {:uri_strategy=>"simple", :subdirectory_one=>{:uri_strategy=>"pretty"}}
+             {uri_strategy: "simple", subdirectory_one: {uri_strategy: "pretty"}}
              <h2>Entry permalinks do not include index.html because of the pretty URI strategy</h2>
              https://example.com/entry-with-variables
            </body>
