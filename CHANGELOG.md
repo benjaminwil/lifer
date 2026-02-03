@@ -1,5 +1,12 @@
 ## Next
 
+## v0.12.3
+
+This release just resolves some issues I was having with the platform in
+the gem specification being set wrong. Unfortunately, it was set wrong for
+both the 0.12.1 and 0.12.2 releases. So, this release is just a resolution
+to this little issue.
+
 ## v0.12.2
 
 This release makes minor improvements to the development server by adding
