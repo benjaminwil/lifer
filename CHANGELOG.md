@@ -1,5 +1,7 @@
 ## Next
 
+## v0.12.4
+
 This release resolves two issues:
 
 1. An issue where reading entry frontmatter (metadata within a `---` cage)
