@@ -1,5 +1,10 @@
 ## Next
 
+This release resolves an issue where reading entry frontmatter (metadata
+within a `---` cage) wasn't working properly when other `---` strings appeared
+later on in the entry. We just needed to make the `Lifer::FRONTMATTER_REGEX`
+less greedy.
+
 ## v0.12.3
 
 This release just resolves some issues I was having with the platform in

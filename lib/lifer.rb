@@ -26,7 +26,7 @@ module Lifer
 
   # We expect frontmatter in any file to be provided in the following format.
   #
-  FRONTMATTER_REGEX = /^---\n(.*)---\n/m
+  FRONTMATTER_REGEX = /^---\n(.*?)---\n/m
 
   class << self
     # The first time `Lifer.brain` is referenced, we build a new `Lifer::Brain`

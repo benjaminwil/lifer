@@ -143,7 +143,7 @@ module Lifer
     def body
       return full_text.strip unless frontmatter?
 
-      full_text.gsub(Lifer::FRONTMATTER_REGEX, "").strip
+      full_text.sub(Lifer::FRONTMATTER_REGEX, "").strip
     end
 
     def feedable?

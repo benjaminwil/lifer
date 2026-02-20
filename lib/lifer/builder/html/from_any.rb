@@ -57,7 +57,7 @@ class Lifer::Builder
         return cached_value if cached_value
 
         contents = File.read layout_file
-        contents = contents.gsub(Lifer::FRONTMATTER_REGEX, "") unless raw
+        contents = contents.sub(Lifer::FRONTMATTER_REGEX, "") unless raw
 
         instance_variable_set cache_variable, contents
       end

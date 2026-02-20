@@ -7,6 +7,32 @@ RSpec.describe Lifer do
     expect(Lifer::VERSION).not_to be nil
   end
 
+  describe Lifer::FRONTMATTER_REGEX do
+    it "is not too greedy" do
+      text = <<~TEXT
+        ---
+        some: frontmatter
+        other: frontmatter
+        ---
+
+        # Section 1
+
+        Content.
+
+        ---
+
+        # Section 2
+
+        Content.
+      TEXT
+
+      expect(text.match(subject)[1]).to eq(<<~MATCH)
+        some: frontmatter
+        other: frontmatter
+      MATCH
+    end
+  end
+
   describe ".build!" do
     subject { described_class.build! }
 
