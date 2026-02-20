@@ -48,6 +48,7 @@ module Lifer::Dev
       case File.extname(path)
       when ".aac" then "audio/aac"
       when ".apng" then "image/apng"
+      when ".asc" then "application/pgp-signature"
       when ".avi" then "video/x-msvideo"
       when ".avif" then "image/avif"
       when ".bin" then "application/octet-stream"
