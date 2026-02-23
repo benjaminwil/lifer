@@ -25,7 +25,7 @@ RSpec.describe Lifer::Builder::RSS do
     context "with a boolean RSS configuration" do
       let(:config) { "rss: true" }
 
-      it "generates a single a single RSS feed to the collection's name + `.xml`" do
+      it "generates a single RSS feed to the collection's name + `.xml`" do
         expect { subject }
           .to change {
             Dir.glob("#{project.brain.output_directory}/**/root.xml").count
