@@ -400,7 +400,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     }
 
     it "is implemented" do
-      expect { subject }.not_to raise_error(NotImplementedError)
+      expect { subject }.not_to raise_error
     end
   end
 
@@ -421,7 +421,7 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     }
 
     it "is implemented" do
-      expect { subject }.not_to raise_error(NotImplementedError)
+      expect { subject }.not_to raise_error
     end
 
     it "does not output frontmatter" do
