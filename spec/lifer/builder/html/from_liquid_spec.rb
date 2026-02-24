@@ -41,6 +41,9 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           ---
           title: Entry Title 1
           published: Sun 29 Dec 2024 18:00:19 MST
+          authors:
+            - One Namesonly
+            - Two Namesonly
           tags: tag1, tag2, tag3
           ---
         MARKDOWN
@@ -49,6 +52,10 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           title: Entry Title 2
           date: Sun 29 Dec 2024 18:01:25 MST
           updated: Sun 30 Dec 2025 18:00:19 PDT
+          authors:
+            - name: Nat McCartney
+              url: https://example.com
+              avatar: https://example.com/haha.png
           tags: tag1
           ---
         MARKDOWN
@@ -86,8 +93,33 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           <header>Header From Partial for "entry"</header>
           <h1>HTML entry with layout variables</h1>
           <h2>Some root collection entry titles</h2>
-          Entry Title 2 (published: 2024-12-29 18:01:25 -0700; updated: 2025-12-30 18:00:19 -0700),
-          <br/>Entry Title 1 (published: 2024-12-29 18:00:19 -0700; updated: )
+          <ul>
+          <li>
+          <span class="title">Entry Title 2</span>
+          <span class="published-at">
+          Published at &nbsp;
+          <time datetime=2024-12-29T18:01:25-07:00>2024-12-29 18:01:25 -0700</time>
+          </span>
+          <span class="updated-at">
+          Updated at &nbsp;
+          <time datetime=2025-12-30T18:00:19-07:00>2025-12-30 18:00:19 -0700</time>
+          </span>
+          <span class="authors">
+          Authored by &nbsp;
+          <img alt="" src="https://example.com/haha.png"><span class="author">Nat McCartney</span>
+          (<a class="url" href="https://example.com">link</a>)
+          </li><li>
+          <span class="title">Entry Title 1</span>
+          <span class="published-at">
+          Published at &nbsp;
+          <time datetime=2024-12-29T18:00:19-07:00>2024-12-29 18:00:19 -0700</time>
+          </span>
+          <span class="authors">
+          Authored by &nbsp;
+          <span class="author">One Namesonly</span>
+          <span class="author">Two Namesonly</span>
+          </li>
+          </ul>
           <h2>All collection names</h2>
           subdirectory_one, root, all_markdown, included_in_feeds
           <h2>All tag names</h2>

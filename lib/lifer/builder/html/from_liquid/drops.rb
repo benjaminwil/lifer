@@ -8,6 +8,7 @@ class Lifer::Builder::HTML::FromLiquid
   module Drops; end
 end
 
+require_relative "drops/authors_drop"
 require_relative "drops/collection_drop"
 require_relative "drops/collections_drop"
 require_relative "drops/entry_drop"

@@ -25,6 +25,20 @@ class Lifer::Brain
     def init(root: Dir.pwd, config_file: nil) = new(root:, config_file:)
   end
 
+  # Given the author manifest, this returns an array of all authors for the
+  # current project. This method is preferrable for accessing and querying for
+  # authors.
+  #
+  # @return [Array<Lifer::Author>]
+  def authors = author_manifest.to_a
+
+  # The author manifest tracks the unique authors added to the project as
+  # they are added. The writer method for this instance variable is used
+  # internally by Lifer when adding new authors.
+  #
+  # @return [Set<Lifer::Author>]
+  def author_manifest = (@author_manifest ||= Set.new)
+
   # Destroy any existing build output and then build the Lifer project with all
   # configured `Lifer::Builder`s.
   #

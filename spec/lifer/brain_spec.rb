@@ -5,6 +5,9 @@ RSpec.describe Lifer::Brain do
   let(:root) {
     temp_dir_with_files "entry.md" => <<~MARKDOWN
       ---
+      authors:
+        - one
+        - two
       tags: one, two, thre
       ---
     MARKDOWN
@@ -14,6 +17,31 @@ RSpec.describe Lifer::Brain do
     subject { described_class.init root: root, config_file: "path/to/file" }
 
     it { is_expected.to be_an_instance_of Lifer::Brain }
+  end
+
+  describe "#author_manifest" do
+    subject { brain.author_manifest }
+
+    context "when fresh" do
+      it { is_expected.to be_an_instance_of Set }
+    end
+
+    context "after a build" do
+      before do
+        allow(Lifer).to receive(:brain).and_return(brain)
+
+        with_stdout_silenced do
+          brain.build!
+        end
+      end
+
+      it { is_expected.to be_an_instance_of Set }
+
+      it "has generated all entry authors", :aggregate_failures do
+        expect(subject.count).to eq 2
+        expect(subject.all? { _1.is_a? Lifer::Author }).to eq true
+      end
+    end
   end
 
   describe "#build!" do

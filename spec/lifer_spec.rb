@@ -33,6 +33,20 @@ RSpec.describe Lifer do
     end
   end
 
+  describe ".author_manifest" do
+    subject { described_class.author_manifest }
+
+    let(:brain) { instance_double Lifer::Brain, author_manifest: [] }
+
+    it "delegates to the brain" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+
+      subject
+
+      expect(brain).to have_received(:author_manifest).once
+    end
+  end
+
   describe ".build!" do
     subject { described_class.build! }
 

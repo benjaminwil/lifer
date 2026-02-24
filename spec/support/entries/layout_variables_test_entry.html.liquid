@@ -2,15 +2,40 @@
 
 <h2>Some root collection entry titles</h2>
 
-{% for entry in collections.root.entries limit: 2 -%}
-  {% if forloop.first -%}
-    {{ entry.title }} (published: {{ entry.published_at }}; updated: {{ entry.updated_at }}),
-    <br/>
-  {%- else -%}
-    {{ entry.title }} (published: {{ entry.published_at }}; updated: {{ entry.updated_at }})
-  {%- endif %}
+<ul>
+  {% for entry in collections.root.entries limit: 2 -%}
+    <li>
+      <span class="title">{{ entry.title }}</span>
 
-{%- endfor %}
+      <span class="published-at">
+        Published at &nbsp;
+        <time datetime={{ entry.published_at | date_to_xmlschema }}>{{ entry.published_at }}</time>
+      </span>
+
+      {% if entry.updated_at -%}
+        <span class="updated-at">
+          Updated at &nbsp;
+          <time datetime={{ entry.updated_at | date_to_xmlschema }}>{{ entry.updated_at }}</time>
+        </span>
+      {%- endif %}
+
+      <span class="authors">
+        Authored by &nbsp;
+      {% for author in entry.authors -%}
+        {% if author.avatar -%}
+          <img alt="" src="{{ author.avatar }}">
+        {%- endif -%}
+
+        <span class="author">{{ author.name }}</span>
+
+        {% if author.url -%}
+          (<a class="url" href="{{ author.url }}">link</a>)
+        {%- endif %}
+      {%- endfor %}
+    </li>
+  {%- endfor %}
+</ul>
+
 
 <h2>All collection names</h2>
 

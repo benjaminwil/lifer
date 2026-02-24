@@ -25,7 +25,9 @@ module Lifer::Builder::HTML::FromLiquid::Drops
     # The entry authors (or author).
     #
     # @return [String]
-    def authors = (@authors ||= lifer_entry.authors.join(", "))
+    def authors
+      @authors ||= AuthorsDrop.new(lifer_entry.authors)
+    end
 
     # The entry content.
     #

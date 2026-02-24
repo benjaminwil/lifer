@@ -29,6 +29,17 @@ module Lifer
   FRONTMATTER_REGEX = /^---\n(.*?)---\n/m
 
   class << self
+    # All of the authors represented in Lifer entries for the current project.
+    #
+    # @return [Array<Lifer::Author>] The complete list of authors.
+    def authors = brain.authors
+
+    # A set of all authors added to the project. Prefer using the `#authors`
+    # method for author queries.
+    #
+    # @return [Set<Lifer::Author>] The complete set of author.
+    def author_manifest = brain.author_manifest
+
     # The first time `Lifer.brain` is referenced, we build a new `Lifer::Brain`
     # object that is used and reused until the current process has ended.
     #
@@ -178,6 +189,7 @@ I18n.available_locales = [:en]
 #
 require_relative "lifer/shared"
 
+require_relative "lifer/author"
 require_relative "lifer/brain"
 require_relative "lifer/builder"
 require_relative "lifer/collection"

@@ -45,35 +45,106 @@ RSpec.shared_examples "Lifer::Entry subclass" do
         directory: File.dirname(file)
     }
 
-    context "when frontmatter for both 'authors' and 'author exist" do
-      let(:file) {
-        temp_entry_subclass "author-and-authors", <<~CONTENTS
-            ---
-            author: singular author
-            authors: [many, authors]
-            ---
-          CONTENTS
-      }
+    context "when authors are listed as names only" do
+      context "when frontmatter for both 'authors' and 'author' exist" do
+        let(:file) {
+          temp_entry_subclass "author-and-authors", <<~CONTENTS
+              ---
+              author: singular author
+              authors: [many, authors]
+              ---
+            CONTENTS
+        }
 
-      it { is_expected.to eq ["singular author"] }
+        it "returns the `Lifer::Author` for the singular author" do
+          expect(subject)
+            .to eq [Lifer.authors.detect { _1.name == "singular author" }]
+        end
+      end
+
+      context "when frontmatter for 'authors' exists" do
+        let(:file) {
+          temp_entry_subclass "entry-with-authors", <<~CONTENTS
+              ---
+              authors: [all of, the authors]
+              ---
+            CONTENTS
+        }
+
+        it "returns the `Lifer::Author`s for each author" do
+          expect(subject)
+            .to eq [
+              Lifer.authors.detect { _1.name == "all of" },
+              Lifer.authors.detect { _1.name == "the authors" }
+            ]
+        end
+      end
+
+      context "when frontmatter for 'author' exists" do
+        let(:file) { temp_entry_subclass "author", "---\nauthor: one author\n---" }
+
+        it { is_expected.to eq [Lifer.authors.detect { _1.name == "one author" }] }
+      end
     end
 
-    context "when frontmatter for 'authors' exists" do
-      let(:file) {
-        temp_entry_subclass "entry-with-authors", <<~CONTENTS
-            ---
-            authors: [all of, the authors]
-            ---
-          CONTENTS
-      }
+    context "when authors are author objects" do
+      context "when frontmatter for both 'authors' and 'author exist" do
+        let(:file) {
+          temp_entry_subclass "author-and-authors", <<~CONTENTS
+              ---
+              author:
+                name: singular author
+                url: /relative1
+              authors:
+                - name: many
+                  avatar: /relative2
+                - name: others
+                  avatar: /relative3
+              ---
+            CONTENTS
+        }
 
-      it { is_expected.to eq ["all of", "the authors"] }
-    end
+        it "returns the `Lifer::Author` for the singular author" do
+          expect(subject)
+            .to eq [Lifer.authors.detect { _1.name == "singular author" }]
+        end
+      end
 
-    context "when frontmatter for 'author' exists" do
-      let(:file) { temp_entry_subclass "author", "---\nauthor: one author\n---" }
+      context "when frontmatter for 'authors' exists" do
+        let(:file) {
+          temp_entry_subclass "entry-with-authors", <<~CONTENTS
+              ---
+              authors:
+                - name: all of
+                  avatar: /haha
+                - name: the authors
+                  avatar: /hoho
+              ---
+            CONTENTS
+        }
 
-      it { is_expected.to eq ["one author"] }
+        it "returns the `Lifer::Author`s for each author" do
+          expect(subject)
+            .to eq [
+              Lifer.authors.detect { _1.name == "all of" },
+              Lifer.authors.detect { _1.name == "the authors" }
+            ]
+        end
+      end
+
+      context "when frontmatter for 'author' exists" do
+        let(:file) {
+          temp_entry_subclass "entry-with-author", <<~CONTENTS
+              ---
+              author:
+                name: one author
+                avatar: /haha
+              ---
+            CONTENTS
+        }
+
+        it { is_expected.to eq [Lifer.authors.detect { _1.name == "one author" }] }
+      end
     end
 
     context "when no frontmatter for 'authors' or 'author' exists" do

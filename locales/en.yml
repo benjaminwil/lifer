@@ -1,4 +1,6 @@
 en:
+  author:
+    ambiguous_uri_error: "Author %{name} contains ambiguous URI: \"%{uri}\". Use an absolute URI or relative from the project root instead."
   builder:
     file_conflict_error: "Cannot build HTML file because `%{path}` already exists."
     prebuild_failure: >

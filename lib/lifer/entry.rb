@@ -58,12 +58,15 @@ module Lifer
       # @param file [String] The absolute filename of an entry file.
       # @param collection [Lifer::Collection] The collection for the entry.
       # @return [Lifer::Entry] An entry.
-      def generate(file:, collection:)
+      def generate(file:, collection:, dependencies: [:authors, :tags])
         error!(file) unless File.exist?(file)
 
         if (new_entry = subclass_for(file)&.new(file:, collection:))
           Lifer.entry_manifest << new_entry
-          new_entry.tags
+
+          dependencies.each do |dependency|
+            new_entry.public_send dependency
+          end
         end
 
         new_entry
@@ -133,7 +136,20 @@ module Lifer
     #
     # @return [Array<String>] An array of authors's names.
     def authors
-      Array(frontmatter[:author] || frontmatter[:authors]).compact
+      list = Array(frontmatter[:author] || frontmatter[:authors]).compact
+      if list.any? && list.all? { _1.is_a? Array }
+        list = [list.to_h]
+      end
+
+      list.map {
+        attributes = Lifer::Utilities.symbolize_keys(
+          case _1
+          when Hash then _1
+          when String then {name: _1}
+          end
+         )
+        Lifer::Author.build_or_update **attributes.merge(entries: [self])
+      }
     end
 
     # This method returns the full text of the entry, only removing the
