@@ -29,6 +29,11 @@ module Lifer
   FRONTMATTER_REGEX = /^---\n(.*?)---\n/m
 
   class << self
+    # All of the assets represented in Lifer entries for the current project.
+    #
+    # @return [Array<Lifer::Asset>] The complete list of assets.
+    def asset_manifest = brain.asset_manifest
+
     # All of the authors represented in Lifer entries for the current project.
     #
     # @return [Array<Lifer::Author>] The complete list of authors.
@@ -190,6 +195,7 @@ I18n.available_locales = [:en]
 require_relative "lifer/shared"
 require_relative "lifer/utilities"
 
+require_relative "lifer/asset"
 require_relative "lifer/author"
 require_relative "lifer/brain"
 require_relative "lifer/builder"

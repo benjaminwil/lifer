@@ -29,6 +29,11 @@ module Lifer
     require_relative "entry/markdown"
     require_relative "entry/txt"
 
+    # If assets are represented in YAML frontmatter as a string, they're split on
+    # commas and/or spaces.
+    #
+    ASSET_DELIMITER_REGEX = /[,\s]+/
+
     # We provide a default date for entries that have no date and entry types that
     # otherwise could not have a date due to no real way of getting that metadata.
     #
@@ -58,7 +63,7 @@ module Lifer
       # @param file [String] The absolute filename of an entry file.
       # @param collection [Lifer::Collection] The collection for the entry.
       # @return [Lifer::Entry] An entry.
-      def generate(file:, collection:, dependencies: [:authors, :tags])
+      def generate(file:, collection:, dependencies: [:assets, :authors, :tags])
         error!(file) unless File.exist?(file)
 
         if (new_entry = subclass_for(file)&.new(file:, collection:))
@@ -125,6 +130,14 @@ module Lifer
     def initialize(file:, collection:)
       @file = Pathname file
       @collection = collection
+    end
+
+    # Locates and returns all assets defined in the entry.
+    #
+    # @return [Array<Lifer::Asset>] The entry's assets.
+    def assets
+      @assets ||= candidate_asset_names
+        .map { Lifer::Asset.build_or_update(url: _1, entries: [self]) }
     end
 
     # Given the entry's frontmatter, we should be able to get a list of authors.
@@ -299,6 +312,21 @@ module Lifer
     end
 
     private
+
+    # Similar to tags, users may represent assets as a string or a list of
+    # strings instead of YAML-style arrays. So let's parse for all of them.
+    #
+    # @return [Array<String>] An array of candidate asset URLs.
+    def candidate_asset_names
+      candidate_frontmatter_fields = [:banner_image, :image, :images]
+      candidate_frontmatter_fields.flat_map {
+        case frontmatter[_1]
+        when Array then frontmatter[_1].map(&:to_s)
+        when String then frontmatter[_1].split(ASSET_DELIMITER_REGEX)
+        else []
+        end.uniq
+      }.compact
+    end
 
     # It is conventional for users to use spaces or commas to delimit tags in
     # other systems, so let's support that. But let's also support YAML-style

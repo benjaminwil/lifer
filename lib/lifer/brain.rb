@@ -25,6 +25,13 @@ class Lifer::Brain
     def init(root: Dir.pwd, config_file: nil) = new(root:, config_file:)
   end
 
+  # The asset manifest tracks the unique assets added to the project as they
+  # are added. The writer methods for this instanc evariable is used internally
+  # by Lifer when adding new assets.
+  #
+  # @return [Set<Lifer::Asset>]
+  def asset_manifest = (@asset_manifest ||= Set.new)
+
   # Given the author manifest, this returns an array of all authors for the
   # current project. This method is preferrable for accessing and querying for
   # authors.

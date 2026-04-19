@@ -36,6 +36,36 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
   end
 
+  describe "#assets" do
+    subject { entry.assets }
+
+    let(:entry) { described_class.new file: file, collection: collection }
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+    let(:file) {
+      temp_entry_subclass "some-assets", <<~CONTENTS
+        ---
+        image: /images/a.png
+        images:
+          - /images/b.png
+          - /images/c.png
+        banner_image: /images/banner.png
+        ---
+      CONTENTS
+    }
+
+    it "returns the `Lifer::Assets`" do
+      expect(subject).to contain_exactly(
+        Lifer.asset_manifest.to_a.detect { _1.url == "https://example.com/images/a.png" },
+        Lifer.asset_manifest.to_a.detect { _1.url == "https://example.com/images/b.png" },
+        Lifer.asset_manifest.to_a.detect { _1.url == "https://example.com/images/c.png" },
+        Lifer.asset_manifest.to_a.detect { _1.url == "https://example.com/images/banner.png" }
+      )
+    end
+  end
+
   describe "#authors" do
     subject { entry.authors }
 
