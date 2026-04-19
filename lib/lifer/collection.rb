@@ -89,6 +89,8 @@ class Lifer::Collection
   #
   # @param name [*Symbol] A list of symbols that map to a nested Lifer
   #   setting (for the current collection).
+  #   @param strict [boolean] Choose whether to strictly return the collection
+  #     setting or to fallback to the Lifer root and default settings.
   # @return [String, Nil] The setting as set in the Lifer project's
   #   configuration file.
   def setting(*name, strict: false)
