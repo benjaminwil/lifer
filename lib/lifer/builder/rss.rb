@@ -15,7 +15,8 @@ require "rss"
 # 1. Boolean
 #
 #    Simply set `rss: true` or `rss: false` to enable or disable a feed for a
-#    collection. If `true`, an RSS feed will be built to `name-of-collection.xml`
+#    collection. If `true`, an RSS feed will be built to
+#    `/name-of-collection.xml` at the root of the Lifer output directory.
 #
 # 2. Simple
 #
@@ -78,8 +79,8 @@ class Lifer::Builder::RSS < Lifer::Builder
   ]
 
   class << self
-    # Traverses and renders an RSS feed for each feedable collection in the
-    # configured output directory for the Lifer project.
+    # Traverses and renders an RSS feed for each RSS-enabled feedable
+    # collection in the configured output directory for the Lifer project.
     #
     # @param root [String] The Lifer root.
     # @return [void]
@@ -98,7 +99,7 @@ class Lifer::Builder::RSS < Lifer::Builder
     DEFAULT_MAKER_FORMAT_NAME
   end
 
-  # Traverses and renders an RSS feed for feedable collection.
+  # Traverses and renders an RSS feed for RSS-enabled feedable collections.
   #
   # @return [void]
   def execute

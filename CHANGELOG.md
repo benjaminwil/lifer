@@ -1,5 +1,7 @@
 ## Next
 
+This release improves the documentation for the `Lifer::Builder::RSS`.
+
 ## v0.12.4
 
 This release resolves two issues:
