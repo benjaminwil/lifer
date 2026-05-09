@@ -1,6 +1,4 @@
 en:
-  author:
-    ambiguous_uri_error: "Author %{name} contains ambiguous URI: \"%{uri}\". Use an absolute URI or relative from the project root instead."
   builder:
     file_conflict_error: "Cannot build HTML file because `%{path}` already exists."
     prebuild_failure: >
@@ -51,5 +49,6 @@ en:
     finder_methods:
       unknown_class: no class with name "%{name}"
   utilities:
+    ambiguous_uri_error: "An %{object_type} contains an ambiguous URI: \"%{uri}\". Use an absolute URI or relative from the project root instead."
     classify_error: >
       could not find constant for path "%{string_constant}" (%{camel_cased_string_constant})

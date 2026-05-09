@@ -104,13 +104,13 @@ RSpec.describe Lifer::Author do
       it "displays a helpful error message and returns nil", :aggregate_failures do
         allow(Lifer::Message)
           .to receive(:error)
-          .with("author.ambiguous_uri_error", name: "H", uri: "")
+          .with("utilities.ambiguous_uri_error", object_type: "Lifer::Author", uri: "")
 
         expect(subject).to be_nil
 
         expect(Lifer::Message)
           .to have_received(:error)
-          .with("author.ambiguous_uri_error", name: "H", uri: "")
+          .with("utilities.ambiguous_uri_error", object_type: "Lifer::Author", uri: "")
           .once
       end
     end
@@ -159,13 +159,13 @@ RSpec.describe Lifer::Author do
       it "displays a helpful error message and returns nil", :aggregate_failures do
         allow(Lifer::Message)
           .to receive(:error)
-          .with("author.ambiguous_uri_error", name: "H", uri: "")
+          .with("utilities.ambiguous_uri_error", object_type: "Lifer::Author", uri: "")
 
         expect(subject).to be_nil
 
         expect(Lifer::Message)
           .to have_received(:error)
-          .with("author.ambiguous_uri_error", name: "H", uri: "")
+          .with("utilities.ambiguous_uri_error", object_type: "Lifer::Author", uri: "")
           .once
       end
     end

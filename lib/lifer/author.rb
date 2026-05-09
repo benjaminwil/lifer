@@ -30,10 +30,8 @@ module Lifer
   # and "nat-mccartney" will all load up the same author object.
   #
   class Author
-    class AmbiguousURIError < StandardError; end
-
     class << self
-      # Builds or updated a Lifer author. On update, the list of an author's
+      # Builds or updates a Lifer author. On update, the list of an author's
       # entries would get freshened.
       #
       # @param name [String] The name of the author.
@@ -41,6 +39,7 @@ module Lifer
       #   the author at.
       # @param avatar [String] A relative or absolute URL to an image that
       #   represents the author.
+      # @return [Lifer::Author] The new or updated author.
       def build_or_update(name:, url: nil, avatar: nil, entries: [])
         update(name:, url:, avatar:, entries:) ||
           build(name:, url:, avatar:, entries:)
@@ -82,7 +81,9 @@ module Lifer
     # @param host [String] The host to prefix to relative URLs. By default,
     # this is the Lifer project's global host.
     # @return [String] The absolute URL to the avatar image.
-    def avatar(host: Lifer.setting(:global, :host)) = uri_from(@avatar, host:)
+    def avatar(host: Lifer.setting(:global, :host))
+      Lifer::Utilities.uri_from(@avatar, host:, object_type: self.class)
+    end
 
     # An identifier built from the author's name. This uses our generic
     # handle-izer function. So a name like "Nat McCartney" becomes
@@ -98,23 +99,8 @@ module Lifer
     # @param host [String] The host to prefix to relative URLs. By default,
     # this is the Lifer project's global host.
     # @return [String] The absolute version of the URL.
-    def url(host: Lifer.setting(:global, :host)) = uri_from(@url, host:)
-
-    private
-
-    def uri_from(string, host:)
-      uri = string && URI.parse(string.strip)
-
-      if uri && uri.relative? && uri.to_s.start_with?("/")
-        "%s%s" % [host, uri]
-      elsif uri && uri.relative? && !uri.to_s.start_with?("/")
-        raise AmbiguousURIError
-      elsif uri&.absolute?
-        uri.to_s
-      end
-    rescue AmbiguousURIError
-      Lifer::Message.error("author.ambiguous_uri_error", name:, uri: uri.to_s)
-      nil
+    def url(host: Lifer.setting(:global, :host))
+      Lifer::Utilities.uri_from(@url, host:, object_type: self.class)
     end
   end
 end

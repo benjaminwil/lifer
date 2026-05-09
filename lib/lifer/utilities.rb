@@ -4,6 +4,8 @@ require "parallel"
 # Ensure that these are actually useful globally, though. :-)
 #
 module Lifer::Utilities
+  class AmbiguousURIError < StandardError; end
+
   class << self
     # Output a string using bold escape sequences to the output TTY text.
     #
@@ -127,6 +129,23 @@ module Lifer::Utilities
       end
 
       symbolized_hash
+    end
+
+    def uri_from(string, host:, object_type:)
+      uri = string && URI.parse(string.strip)
+
+      if uri && uri.relative? && uri.to_s.start_with?("/")
+        "%s%s" % [host, uri]
+      elsif uri && uri.relative? && !uri.to_s.start_with?("/")
+        raise AmbiguousURIError
+      elsif uri&.absolute?
+        uri.to_s
+      end
+    rescue AmbiguousURIError
+      Lifer::Message.error "utilities.ambiguous_uri_error",
+        object_type: object_type.inspect,
+        uri: uri&.to_s
+      nil
     end
 
     private

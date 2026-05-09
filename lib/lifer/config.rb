@@ -1,5 +1,3 @@
-require_relative "utilities"
-
 # This class is responsible for reading the Lifer configuration YAML file. This
 # file should provided by the user, but the Lifer Ruby gem does provide a default
 # file, as well.

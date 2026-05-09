@@ -192,4 +192,51 @@ RSpec.describe Lifer::Utilities do
       end
     end
   end
+
+  describe ".uri_from" do
+    subject {
+      described_class.uri_from string,
+        host: "https://example.com",
+        object_type: Lifer::Author
+    }
+
+    context "when the given string is an absolute URL" do
+      let(:string) { "https://asdf.com/about" }
+
+      it { is_expected.to eq "https://asdf.com/about" }
+    end
+
+    context "when the given string is a relative URL" do
+      let(:string) { "/relative-url/index.html" }
+
+      it { is_expected.to eq "https://example.com/relative-url/index.html" }
+    end
+
+    context "when the given string is ambiguous" do
+      let(:string) { "not/clear/enough-haha" }
+
+      it "outputs a message and returns nil" do
+        allow(Lifer::Message)
+          .to receive(:error)
+          .with(
+            "utilities.ambiguous_uri_error",
+            object_type: "Lifer::Author",
+            uri: string
+          )
+
+         expect(subject).to be_nil
+
+         expect(Lifer::Message)
+           .to have_received(:error)
+           .with(
+            "utilities.ambiguous_uri_error",
+            object_type: "Lifer::Author",
+            uri: string
+           )
+           .once
+      end
+
+      it { is_expected.to be_nil }
+    end
+  end
 end

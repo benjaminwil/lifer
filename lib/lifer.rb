@@ -184,10 +184,11 @@ require "i18n"
 I18n.load_path += Dir["%s/locales/*.yml" % Lifer.gem_root]
 I18n.available_locales = [:en]
 
-# `Lifer::Shared` contains modules that that may or may not be included on other
-# classes required below.
+# `Lifer::Shared` and `Lifer::Utilities` contain modules and methods that
+# are used by the main models required below.
 #
 require_relative "lifer/shared"
+require_relative "lifer/utilities"
 
 require_relative "lifer/author"
 require_relative "lifer/brain"

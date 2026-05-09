@@ -2,8 +2,6 @@ require "date"
 require "kramdown"
 require "time"
 
-require_relative "../utilities"
-
 # We should initialize each Markdown file in a Lifer project as a
 # `Lifer::Entry::Markdown` object. This class contains convenience methods for
 # parsing a Markdown file with frontmatter as a weblog post or article. Of
