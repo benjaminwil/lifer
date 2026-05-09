@@ -8,6 +8,7 @@ author: Admin
 entries:
   default_title: Untitled Entry
 
+json_feed: false
 rss: false
 uri_strategy: simple
 
@@ -33,12 +34,24 @@ uri_strategy: simple
 ###
 ###   layout_file: path/to/my_other_layout.html.erb
 ###
-### my_with_fine_grained_rss_settings:
-###   rss
+### my_collection_with_fine_grained_rss_settings:
+###   json_feed:
+###     authors:
+###       - name: Hal Human
+###         avatar: /images/avatars/hal.png
+###         url: https://hals-website.local
+###     content_format: html
+###     count: 99
+###     expired: false
+###     home_page_url: https://example.com/my-collection
+###     url: /location-of-the-feed.json
+###
+###   rss:
 ###     count: 99
 ###     format: rss
 ###     managing_editor: editor@example.com (Managing Editor)
 ###     url: custom.xml
+###
 
 # Selections
 #

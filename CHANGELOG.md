@@ -1,6 +1,12 @@
 ## Next
 
-This release improves the documentation for the `Lifer::Builder::RSS`.
+This release allows projects to build JSON Feed 1.1. Now, a project can
+build both Atom (or RSS 2.0) and JSON Feed, which is nice. In order to
+support JSON Feed, we modelled out `Lifer::Asset` and `Lifer::Author`. This
+is because JSON Feed explicitly supports author objects (with name, URL,
+and avatars URLs), and images and banner images per feed item.
+
+This release also improves the documentation for the `Lifer::Builder::RSS`.
 
 ## v0.12.4
 
