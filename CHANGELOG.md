@@ -1,4 +1,5 @@
 ## Next
+## v0.13.0
 
 This release allows projects to build JSON Feed 1.1. Now, a project can
 build both Atom (or RSS 2.0) and JSON Feed, which is nice. In order to
