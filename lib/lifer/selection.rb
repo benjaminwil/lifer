@@ -6,7 +6,7 @@
 # detected Ruby files are dynamically loaded when `Lifer::Brain` is initialized.
 #
 # Implementing a selection is simple. Just implement the `#entries` method and
-# rovide a name. The `#entries` method can be used to filter down
+# provide a name. The `#entries` method can be used to filter down
 # `Lifer.entry_manifest` in whichever way one needs. To see examples of this,
 # check out the source code of any of the included selections.
 #
