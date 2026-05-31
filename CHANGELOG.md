@@ -1,5 +1,8 @@
 ## Next
 
+This release fixes the included configuration file template to enable the
+JSON Feed builder by default.
+
 ## v0.13.0
 
 This release allows projects to build JSON Feed 1.1. Now, a project can

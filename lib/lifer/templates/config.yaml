@@ -92,6 +92,7 @@ global:
   build:
     - html
     - rss
+    - json_feed
     - txt
   host: https://example.com
   output_directory: _build
