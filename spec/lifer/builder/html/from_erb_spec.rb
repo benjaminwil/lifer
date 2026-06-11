@@ -86,6 +86,7 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
            <body>
              <h1>HTML entry with layout variables</h1>
              <h2>Some root collection entry titles</h2>
+             Untitled Entry (published: 1900-01-01 00:00:00 +0000, updated: )
              entry-with-variables (published: 1900-01-01 00:00:00 +0000, updated: )
              Another Entry (published: 1900-01-01 00:00:00 +0000, updated: )
              Another Another Entry (published: 1900-01-01 00:00:00 +0000, updated: 2000-01-01 00:00:01 +0000)
@@ -94,7 +95,7 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
              <h2>All tag names</h2>
              tag1, tag2, tag3
              <h2>Entries for tag1</h2>
-             Another Another Entry, Another Entry
+             Another Entry, Another Another Entry
              <h2>This project's settings</h2>
              {"uri_strategy":"simple","subdirectory_one":{"uri_strategy":"pretty"}}
              <h2>Entry permalinks do not include index.html because of the pretty URI strategy</h2>

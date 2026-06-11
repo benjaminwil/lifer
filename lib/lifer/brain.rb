@@ -94,8 +94,8 @@ class Lifer::Brain
   # @return [Lifer::Config] The Lifer configuration object.
   def config = (@config ||= Lifer::Config.build file: config_file_location)
 
-  # Returns all entries that have been added to the manifest. If all is working
-  # as intended, this should be every entry ever generated.
+  # Allows for getting the entry manifest or shovelling new entries to the
+  # entry manifest.
   #
   # @return [Set<Lifer::Entry>] All entries that currently exist.
   def entry_manifest = (@entry_manifest ||= Set.new)

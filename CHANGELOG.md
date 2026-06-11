@@ -2,6 +2,10 @@
 
 This release includes some really nice improvements and bug fixes:
 
+- When returning a list of entries belonging to a `Lifer::Collection` or a
+  `Lifer::Tag`, the entries are now returned in reverse chronological order
+  by default. (But you can pass the argument `order: :oldest` to get them
+  in reverse, if you want.)
 - The included Lifer configuration file template now enables the
   JSON Feed builder by default.
 - Every `Lifer::Selection` name is now automatically registered as a setting so

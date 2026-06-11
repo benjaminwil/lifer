@@ -81,7 +81,21 @@ module Lifer
     # @return [Pathname] The path to the current Lifer config file.
     def config_file = brain.config.file
 
-    # A set of all entries currently in the project.
+    # Uses the entry manifest to return entries in the specified order.
+    #
+    # @param order [Symbol] Either :latest (descending) or :oldest (ascending).
+    # @return [Set] All entries in the specified order.
+    def entries(order: :latest)
+      case order
+      when :latest
+        entry_manifest.sort_by { |entry| entry.published_at }.reverse
+      when :oldest
+        entry_manifest.sort_by { |entry| entry.published_at }
+      end
+    end
+
+    # Allows for getting the entry manifest or shovelling new entries to the
+    # entry manifest.
     #
     # @fixme Do we need this as well as `Lifer.manifest`?
     #

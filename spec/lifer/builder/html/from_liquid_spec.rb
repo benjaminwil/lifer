@@ -125,7 +125,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
           <h2>All tag names</h2>
           tag1, tag2, tag3
           <h2>Entries for tag1</h2>
-          Entry Title 1, Entry Title 2
+          Entry Title 2, Entry Title 1
           <h2>This project's settings</h2>
           all settings: {"layout_file":"../_layouts/layout.html.liquid","uri_strategy":"simple","subdirectory_one":{"uri_strategy":"pretty"},"test_setting":[{"number":123,"description":"To tests arrays of objects."}]}
           root layout file: ../_layouts/layout.html.liquid

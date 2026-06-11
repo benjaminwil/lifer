@@ -43,11 +43,22 @@ module Lifer
 
     attr_accessor :name
 
-    attr_reader :entries
-
     def initialize(name:, entries:)
       @name = name
       @entries = entries
+    end
+
+    # Returns the tag's associated entries in order.
+    #
+    # @param order [Symbol] Either :latest (descending) or :oldest (ascending).
+    # @return [Array<Lifer::Entry>] The entries for the current tag.
+    def entries(order: :latest)
+      case order
+      when :latest
+        @entries.sort_by { |entry| entry.published_at }.reverse
+      when :oldest
+        @entries.sort_by { |entry| entry.published_at }
+      end
     end
   end
 end

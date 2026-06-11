@@ -59,4 +59,39 @@ RSpec.describe Lifer::Tag do
       expect { subject }.to raise_error NoMethodError
     end
   end
+
+  describe "#entries" do
+    subject { tag.entries(order:) }
+
+    let(:latest_entry) {
+      Lifer::Entry.generate(file: temp_file("latest.md", <<~TEXT), collection: :zzz)
+        ---
+        published_at: Wed Jun 10 09:29:58 PM PDT 2026
+        ---
+      TEXT
+    }
+    let(:oldest_entry) {
+      Lifer::Entry.generate(file: temp_file("oldest.md", <<~TEXT), collection: :zzz)
+        ---
+        published_at: Wed Jan 01 09:00:00 AM PDT 1975
+        ---
+      TEXT
+    }
+    let(:tag) {
+      described_class.new name: "existing-tag",
+        entries: [oldest_entry, latest_entry]
+    }
+
+    context "when the order is 'latest'" do
+      let(:order) { :latest }
+
+      it { is_expected.to eq [latest_entry, oldest_entry] }
+    end
+
+    context "when the order is 'oldest'" do
+      let(:order) { :oldest }
+
+      it { is_expected.to eq [oldest_entry, latest_entry] }
+    end
+  end
 end

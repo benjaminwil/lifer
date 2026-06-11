@@ -124,10 +124,43 @@ RSpec.describe Lifer do
     end
   end
 
+  describe ".entries" do
+    subject { described_class.entries(order:) }
+
+    let!(:brain) {
+      instance_double Lifer::Brain, entry_manifest: [
+        latest_entry,
+        oldest_entry
+      ]
+    }
+    let(:order) { :oldest }
+
+    let(:latest_entry) {
+      Lifer::Entry.generate(file: temp_file("latest.md", <<~TEXT), collection: :zzz)
+        ---
+        published_at: Wed Jun 10 09:29:58 PM PDT 2026
+        ---
+      TEXT
+    }
+    let(:oldest_entry) {
+      Lifer::Entry.generate(file: temp_file("oldest.md", <<~TEXT), collection: :zzz)
+        ---
+        published_at: Wed Jan 01 09:00:00 AM PDT 1975
+        ---
+      TEXT
+    }
+
+    it "returns the entries in the specified order" do
+      allow(Lifer::Brain).to receive(:init).and_return(brain)
+
+      expect(subject).to eq [oldest_entry, latest_entry]
+    end
+  end
+
   describe ".entry_manifest" do
     subject { described_class.entry_manifest }
 
-    let(:brain) { instance_double Lifer::Brain, entry_manifest: [] }
+    let!(:brain) { instance_double Lifer::Brain, entry_manifest: [] }
 
     it "delegates to the brain" do
       allow(Lifer::Brain).to receive(:init).and_return(brain)
@@ -136,6 +169,7 @@ RSpec.describe Lifer do
 
       expect(brain).to have_received(:entry_manifest).once
     end
+
   end
 
   describe ".ignoreable?" do
