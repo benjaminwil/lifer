@@ -100,11 +100,6 @@ class Lifer::Brain
   # @return [Set<Lifer::Entry>] All entries that currently exist.
   def entry_manifest = (@entry_manifest ||= Set.new)
 
-  # A manifest of all Lifer project entries.
-  #
-  # @return [Set<Lifer::Entry>] A set of all entries.
-  def manifest = (@manifest ||= Set.new)
-
   # Returns the build directory for the Lifer project's build output.
   #
   # @return [String] The Lifer build directory.

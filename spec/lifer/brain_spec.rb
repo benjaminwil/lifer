@@ -375,39 +375,6 @@ RSpec.describe Lifer::Brain do
     end
   end
 
-  describe "#manifest" do
-    subject { brain.manifest }
-
-    context "when fresh" do
-      it { is_expected.to be_an_instance_of Set }
-    end
-
-    context "after a build" do
-      before do
-        allow(Lifer).to receive(:brain).and_return(brain)
-
-        with_stdout_silenced do
-          brain.build!
-        end
-      end
-
-      it "lists all entries" do
-        expect(subject).to be_an_instance_of Set
-
-        input_files = directory_entries_for(root)
-          .map { _1.gsub Lifer::Utilities.file_extension(_1), "" }
-        output_files =
-          subject.map { _1.gsub Lifer::Utilities.file_extension(_1), "" }
-
-        expect(output_files).to contain_exactly(*input_files),
-          "This failure indicates that the input files and output files are " \
-          "out of sync for some reason. Perhaps the `#directory_entries` " \
-          "needs to be refactored to better reflect the intended manifest " \
-          "contents."
-      end
-    end
-  end
-
   describe "#require_user_provided_ruby_files!" do
     subject { brain.require_user_provided_ruby_files! }
 

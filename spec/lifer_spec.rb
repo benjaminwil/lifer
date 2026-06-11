@@ -194,20 +194,6 @@ RSpec.describe Lifer do
     end
   end
 
-  describe ".manifest" do
-    subject { described_class.manifest }
-
-    let(:brain) { instance_double Lifer::Brain, manifest: [] }
-
-    it "delegates to the brain" do
-      allow(Lifer::Brain).to receive(:init).and_return(brain)
-
-      subject
-
-      expect(brain).to have_received(:manifest).once
-    end
-  end
-
   describe ".output_directory" do
     subject { described_class.output_directory }
 

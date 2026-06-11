@@ -32,12 +32,13 @@ class Lifer::Collection
         .select { |candidate| Lifer::Entry.supported? candidate }
 
       entries = entry_glob.select { |entry|
-        if Lifer.manifest.include? entry
+        filenames = Lifer.entry_manifest.map(&:file)
+
+        if filenames.include? entry
           false
         elsif Lifer.ignoreable? entry.gsub("#{directory}/", "")
           false
         else
-          Lifer.manifest << entry
           true
         end
       }.map { |entry| Lifer::Entry.generate file: entry, collection: }

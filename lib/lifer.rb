@@ -97,8 +97,6 @@ module Lifer
     # Allows for getting the entry manifest or shovelling new entries to the
     # entry manifest.
     #
-    # @fixme Do we need this as well as `Lifer.manifest`?
-    #
     # @return [Set] All entries.
     def entry_manifest = brain.entry_manifest
 
@@ -116,13 +114,6 @@ module Lifer
     def ignoreable?(directory_or_file)
       directory_or_file.match?(/#{IGNORE_PATTERNS.join("|")}/)
     end
-
-    # A set of all entries currently in the project.
-    #
-    # @fixme Do we need this as well as `Lifer.manifest`?
-    #
-    # @return [Set] All entries.
-    def manifest = brain.manifest
 
     # The build directory for the Lifer project.
     #

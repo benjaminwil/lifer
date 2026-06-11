@@ -10,6 +10,9 @@ This release includes some really nice improvements and bug fixes:
   JSON Feed builder by default.
 - Every `Lifer::Selection` name is now automatically registered as a setting so
   that you can configure it like you configure any other collection of entries.
+- Lastly, this release removes `Lifer.manifest`. (A collection of absolute
+  paths to every entry file ended up not being incredibly useful. We get
+  the same-ish functionality from `Lifer.entry_manifest`.)
 
 ## v0.13.0
 
