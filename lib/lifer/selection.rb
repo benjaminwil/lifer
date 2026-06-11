@@ -25,7 +25,9 @@ class Lifer::Selection < Lifer::Collection
     #
     # @return [Lifer::Selection]
     def generate
-      new(name: name, directory: nil)
+      selection = new(name: name, directory: nil)
+      Lifer.register_settings name
+      selection
     end
 
     private

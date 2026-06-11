@@ -1,7 +1,11 @@
 ## Next
 
-This release fixes the included configuration file template to enable the
-JSON Feed builder by default.
+This release includes some really nice improvements and bug fixes:
+
+- The included Lifer configuration file template now enables the
+  JSON Feed builder by default.
+- Every `Lifer::Selection` name is now automatically registered as a setting so
+  that you can configure it like you configure any other collection of entries.
 
 ## v0.13.0
 

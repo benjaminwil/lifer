@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Lifer::Selection do
-  describe "a selectionsubclass" do
+  describe "a selection subclass" do
     context "an only-initialized subclass" do
       let(:my_subclass) {
         Class.new described_class do
@@ -10,6 +10,17 @@ RSpec.describe Lifer::Selection do
 
       it "is given a default name" do
         expect(my_subclass.name).to eq :unnamed_selection
+      end
+
+      it "registers the selection name as a setting" do
+        allow(Lifer).to receive(:register_settings).with :unnamed_selection
+
+        my_subclass.generate
+
+        expect(Lifer)
+          .to have_received(:register_settings)
+          .with(:unnamed_selection)
+          .once
       end
 
       it "raises an error if `#entries` is not implemented" do
@@ -31,6 +42,17 @@ RSpec.describe Lifer::Selection do
 
       it "has a name" do
         expect(my_subclass.name).to eq :my_selection
+      end
+
+      it "registers the selection name as a setting" do
+        allow(Lifer).to receive(:register_settings).with :my_selection
+
+        my_subclass.generate
+
+        expect(Lifer)
+          .to have_received(:register_settings)
+          .with(:my_selection)
+          .once
       end
 
       it "implements `#entries`" do
