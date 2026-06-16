@@ -56,7 +56,7 @@ class Lifer::Builder::TXT < Lifer::Builder
   end
 
   def generate_output_file_for(entry)
-    return unless entry.class.output_extension == :txt
+    return unless entry.output_extension == :txt
 
     relative_path = output_file entry
     absolute_path = File.join(Lifer.output_directory, relative_path)

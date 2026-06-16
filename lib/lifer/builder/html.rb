@@ -116,7 +116,7 @@ class Lifer::Builder::HTML < Lifer::Builder
   #   entry cannot be output to HTML.  We should not care about this return
   #   value.
   def generate_output_file_for(entry)
-    return unless entry.class.output_extension == :html
+    return unless entry.output_extension == :html
 
     relative_path = output_file entry
     absolute_path = File.join(Lifer.output_directory, relative_path)

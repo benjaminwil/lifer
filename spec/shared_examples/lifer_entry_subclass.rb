@@ -283,6 +283,21 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
   end
 
+  describe "#output_extension" do
+    subject { entry.output_extension }
+
+    let(:entry) { described_class.new file: file, collection: collection }
+    let(:file) { temp_entry_subclass "small", "<p>Hello world</p>" }
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+
+    it "returns the entry subclass output extension" do
+      expect(subject).to eq described_class.output_extension
+    end
+  end
+
   describe "#to_html" do
     subject { entry.to_html }
 

@@ -205,6 +205,12 @@ module Lifer
       @full_text ||= File.readlines(file).join if file
     end
 
+    # The file extension to be used when at the entry's build time. For
+    # example, a Markdown file should be built to HTML.
+    #
+    # @return [String]
+    def output_extension = self.class.output_extension
+
     # Using the current Lifer configuration, we can calculate the expected
     # permalink for the entry. For example:
     #

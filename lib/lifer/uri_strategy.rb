@@ -59,7 +59,7 @@ class Lifer::URIStrategy
 
   private
 
-  def file_extension(entry) = entry.class.output_extension
+  def file_extension(entry) = entry.output_extension
 
   self.name = :uri_strategy
 end
