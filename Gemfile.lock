@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lifer (0.13.0)
+    lifer (0.14.0)
       base64
       i18n (< 2)
       kramdown (~> 2.4)
