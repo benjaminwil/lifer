@@ -18,7 +18,7 @@ class Lifer::Builder
       # should be expected to.
       #
       # @raise [NotImplementedError]
-      def render
+      def render(_path, _locals, _context)
         raise NotImplementedError,
           "subclasses must implement a custom `#render` method"
       end

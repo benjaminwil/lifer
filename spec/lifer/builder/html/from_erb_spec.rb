@@ -23,6 +23,9 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
           This project contains <%= collections.count %> collections
         </header>
       TEXT
+      "_layouts/partials/icon.html.erb" => <<~TEXT,
+        <span class="icon"><%= icon_name %></span>
+      TEXT
       "_layouts/root.html.erb" => <<~TEXT,
         <html>
           <body>
@@ -39,6 +42,15 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
         <main><%= content %></main>
       TEXT
       "entry-with-variables.html.erb" => entry_content_with_variables,
+      "entry-with-render.html.erb" => <<~TEXT,
+        ---
+        title: Entry With Render
+        ---
+
+        <p>Before icon</p>
+        <%= render "_layouts/partials/icon.html.erb", icon_name: "star" %>
+        <p>After icon</p>
+      TEXT
       "another-entry.md" => <<~TEXT,
         ---
         title: Another Entry
@@ -72,6 +84,25 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
         directory: "#{project.root}/subdirectory_one"
     }
 
+    context "when an entry template calls render" do
+      let(:entry) {
+        Lifer::Entry::HTML.new collection: collection,
+          file: "#{project.root}/entry-with-render.html.erb"
+      }
+      let(:config) {
+        <<~CONFIG
+          layout_file: ../_layouts/layout.html.erb
+          uri_strategy: simple
+          subdirectory_one:
+            uri_strategy: pretty
+        CONFIG
+      }
+
+      it "renders the partial within the entry content" do
+        expect(subject).to include '<span class="icon">star</span>'
+      end
+    end
+
     context "when using layout-provided variables" do
       let(:entry) {
         Lifer::Entry::HTML.new collection: collection,
@@ -88,6 +119,7 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
              <h2>Some root collection entry titles</h2>
              Untitled Entry (published: 1900-01-01 00:00:00 +0000, updated: )
              entry-with-variables (published: 1900-01-01 00:00:00 +0000, updated: )
+             Entry With Render (published: 1900-01-01 00:00:00 +0000, updated: )
              Another Entry (published: 1900-01-01 00:00:00 +0000, updated: )
              Another Another Entry (published: 1900-01-01 00:00:00 +0000, updated: 2000-01-01 00:00:01 +0000)
              <h2>All collection names</h2>

@@ -6,6 +6,10 @@ This release includes some really nice improvements and bug fixes:
   `Lifer::Tag`, the entries are now returned in reverse chronological order
   by default. (But you can pass the argument `order: :oldest` to get them
   in reverse, if you want.)
+- We fixed a bug where entries in `.html.erb` format that attempted to render
+  view partials would error out due to the `render` method not having been
+  defined with the context of the entry being built yet. This bug was a bit
+  unpleasant to reason about, but it resolves a major defect with ERB building.
 - The included Lifer configuration file template now enables the
   JSON Feed builder by default.
 - Every `Lifer::Selection` name is now automatically registered as a setting so

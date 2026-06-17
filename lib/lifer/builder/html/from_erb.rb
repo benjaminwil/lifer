@@ -11,7 +11,7 @@ class Lifer::Builder::HTML
   #       </head>
   #
   #       <body>
-  #         <%= partial "_layouts/header.html.erb" %>
+  #         <%= render "_layouts/header.html.erb" %>
   #
   #         <h1><%= my_collection.name %></h1>
   #
@@ -23,7 +23,7 @@ class Lifer::Builder::HTML
   #           </section>
   #         <% end %>
   #
-  #         <%= partial "_layouts/footer.html.erb" %>
+  #         <%= render "_layouts/footer.html.erb" %>
   #       </body>
   #     </html>
   #
@@ -101,16 +101,20 @@ class Lifer::Builder::HTML
         collections = collection_context_class.new Lifer.collections
         tags = tag_context_class.new Lifer.tags
 
-        binding.local_variable_set :collections, collections
-        binding.local_variable_set :settings, Lifer.settings
-        binding.local_variable_set :tags, tags
-        binding.local_variable_set :content,
-          ERB.new(entry.to_html).result(binding)
+        current_binding = binding
+        current_binding.local_variable_set :collections, collections
+        current_binding.local_variable_set :settings, Lifer.settings
+        current_binding.local_variable_set :tags, tags
 
         define_singleton_method :render,
           -> (relative_path_to_template, locals = {}) {
-            partial_render_method relative_path_to_template, locals
+            partial_render_method relative_path_to_template,
+              locals,
+              current_binding
           }
+
+        current_binding.local_variable_set :content,
+          ERB.new(entry.to_html).result(binding)
       }
     end
 
@@ -130,21 +134,23 @@ class Lifer::Builder::HTML
     # available from entry and layout templates.
     #
     # @example Usage
-    #    <%= partial "_layouts/my_partial.html.erb", id: "123" %>
+    #    <%= render "_layouts/my_partial.html.erb", id: "123" %>
     # @param relative_path_to_template [String] The path, from the Lifer root,
     #   to the partial layout file.
     # @param locals [Hash] Additional data that should be passed along for
     #   rendering the partial.
+    # @param source_binding [Binding] A binding object carrying context
+    #   required to render the current partial layout.
     # @return [String] The rendered partial document.
-    def partial_render_method(relative_path_to_template, locals)
+    def partial_render_method(relative_path_to_template, locals, source_binding)
       template_path = File.join(Lifer.root, relative_path_to_template)
 
       partial_binding = binding.tap { |binding|
-        context.local_variables.each do |variable|
+        source_binding.local_variables.each do |variable|
           next if variable == :content
 
           binding.local_variable_set variable,
-            context.local_variable_get(variable)
+            source_binding.local_variable_get(variable)
         end
 
         locals.each do |key, value|
