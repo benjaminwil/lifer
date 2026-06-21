@@ -21,6 +21,7 @@ en:
       dump_default_config: Print the default configuration file to STDOUT and exit.
       port: Specify a custom port for the dev server.
       root: Specify the path to the Lifer project root.
+    pwd_is_gem_root: "Cannot build project at gem root: %{root}."
     subcommands:
       build: Build the Lifer project as configured in your Lifer configuration file.
       help: Display help text for the Lifer commandline interface.

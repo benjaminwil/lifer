@@ -26,17 +26,33 @@ RSpec.describe "bin/lifer", type: :system do
 
   describe "bin/lifer (no arguments)" do
     subject {
-      Dir.chdir(Lifer.root) do
+      Dir.chdir(pwd) do
         system "lifer"
       end
     }
 
-    it "builds the Lifer project" do
-      expect { subject }
-        .to change { Dir.glob("#{Lifer.output_directory}/*").size }
-        .from(0)
-        .and output(/Using default configuration/)
-        .to_stdout_from_any_process
+    context "from a project root" do
+      let(:pwd) { Lifer.root }
+
+      it "builds the Lifer project" do
+        expect { subject }
+          .to change { Dir.glob("#{Lifer.output_directory}/*").size }
+          .from(0)
+          .and output(/Using default configuration/)
+          .to_stdout_from_any_process
+      end
+    end
+
+    context "from the gem root" do
+      let(:pwd) { Lifer.gem_root }
+
+      it "exits without building" do
+        expect { subject }
+          .to output(/ERR: Cannot build project at gem root/)
+          .to_stdout_from_any_process
+
+        expect(Dir.glob("#{Lifer.output_directory}/*").size).to be_zero
+      end
     end
   end
 

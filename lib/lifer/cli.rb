@@ -66,6 +66,11 @@ module Lifer
       parser.parse! args
 
       brain = Lifer.brain(**{root: @root, config_file: @config_file}.compact)
+      if brain.root == Lifer.gem_root
+        Lifer::Message.error("cli.pwd_is_gem_root", root: brain.root)
+        return
+      end
+
       brain.require_user_provided_ruby_files!
 
       case subcommand

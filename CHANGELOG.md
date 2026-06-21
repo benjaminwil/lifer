@@ -1,4 +1,10 @@
 ## Next
+
+- If the project root is equal to the `Lifer.gem_root`, we now exit before
+  attempting to build. This is just a quality-of-life improvement for
+  developers, to ensure that the project and Lifer development environment
+  are isolated from each other.
+
 ## v0.14.0
 
 This release includes some really nice improvements and bug fixes:
