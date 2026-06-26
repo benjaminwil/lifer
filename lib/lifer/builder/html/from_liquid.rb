@@ -40,7 +40,7 @@ class Lifer::Builder::HTML
       )
       document = Liquid::Template
         .parse(layout_file_contents, **parse_options)
-        .render(document_context, **render_options)
+        .render!(document_context, **render_options)
 
       return document unless (relative_layout_path = frontmatter[:layout])
 
@@ -83,7 +83,7 @@ class Lifer::Builder::HTML
     def parse_options
       {
         environment: liquid_environment,
-        error_mode: :strict
+        error_mode: :strict2
       }
     end
 

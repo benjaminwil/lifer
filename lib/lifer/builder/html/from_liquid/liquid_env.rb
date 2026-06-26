@@ -16,7 +16,7 @@ class Lifer::Builder::HTML::FromLiquid
     # @return [Lifer::Environment]
     def self.global
       Liquid::Environment.build do |environment|
-        environment.error_mode = :strict
+        environment.error_mode = :strict2
 
         environment.file_system =
           Liquid::LocalFileSystem.new(Lifer.root, "%s.html.liquid")

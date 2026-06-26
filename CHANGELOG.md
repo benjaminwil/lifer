@@ -4,6 +4,10 @@
   attempting to build. This is just a quality-of-life improvement for
   developers, to ensure that the project and Lifer development environment
   are isolated from each other.
+- When building HTML from Liquid templates, we now use the `:strict2`
+  error mode and the error-raising `#render!` method for Liquid documents
+  now. This results in build failing early rather than Liquid builds succeeding
+  with entry contents that include strings like "Liquid error: blah blah."
 
 ## v0.14.0
 
