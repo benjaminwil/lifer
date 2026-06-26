@@ -28,7 +28,7 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
       {
         "_layouts/layout.html.liquid" => <<~LIQUID,
           <title>Layout with Greeting</title>
-          {% render "_layouts/partial" with entry: entry %}
+          {% render "_layouts/partial", entry: entry %}
           {{ content }}
         LIQUID
         "_layouts/partial.html.liquid" => <<~LIQUID,

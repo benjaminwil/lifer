@@ -59,13 +59,13 @@ RSpec.feature "dev server", type: :system do
   scenario "serving Liquid layouts with nested partials" do
     files = {
       "_layouts/layout.html.liquid" => <<~LIQUID,
-        {% render "_layouts/parent_partial" with entry: entry %}
+        {% render "_layouts/parent_partial", entry: entry %}
         <main>{{ content }}</main>
       LIQUID
       "_layouts/parent_partial.html.liquid" => <<~LIQUID,
         <p>Parent partial content</p>
         <p>Date: {{ entry.published_at | date_to_xmlschema }}
-        {% render "_layouts/child_partial" with entry: entry %}
+        {% render "_layouts/child_partial", entry: entry %}
       LIQUID
       "_layouts/child_partial.html.liquid" => <<~LIQUID,
         <p>Child partial content</p>

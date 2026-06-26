@@ -62,7 +62,7 @@ RSpec.describe Lifer::Builder::HTML do
       let(:files) {
         {
           ".config/layouts/layout.html.liquid" => <<~LAYOUT,
-            {% render "_partials/header" with entry: entry %}
+            {% render "_partials/header", entry: entry %}
             {{ content }}
           LAYOUT
           "_partials/header.html.liquid" => <<~PARTIAL,
