@@ -8,6 +8,10 @@
   error mode and the error-raising `#render!` method for Liquid documents
   now. This results in build failing early rather than Liquid builds succeeding
   with entry contents that include strings like "Liquid error: blah blah."
+- When any entry fails to build for some reason, we now rescue the error,
+  inject an error message and entry context into STDOUT, and then re-raise
+  the original error. This should improve the experience of debugging template
+  bugs in projects.
 
 ## v0.14.0
 

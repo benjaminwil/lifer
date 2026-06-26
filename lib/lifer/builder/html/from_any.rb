@@ -11,6 +11,14 @@ class Lifer::Builder
         # @return [String] The rendered entry.
         def build(entry:)
           new(entry: entry).build
+        rescue => error
+          Lifer::Message.error "builder.catchall_failure", context: {
+            entry_path: entry.path,
+            collection: entry.collection,
+            layout_file: entry.collection&.layout_file,
+            error_message: error.message
+          }.to_json
+          raise(error)
         end
       end
 

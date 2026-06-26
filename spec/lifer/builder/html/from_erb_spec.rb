@@ -166,6 +166,41 @@ RSpec.describe Lifer::Builder::HTML::FromERB do
       end
     end
 
+    context "when a layout file references another layout file that doesn't exist" do
+      before do
+        files["_layouts/layout.html.erb"] = "<%= render 'doesnt_exist.html.erb' %>"
+      end
+
+      let(:entry) {
+        Lifer::Entry::HTML.new collection: collection,
+          file: "#{project.root}/entry-with-render.html.erb"
+      }
+      let(:config) {
+        <<~CONFIG
+          layout_file: ../_layouts/layout.html.erb
+          uri_strategy: simple
+          subdirectory_one:
+            uri_strategy: pretty
+        CONFIG
+      }
+
+      it "prints out an error message with context" do
+        allow(Lifer::Message).to receive(:error)
+
+        expect { subject }.to raise_error Errno::ENOENT
+
+        expect(Lifer::Message).to have_received(:error).with(
+          "builder.catchall_failure",
+          context: instance_of(String)
+        )
+      end
+
+      it "bubbles up the standard Ruby error" do
+        expect { subject }
+          .to raise_error Errno::ENOENT, /No such file or directory @ rb_sysopen/
+      end
+    end
+
     context "when not assigning a template file" do
       it "renders a valid HTML document using the default template" do
         expect(subject).to fuzzy_match <<~RESULT

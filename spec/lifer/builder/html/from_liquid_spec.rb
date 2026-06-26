@@ -199,5 +199,44 @@ RSpec.describe Lifer::Builder::HTML::FromLiquid do
         RESULT
       end
     end
+
+    context "when referencing a partial that doesn't exist" do
+      let(:config) {
+        <<~CONFIG
+          layout_file: ../_layouts/layout.html.liquid
+        CONFIG
+      }
+      let(:file) {
+        temp_file "tiny_entry.md", <<~CONTENT
+          ---
+          layout: doesnt_exist.html.liquid
+          ---
+          Some content.
+        CONTENT
+      }
+      let(:files) {
+        {
+          "_layouts/layout.html.liquid" => <<~LIQUID
+            {% render "doesnt_exist" %}
+          LIQUID
+        }
+      }
+
+      it "prints out an error message with context" do
+        allow(Lifer::Message).to receive(:error)
+
+        expect { subject }.to raise_error Liquid::FileSystemError
+
+        expect(Lifer::Message).to have_received(:error).with(
+          "builder.catchall_failure",
+          context: instance_of(String)
+        )
+      end
+
+      it "bubbles up the standard Ruby error" do
+        expect { subject }
+          .to raise_error Liquid::FileSystemError, /No such template/
+      end
+    end
   end
 end
