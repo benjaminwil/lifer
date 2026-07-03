@@ -1,4 +1,7 @@
 ## Next
+## v0.15.0
+
+The theme for this release is improved error messaging
 
 - If the project root is equal to the `Lifer.gem_root`, we now exit before
   attempting to build. This is just a quality-of-life improvement for
