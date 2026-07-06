@@ -283,6 +283,24 @@ RSpec.shared_examples "Lifer::Entry subclass" do
     end
   end
 
+  describe "#identifier" do
+    subject { entry.identifier }
+
+    let(:entry) { described_class.new file: file, collection: collection }
+    let(:file) {
+      temp_entry_subclass "tiny", <<~MARKDOWN
+          # Tiny
+          A testable entry.
+        MARKDOWN
+    }
+    let(:collection) {
+      Lifer::Collection.generate name: "Collection",
+        directory: File.dirname(file)
+    }
+
+    it { is_expected.to eq entry.permalink }
+  end
+
   describe "#output_extension" do
     subject { entry.output_extension }
 

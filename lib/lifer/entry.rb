@@ -205,6 +205,12 @@ module Lifer
       @full_text ||= File.readlines(file).join if file
     end
 
+    # A unique identifier for the current entry. For all entry types (so far)
+    # it makes sense to use the permalink.
+    #
+    # @return [String] The permalink (using the defafult global host argument).
+    def identifier = permalink
+
     # The file extension to be used when at the entry's build time. For
     # example, a Markdown file should be built to HTML.
     #

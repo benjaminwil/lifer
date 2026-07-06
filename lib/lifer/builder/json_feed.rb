@@ -117,7 +117,7 @@ class Lifer::Builder
     #   by the end of this procedure.
     def json_feed_entry(feed_object, lifer_entry, lifer_collection)
       feed_item_object = {
-        id: lifer_entry.permalink,
+        id: lifer_entry.identifier,
         url: lifer_entry.permalink,
         external_url: lifer_entry.frontmatter[:external_url],
         title: lifer_entry.title,

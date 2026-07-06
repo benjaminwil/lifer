@@ -216,7 +216,7 @@ class Lifer::Builder::RSS < Lifer::Builder
       if (authors = lifer_entry.authors).any?
         rss_feed_item.author = authors.join(", ")
       end
-      rss_feed_item.id = lifer_entry.permalink
+      rss_feed_item.id = lifer_entry.identifier
       rss_feed_item.link = lifer_entry.permalink
       rss_feed_item.title = lifer_entry.title
       rss_feed_item.summary = lifer_entry.summary
