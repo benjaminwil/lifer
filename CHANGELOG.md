@@ -1,4 +1,5 @@
 ## Next
+## v0.15.1
 
 In this release:
 
