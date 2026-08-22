@@ -1,4 +1,12 @@
 ## Next
+
+In this release:
+
+- Entry IDs and permalinks are no longer equivalent. This helps us build out
+  entries (or something with the same interface as entries) that aren't
+  represented by a file on disk.
+- The `node_modules` directory is now ignored at build time.
+
 ## v0.15.0
 
 The theme for this release is improved error messaging

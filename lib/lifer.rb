@@ -13,6 +13,7 @@ module Lifer
   IGNORE_DIRECTORIES = [
     "assets",
     "bin",
+    "node_modules",
     "vendor"
   ]
 
