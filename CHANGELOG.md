@@ -1,4 +1,10 @@
 ## Next
+
+I created this release to deal with a `gem build` warning:
+
+    WARNING:  open-ended dependency on base64 (>= 0) is not recommended
+      use a bounded requirement, such as "~> x.y"
+
 ## v0.15.1
 
 In this release:
