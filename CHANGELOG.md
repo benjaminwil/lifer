@@ -1,4 +1,5 @@
 ## Next
+## v0.15.2
 
 I created this release to deal with a `gem build` warning:
 
